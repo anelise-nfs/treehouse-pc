@@ -56,13 +56,17 @@
   --color-on-ocean:     var(--color-ink);
 
   /* --- Typefaces --------------------------------------------------------
-     Betania Patmos web license UNCONFIRMED (see ASK_FONTAINE.md).
-     Fallback stack degrades to a cursive rather than to sans, so layout
-     breakage is visible immediately rather than silently acceptable.
+     All three are self-hosted at build time by next/font/google in
+     app/layout.tsx, which sets these variables on <html>. Nothing is fetched
+     from Google at runtime.
+
+     Only a generic family remains as a last resort. The named fallback stacks
+     that used to sit here were insurance against an unresolved Betania Patmos
+     license question, which is now settled.
      -------------------------------------------------------------------- */
-  --font-script: "Betania Patmos", "Brush Script MT", cursive;
-  --font-serif:  "Libre Baskerville", Georgia, "Times New Roman", serif;
-  --font-sans:   "Quicksand", ui-rounded, "Segoe UI", system-ui, sans-serif;
+  --font-script: var(--font-betania-patmos), cursive;
+  --font-serif:  var(--font-libre-baskerville), serif;
+  --font-sans:   var(--font-quicksand), sans-serif;
 
   /* --- Type scale (fluid, 1.25 ratio, no mobile/desktop fork) ---------- */
   --text-display: clamp(2.25rem, 1.5rem + 3.2vw, 4rem);      /* hero        */
@@ -70,6 +74,13 @@
   --text-h2:      clamp(1.5rem, 1.2rem + 1.2vw, 2rem);
   --text-h3:      clamp(1.25rem, 1.1rem + 0.6vw, 1.5rem);
   --text-body:    clamp(1rem, 0.98rem + 0.1vw, 1.0625rem);   /* never <16px */
+
+  /* Script subsection headings ("built for play that matters", "the classic").
+     The brand guide is in points: its 21pt mobile / 32pt desktop script heading
+     is 28px / 43px at 1pt = 1.333px, so it clears the 28px script floor at both
+     breakpoints. 28px is a hard floor for the script face — anything smaller
+     uses Quicksand. */
+  --text-script-sm: clamp(1.75rem, 1.4rem + 1.5vw, 2.6875rem);
   --text-ui:      0.9375rem;
   --text-caption: 0.8125rem;
 

@@ -1,0 +1,16 @@
+<!-- PLACEHOLDER wordmark pending final brand files. Letter colors approximate
+     the brand palette; swap this single file when the real logo arrives. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 140" role="img" aria-label="Treehouse — Park City, Utah">
+  <g font-family="Quicksand, ui-rounded, system-ui, sans-serif" font-weight="700" font-size="64" text-anchor="middle">
+    <text x="26"  y="70" fill="#3c8dce">T</text>
+    <text x="72"  y="70" fill="#ed671d">R</text>
+    <text x="118" y="70" fill="#fdc32b">E</text>
+    <text x="162" y="70" fill="#f686b3">E</text>
+    <text x="210" y="70" fill="#a4c357">H</text>
+    <text x="258" y="70" fill="#ed671d">O</text>
+    <text x="304" y="70" fill="#6dc19c">U</text>
+    <text x="348" y="70" fill="#b8dccb">S</text>
+    <text x="392" y="70" fill="#b1d5e6">E</text>
+    <text x="210" y="108" fill="#ffffff" font-size="22" font-weight="600">Park City, Utah</text>
+  </g>
+</svg>

@@ -81,12 +81,31 @@ accommodation and the primary audience reads on phones, often outdoors.
 ### Typography roles
 
 - **Script (Betania Patmos):** display headlines and section band headings only. Never below ~28px,
-  never body copy, never UI. _(Web license unconfirmed — see the open questions doc. A fallback
-  stack is defined in tokens.)_
+  never body copy, never UI.
 - **Serif (Libre Baskerville):** body copy and editorial headings.
 - **Sans (Quicksand):** buttons, nav, labels, captions, prices.
 
 Body copy never renders below 16px on any viewport.
+
+All three are self-hosted at build time by `next/font/google` in `app/layout.tsx`, which sets the
+`--font-script` / `--font-serif` / `--font-sans` variables on `<html>`. Nothing is fetched from
+Google at runtime. Betania Patmos has no published fallback metrics, so script headings shift
+slightly on load; the other two have metric-matched fallbacks and do not.
+
+### Script subsection headings
+
+The brand guide is specified in points, not pixels. At 1pt = 1.333px its script heading is 28px on
+mobile (21pt) and 43px on desktop (32pt) — so it clears the 28px floor at both breakpoints, and
+script is correct for subsection headings: "built for play that matters", "the classic", "pick your
+room", "drop us a line" and similar.
+
+These use `--text-script-sm`, which is clamped so it cannot fall below 28px. **28px is a hard floor
+for the script face.** Anything that needs to render smaller uses Quicksand instead — there is no
+small script, at any breakpoint.
+
+Section band headings are larger still and sit at display scale. Some band colors only clear
+contrast at the large-text threshold — white on ocean is 3.56:1, which passes the 3:1 large-text
+bar and nothing else — so a band's `mobileHeading` is a *shorter* string, never a smaller one.
 
 ### The client brand guide's type scale is not authoritative
 
@@ -96,7 +115,10 @@ Ignore the guide's numbers.
 
 ## Accessibility baseline
 
-- Semantic HTML. One `<h1>` per page, no skipped heading levels.
+- Semantic HTML. One `<h1>` per page, no skipped heading levels. Exactly two blocks produce an h1:
+  `hero` (its `overlayHeadline`, on the homepage) and `pageHeader` (its `title`, on sub-pages).
+  Section bands are always h2 no matter how large they look — display styling never becomes the h1
+  by accident. `getPage()` warns in development when a page has anything other than one h1 source.
 - Visible `:focus-visible` styles on every interactive element. Never remove outlines without
   replacing them.
 - Minimum 44×44px touch targets.
