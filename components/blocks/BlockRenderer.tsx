@@ -1,7 +1,10 @@
 import type { Block } from '@/types/content';
+import { DropInSection } from './DropInSection';
 import { Hero } from './Hero';
 import { ImageTextSplit } from './ImageTextSplit';
+import { MembershipSection } from './MembershipSection';
 import { PageHeader } from './PageHeader';
+import { SectionBand } from './SectionBand';
 
 /**
  * Maps content blocks to components.
@@ -32,7 +35,7 @@ function BlockSwitch({ block }: { block: Block }) {
     case 'pageHeader':
       return <PageHeader {...block} />;
     case 'sectionBand':
-      return null;
+      return <SectionBand {...block} />;
     case 'richText':
       return null;
     case 'imageTextSplit':
@@ -43,8 +46,10 @@ function BlockSwitch({ block }: { block: Block }) {
       return null;
     case 'pricingTable':
       return null;
-    case 'priceBadgeRow':
-      return null;
+    case 'dropInSection':
+      return <DropInSection {...block} />;
+    case 'membershipSection':
+      return <MembershipSection {...block} />;
     case 'partyPackages':
       return null;
     case 'perksList':

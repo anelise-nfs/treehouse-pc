@@ -75,6 +75,10 @@
   --text-h2:      clamp(1.5rem, 1.2rem + 1.2vw, 2rem);
   --text-h3:      clamp(1.25rem, 1.1rem + 0.6vw, 1.5rem);
   --text-body:    clamp(1rem, 0.98rem + 0.1vw, 1.0625rem);   /* never <16px */
+  /* Lead paragraph — the short intro that opens a section, set larger than body
+     but below a heading. The gap between --text-body and --text-h3 is a 1.41
+     jump, wider than the rest of the scale, and this fills it. */
+  --text-lead:    clamp(1.125rem, 1.05rem + 0.3vw, 1.25rem);
 
   /* Script subsection headings ("built for play that matters", "the classic").
      The brand guide is in points: its 21pt mobile / 32pt desktop script heading
@@ -82,6 +86,10 @@
      breakpoints. 28px is a hard floor for the script face — anything smaller
      uses Quicksand. */
   --text-script-sm: clamp(1.75rem, 1.4rem + 1.5vw, 2.6875rem);
+  /* Script inside a tight container — the price badge circles, where the
+     subsection size above would run to the curve. Still floored at 28px: this
+     is the face at its minimum, not a small script. */
+  --text-script-badge: clamp(1.75rem, 1.5rem + 1.1vw, 2.375rem);
   --text-ui:      0.9375rem;
   --text-caption: 0.8125rem;
 

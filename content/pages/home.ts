@@ -2,7 +2,7 @@ import type { Page } from '@/types/content';
 import { partyPackages } from '../parties';
 import { parkCity } from '../location';
 import { pt } from '../_portableText';
-import { checkerboardDivider, contactCopy, earlyBirdPerks, foundingPricingTable } from './_shared';
+import { checkerboardDivider, contactCopy, earlyBirdMembership } from './_shared';
 
 /**
  * Launch homepage. Copy is verbatim from to_start.png except where marked
@@ -119,47 +119,44 @@ export const homePage: Page = {
       anchorId: 'how-it-works',
       accent: 'rainbow',
     },
+    earlyBirdMembership('early-bird-membership'),
     {
-      _key: 'band-early-bird',
-      _type: 'sectionBand',
-      heading: 'early bird gets the worm',
-      color: 'tangerine',
-      level: 'secondary',
-    },
-    foundingPricingTable('founding-pricing'),
-    {
-      _key: 'founding-intro',
-      _type: 'richText',
-      align: 'center',
-      content: pt(
-        "Founding Members (aka early birds) are the families who believe in what we're building — and we're making it worth your while.",
-      ),
-    },
-    earlyBirdPerks('early-bird-perks'),
-    {
-      _key: 'band-drop-in',
-      _type: 'sectionBand',
-      heading: 'drop-in play',
-      color: 'lime',
-      level: 'secondary',
-    },
-    {
-      _key: 'drop-in-prices',
-      _type: 'priceBadgeRow',
+      _key: 'drop-in',
+      _type: 'dropInSection',
+      title: 'drop-in play',
+      titleBandColor: 'lime',
       badges: [
-        { _key: 'little-kid', label: 'little kid', note: 'up to three', price: '$28', color: 'flamingo' },
-        { _key: 'big-kid', label: 'big kid', note: 'four – twelve', price: '$35', color: 'ocean' },
-        { _key: 'wee-ones', label: 'wee ones', note: 'under one', price: 'free with sibling', color: 'sunshine' },
+        {
+          _key: 'little-kid',
+          label: 'little kid',
+          note: 'up to three',
+          price: '$28',
+          labelColor: 'seafoam',
+          priceColor: 'flamingo',
+        },
+        {
+          _key: 'big-kid',
+          label: 'big kid',
+          note: 'four – twelve',
+          price: '$35',
+          labelColor: 'ocean',
+          priceColor: 'lime',
+        },
+        {
+          _key: 'wee-ones',
+          label: 'wee ones',
+          note: 'under one',
+          price: 'free',
+          priceNote: 'with sibling',
+          labelColor: 'sunshine',
+          priceColor: 'sky',
+        },
       ],
-    },
-    {
-      _key: 'drop-in-copy',
-      _type: 'richText',
-      align: 'center',
-      content: pt(
+      body: pt(
         "Most days, you can just walk right in — no planning required. On our busiest days (think holidays, powder days, and peak tourist weeks), we use timed entry to keep things comfortable and never overcrowded, so you'll reserve an entry time in advance. We'll always make it easy to know before you go.",
-        'Play sessions are come-and-stay — settle in, grab a snack, and let the kids explore.',
       ),
+      footnote:
+        'Play sessions are come-and-stay — settle in, grab a snack, and let the kids explore.',
     },
     {
       _key: 'band-parties',

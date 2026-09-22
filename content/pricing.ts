@@ -26,7 +26,8 @@ export const foundingTiers: PricingTier[] = [
     billedAmount: 1620,
     billedInterval: 'year',
     features: [],
-    color: 'lime',
+    headerColor: 'lime',
+    priceColor: 'sky',
     cta: beAnEarlyBird,
   },
   {
@@ -39,7 +40,8 @@ export const foundingTiers: PricingTier[] = [
     billedAmount: 2820,
     billedInterval: 'year',
     features: [],
-    color: 'sunshine',
+    headerColor: 'sunshine',
+    priceColor: 'mint',
     cta: beAnEarlyBird,
   },
   {
@@ -52,7 +54,8 @@ export const foundingTiers: PricingTier[] = [
     billedAmount: 3960,
     billedInterval: 'year',
     features: [],
-    color: 'tangerine',
+    headerColor: 'tangerine',
+    priceColor: 'flamingo',
     cta: beAnEarlyBird,
   },
 ];
@@ -70,7 +73,8 @@ export const standardTiers: PricingTier[] = [
     amount: 145,
     interval: 'month',
     features: [],
-    color: 'lime',
+    headerColor: 'lime',
+    priceColor: 'sky',
   },
   {
     _id: 'pricingTier.standard-two-kids',
@@ -79,7 +83,8 @@ export const standardTiers: PricingTier[] = [
     amount: 250,
     interval: 'month',
     features: [],
-    color: 'sunshine',
+    headerColor: 'sunshine',
+    priceColor: 'mint',
   },
   {
     _id: 'pricingTier.standard-three-plus-kids',
@@ -88,7 +93,8 @@ export const standardTiers: PricingTier[] = [
     amount: 350,
     interval: 'month',
     features: [],
-    color: 'tangerine',
+    headerColor: 'tangerine',
+    priceColor: 'flamingo',
   },
 ];
 

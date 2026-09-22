@@ -374,12 +374,51 @@ export interface PricingTableBlock extends BlockBase {
   backgroundColor?: SurfaceColor;
 }
 
-/** Circular price badges. Become full-width cards below 640px. */
-export interface PriceBadgeRowBlock extends BlockBase {
-  _type: 'priceBadgeRow';
-  heading?: string;
+/**
+ * The whole "early bird gets the worm" section as one block: title band, tier
+ * cards, and the intro/CTA/perks column beside them.
+ *
+ * Deliberately not a pricingTable next to a perksList next to a sectionBand.
+ * The three are one designed unit with a fixed internal arrangement, and an
+ * author reordering or separating them would produce something the design does
+ * not account for.
+ */
+export interface MembershipSectionBlock extends BlockBase {
+  _type: 'membershipSection';
+  title: string;
+  titleBandColor: BandColor;
+  tiers: PricingTier[];
+  /** Fine print under the last card — annual billing terms. */
+  tiersFootnote?: string;
+  intro: PortableTextBlock[];
+  cta: Link;
+  perksTitle: string;
+  perks: MembershipPerk[];
+}
+
+export interface MembershipPerk {
+  _key: string;
+  /** Short colored label — 'best rates'. */
+  label: string;
+  description: string;
+}
+
+/**
+ * The whole drop-in section: title bar, the row of price badges, and the copy
+ * beneath them. Same shape as MembershipSectionBlock — a designed unit with a
+ * fixed internal arrangement rather than three separately orderable blocks.
+ *
+ * The badges are circles that become full-width cards below 640px, per
+ * ARCHITECTURE.md → Mobile.
+ */
+export interface DropInSectionBlock extends BlockBase {
+  _type: 'dropInSection';
+  title: string;
+  titleBandColor: BandColor;
   badges: PriceBadge[];
-  backgroundColor?: SurfaceColor;
+  body: PortableTextBlock[];
+  /** Smaller closing line, set in sans below the body. */
+  footnote?: string;
 }
 
 export interface PriceBadge {
@@ -390,8 +429,16 @@ export interface PriceBadge {
    * relationship to anything — '$28', 'free with sibling'.
    */
   price: string;
+  /**
+   * Qualifier set smaller beneath the price — 'with sibling' under 'free'. A
+   * separate field rather than a longer `price` string so the component never
+   * has to split one, and so an author controls where the break falls.
+   */
+  priceNote?: string;
   note?: string;
-  color: BandColor;
+  /** Fill behind the label half. The price half below it uses `priceColor`. */
+  labelColor: BandColor;
+  priceColor: BandColor;
 }
 
 export interface PartyPackagesBlock extends BlockBase {
@@ -497,7 +544,8 @@ export type Block =
   | PhotoGalleryBlock
   | FeatureGridBlock
   | PricingTableBlock
-  | PriceBadgeRowBlock
+  | MembershipSectionBlock
+  | DropInSectionBlock
   | PartyPackagesBlock
   | PerksListBlock
   | LocationBlock
@@ -608,7 +656,9 @@ export interface PricingTier {
   /** At most one tier should set this; enforced in content, not in types. */
   featured?: boolean;
   badge?: string;
-  color: BandColor;
+  /** Fill behind the tier name. The price row below it uses `priceColor`. */
+  headerColor: BandColor;
+  priceColor: BandColor;
   cta?: Link;
   /** Founding-membership scarcity counter. Static in Phase 1. */
   limitNote?: string;
