@@ -1,0 +1,18 @@
+<!-- Stand-in for the party room photographs, which the client has not supplied
+     yet. Deliberately flat and obviously unfinished so it cannot be mistaken for
+     final artwork. Replace the per-room files referenced from
+     /content/pages/home.ts and delete this one. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="800" height="600" role="img">
+  <rect width="800" height="600" fill="#e4e0d8"/>
+  <rect x="16" y="16" width="768" height="568" fill="none" stroke="#c2bbac" stroke-width="2" stroke-dasharray="12 10"/>
+  <g stroke="#8a8378" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M262 356V236a14 14 0 0 1 14-14h248a14 14 0 0 1 14 14v120"/>
+    <path d="M238 356h324"/>
+    <path d="M300 222v-34a14 14 0 0 1 14-14h172a14 14 0 0 1 14 14v34"/>
+    <circle cx="400" cy="290" r="26"/>
+  </g>
+  <text x="400" y="452" text-anchor="middle" font-family="Quicksand, Avenir, Helvetica, Arial, sans-serif"
+        font-size="26" font-weight="600" fill="#6f6a61">Room photography pending</text>
+  <text x="400" y="486" text-anchor="middle" font-family="Quicksand, Avenir, Helvetica, Arial, sans-serif"
+        font-size="18" fill="#8a8378">placeholder — not final artwork</text>
+</svg>

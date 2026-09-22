@@ -2,7 +2,7 @@ import type { Page } from '@/types/content';
 import { partyPackages } from '../parties';
 import { parkCity } from '../location';
 import { pt } from '../_portableText';
-import { checkerboardDivider, contactCopy, earlyBirdMembership } from './_shared';
+import { earlyBirdMembership } from './_shared';
 
 /**
  * Launch homepage. Copy is verbatim from to_start.png except where marked
@@ -172,6 +172,8 @@ export const homePage: Page = {
       align: 'center',
       content: pt(
         "The easiest birthday you'll ever throw. Your party includes a private room for two full hours plus play access for all your little guests — so the kids climb, explore, and celebrate while you actually enjoy the day.",
+      ),
+      subcopy: pt(
         'Choose the level of help that fits your style: bring your own, or let us handle everything.',
       ),
     },
@@ -191,27 +193,38 @@ export const homePage: Page = {
       _key: 'pick-your-room',
       _type: 'featureGrid',
       heading: 'pick your room',
-      intro: pt('three private rooms sized to fit your crew'),
+      subheading: 'three private rooms sized to fit your crew',
       columns: 3,
       items: [
         {
           _key: 'the-nook',
           title: 'the nook',
-          body: 'up to 16 kids',
-          // PLACEHOLDER: room photography pending; mockups show grey boxes.
-          image: { url: '/images/room-the-nook.jpg', alt: 'The Nook party room' },
+          // PLACEHOLDER: room photography pending; all three share one stand-in.
+          image: {
+            url: '/images/placeholder-room.svg',
+            alt: 'Placeholder graphic: photography of Nook pending',
+          },
+          caption: 'up to 16 kids',
         },
         {
           _key: 'the-den',
           title: 'the den',
-          body: 'up to 24 kids',
-          image: { url: '/images/room-the-den.jpg', alt: 'The Den party room' },
+          // PLACEHOLDER: room photography pending; all three share one stand-in.
+          image: {
+            url: '/images/placeholder-room.svg',
+            alt: 'Placeholder graphic: photography of Den pending',
+          },
+          caption: 'up to 24 kids',
         },
         {
           _key: 'the-grove',
           title: 'the grove',
-          body: 'up to 48 kids',
-          image: { url: '/images/room-the-grove.jpg', alt: 'The Grove party room' },
+          // PLACEHOLDER: room photography pending; all three share one stand-in.
+          image: {
+            url: '/images/placeholder-room.svg',
+            alt: 'Placeholder graphic: photography of Grove pending',
+          },
+          caption: 'up to 48 kids',
         },
       ],
     },
@@ -225,22 +238,22 @@ export const homePage: Page = {
       accent: 'ribbon',
     },
     {
-      _key: 'location',
+      _key: 'location-map',
       _type: 'locationBlock',
-      location: parkCity,
-      showHours: true,
-      showMap: true,
+      location: {
+        label: 'Treehouse Park City',
+        address: '1209 Center Dr, Park City, UT 84098',
+        // PLACEHOLDER: approximate. Confirm the exact pin before the map goes live.
+        coordinates: { lat: 40.719, lng: -111.539 },
+      },
+      zoom: 15,
     },
     {
-      _key: 'band-connect',
-      _type: 'sectionBand',
-      heading: 'connect with us',
-      color: 'tomato',
-      level: 'primary',
-      anchorId: 'connect',
-      accent: 'rainbow',
+      _key: 'hours-address',
+      _type: 'hoursAddress',
+      // location is resolved from SiteSettings by /lib/content.ts.
     },
-    contactCopy('contact'),
-    checkerboardDivider('footer-divider'),
+    // The 'connect with us' band and its contact copy moved into the site
+    // footer, which renders on every route from app/layout.tsx.
   ],
 };

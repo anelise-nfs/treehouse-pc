@@ -1,7 +1,7 @@
 import type { Page } from '@/types/content';
 import { parkCity } from '../location';
 import { pt } from '../_portableText';
-import { checkerboardDivider, contactCopy, earlyBirdPerks, foundingPricingTable } from './_shared';
+import { earlyBirdPerks, foundingPricingTable } from './_shared';
 
 /**
  * Founding membership sales page. Copy is verbatim from early_bird_page.png.
@@ -86,16 +86,7 @@ export const earlyBirdPage: Page = {
         },
       ],
     },
-    {
-      _key: 'band-connect',
-      _type: 'sectionBand',
-      heading: 'connect with us',
-      color: 'lime',
-      level: 'primary',
-      anchorId: 'connect',
-      accent: 'flowers',
-    },
-    contactCopy('contact'),
-    checkerboardDivider('footer-divider'),
+    // The 'connect with us' band and its contact copy moved into the site
+    // footer, which renders on every route from app/layout.tsx.
   ],
 };

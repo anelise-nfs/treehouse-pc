@@ -1,7 +1,8 @@
 import type { MembershipSectionBlock, PricingTier } from '@/types/content';
 import { CtaLink } from '@/components/CtaLink';
 import { PortableText } from '@/components/PortableText';
-import { BAND_BG, CONTENT_INSET, SectionTitleBar } from '@/components/SectionTitleBar';
+import { BAND_BG, SectionTitleBar } from '@/components/SectionTitleBar';
+import { CONTENT_INSET } from '@/components/layout';
 
 /** Whole dollars. No currency library for one symbol — see Dependency discipline. */
 function money(amount: number): string {

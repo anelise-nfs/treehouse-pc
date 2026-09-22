@@ -14,8 +14,7 @@ export const partyPackages: PartyPackage[] = [
     _type: 'partyPackage',
     name: 'the classic',
     slug: 'the-classic',
-    price: '$25/child',
-    priceNote: '(parties start at $300)',
+    priceLine: '$25/child (parties start at $300)',
     duration: '2 hours',
     description: pt(
       "Your private party room and 2 hours of play, set up for you to make your own. Bring your food, cake, and decorations, and we'll take care of the space and the cleanup. Perfect for parents who have their theme dialed in.",
@@ -29,8 +28,7 @@ export const partyPackages: PartyPackage[] = [
     _type: 'partyPackage',
     name: 'the works',
     slug: 'the-works',
-    price: '$50/child',
-    priceNote: '(parties start at $500)',
+    priceLine: '$50/child (parties start at $500)',
     duration: '2 hours',
     description: pt(
       "Your private party room and 2 hours of play — we handle the rest. Food, cake, and decorations are all taken care of, so you show up, celebrate, and leave the mess to us. Perfect for parents who'd rather just be present.",

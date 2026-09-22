@@ -1,6 +1,7 @@
 import type { DropInSectionBlock, PriceBadge } from '@/types/content';
 import { PortableText } from '@/components/PortableText';
-import { BAND_BG, CONTENT_INSET, SectionTitleBar } from '@/components/SectionTitleBar';
+import { BAND_BG, SectionTitleBar } from '@/components/SectionTitleBar';
+import { CONTENT_INSET } from '@/components/layout';
 
 /**
  * One price badge: a label half above a price half.

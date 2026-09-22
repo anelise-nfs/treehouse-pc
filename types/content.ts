@@ -303,6 +303,11 @@ export interface RichTextBlock extends BlockBase {
   _type: 'richText';
   heading?: string;
   content: PortableTextBlock[];
+  /**
+   * Smaller muted line beneath `content`, set in sans. Separate from `content`
+   * so the styling difference is authored rather than inferred from position.
+   */
+  subcopy?: PortableTextBlock[];
   /** 'measure' caps line length at ~68ch; 'full' spans the container. */
   width?: 'measure' | 'full';
   align?: 'left' | 'center';
@@ -346,8 +351,9 @@ export type GalleryLayout = 'single' | 'grid' | 'strip' | 'featured';
 
 export interface FeatureGridBlock extends BlockBase {
   _type: 'featureGrid';
-  heading?: string;
-  intro?: PortableTextBlock[];
+  /** Required: the grid names itself rather than relying on a band above it. */
+  heading: string;
+  subheading?: string;
   items: FeatureItem[];
   columns: 2 | 3 | 4;
   backgroundColor?: SurfaceColor;
@@ -356,9 +362,9 @@ export interface FeatureGridBlock extends BlockBase {
 export interface FeatureItem {
   _key: string;
   title: string;
-  body?: string;
-  icon?: IconName;
-  image?: SanityImage;
+  /** Short line under the title — 'up to 16 kids'. */
+  caption?: string;
+  image: SanityImage;
   link?: Link;
 }
 
@@ -468,15 +474,46 @@ export interface PerkItem {
   icon?: IconName;
 }
 
+/**
+ * The map block. Deliberately renderer-agnostic: a flat display address and
+ * optional coordinates are what every map implementation needs, so the shape
+ * does not change when the placeholder becomes a Mapbox static image and later
+ * an interactive map. See components/blocks/LocationMap.tsx.
+ */
 export interface LocationBlock extends BlockBase {
   _type: 'locationBlock';
-  heading?: string;
-  /** Resolved by /lib/content.ts. Optional because a page may inherit the site default. */
+  location: MapLocation;
+  /** Unused by the placeholder; consumed once a real map renders. */
+  zoom?: number;
+}
+
+export interface MapLocation {
+  /**
+   * Display name on the card, authored — never derived from the address, the
+   * coordinates, or a Google lookup. Google will not reliably return a business
+   * name for a business that has not opened, and site copy should not depend on
+   * their database either way. Required, so a location cannot render nameless.
+   * With multiple locations later, each carries its own.
+   */
+  label: string;
+  /**
+   * Single-line. Drives the pin and the directions URL only — it is independent
+   * of `label`, which is what the card displays.
+   */
+  address: string;
+  coordinates?: { lat: number; lng: number };
+}
+
+/**
+ * Opening hours and the postal address, side by side.
+ *
+ * `location` is resolved from SiteSettings by /lib/content.ts, not authored:
+ * hours and the address also appear in the footer and change often, so they
+ * have exactly one home.
+ */
+export interface HoursAddressBlock extends BlockBase {
+  _type: 'hoursAddress';
   location?: Location;
-  showHours?: boolean;
-  showMap?: boolean;
-  body?: PortableTextBlock[];
-  backgroundColor?: SurfaceColor;
 }
 
 export interface FaqAccordionBlock extends BlockBase {
@@ -549,6 +586,7 @@ export type Block =
   | PartyPackagesBlock
   | PerksListBlock
   | LocationBlock
+  | HoursAddressBlock
   | FaqAccordionBlock
   | CtaBannerBlock
   | BookingEmbedBlock
@@ -679,9 +717,12 @@ export interface PartyPackage {
   _type: 'partyPackage';
   name: string;
   slug: string;
-  /** Display string. Party pricing is per-child plus a floor, with no arithmetic. */
-  price: string;
-  priceNote?: string;
+  /**
+   * One display string — '$25/child (parties start at $300)'. Party pricing is
+   * per-child plus a floor, with no arithmetic, and the design sets the whole
+   * line at one size, so it is not split into a price and a note.
+   */
+  priceLine: string;
   duration?: string;
   guestCount?: string;
   description?: PortableTextBlock[];
@@ -720,12 +761,19 @@ export interface SiteSettings {
   logo?: SanityImage;
   /** Square mark for favicons and small placements. */
   logoMark?: SanityImage;
+  /**
+   * Single-color white wordmark, for dark surfaces. A distinct asset rather
+   * than a filter over the full-color logo, which would muddy it.
+   */
+  logoWhite?: SanityImage;
   /** At launch: the two links inside the hamburger menu. */
   primaryNav: Link[];
   footerNav?: Link[];
   navCta?: Link;
   socialLinks?: SocialLink[];
   footerNote?: PortableTextBlock[];
+  /** Secondary links in the footer's bottom bar — privacy, terms. */
+  legalNav?: Link[];
   defaultSeo?: SeoMeta;
   location?: Location;
 }

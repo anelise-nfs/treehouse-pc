@@ -1,6 +1,7 @@
-import type { ImageTextSplitBlock, SanityImage, SplitHeadingColor } from '@/types/content';
+import type { ImageTextSplitBlock, SplitHeadingColor } from '@/types/content';
 import { CtaLink } from '@/components/CtaLink';
 import { PortableText } from '@/components/PortableText';
+import { objectPosition } from '@/components/imageFraming';
 
 /**
  * Script heading color, mapped from the authored union to a token.
@@ -18,17 +19,6 @@ const HEADING_COLOR: Record<SplitHeadingColor, string> = {
   // CONTRAST: provisional (tangerine on linen 3.09:1 — clears the 3:1 large-text bar only).
   tangerine: 'text-tangerine',
 };
-
-/**
- * Framing for a cropped image, from the authored hotspot.
- *
- * The container is a fixed ratio and the source images are not, so something has
- * to be cut. The hotspot decides what survives; absent one, center.
- */
-function objectPosition(image: SanityImage): string | undefined {
-  if (!image.hotspot) return undefined;
-  return `${image.hotspot.x * 100}% ${image.hotspot.y * 100}%`;
-}
 
 /**
  * Image on one side, heading and body on the other.

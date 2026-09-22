@@ -3,14 +3,12 @@
  * because every block needs its own `_key` within the page that holds it.
  */
 import type {
-  DividerBlock,
   MembershipSectionBlock,
   PerksListBlock,
   PricingTableBlock,
-  RichTextBlock,
 } from '@/types/content';
 import { foundingTiers } from '../pricing';
-import { pt, ptLink, h3 } from '../_portableText';
+import { pt } from '../_portableText';
 
 export function foundingPricingTable(key: string, cta = true): PricingTableBlock {
   return {
@@ -112,25 +110,4 @@ export function earlyBirdPerks(key: string): PerksListBlock {
       },
     ],
   };
-}
-
-/**
- * Email and phone carry link annotations rather than being plain text, so they
- * are tappable on a phone. The mockups render them as plain strings.
- */
-export function contactCopy(key: string): RichTextBlock {
-  return {
-    _key: key,
-    _type: 'richText',
-    align: 'center',
-    content: [
-      ...pt('Questions? Ideas? Thoughts?', 'Want to partner? Want to franchise?', h3('drop us a line')),
-      ptLink('fontaine@treehouseparkcity.com', 'mailto:fontaine@treehouseparkcity.com'),
-      ptLink('(415) 860-3698', 'tel:+14158603698'),
-    ],
-  };
-}
-
-export function checkerboardDivider(key: string): DividerBlock {
-  return { _key: key, _type: 'divider', shape: 'checkerboard', size: 'md' };
 }

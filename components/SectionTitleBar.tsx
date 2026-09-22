@@ -1,4 +1,5 @@
 import type { BandColor } from '@/types/content';
+import { CONTENT_INSET } from '@/components/layout';
 
 export const BAND_BG: Record<BandColor, string> = {
   pine: 'bg-pine',
@@ -12,13 +13,6 @@ export const BAND_BG: Record<BandColor, string> = {
   sky: 'bg-sky',
   ocean: 'bg-ocean',
 };
-
-/**
- * Horizontal inset shared by a section's title bar and the content beneath it,
- * so the bar's edges land exactly on the content's. Sits further in than the
- * page gutter the rest of the site uses, per the client's design.
- */
-export const CONTENT_INSET = 'px-[calc(var(--spacing-gutter)*2+var(--spacing-block))]';
 
 export interface SectionTitleBarProps {
   title: string;

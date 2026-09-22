@@ -1,9 +1,14 @@
 import type { Block } from '@/types/content';
 import { DropInSection } from './DropInSection';
+import { FeatureGrid } from './FeatureGrid';
 import { Hero } from './Hero';
+import { HoursAddress } from './HoursAddress';
 import { ImageTextSplit } from './ImageTextSplit';
 import { MembershipSection } from './MembershipSection';
+import { LocationMap } from './LocationMap';
 import { PageHeader } from './PageHeader';
+import { PartyPackages } from './PartyPackages';
+import { RichText } from './RichText';
 import { SectionBand } from './SectionBand';
 
 /**
@@ -37,13 +42,13 @@ function BlockSwitch({ block }: { block: Block }) {
     case 'sectionBand':
       return <SectionBand {...block} />;
     case 'richText':
-      return null;
+      return <RichText {...block} />;
     case 'imageTextSplit':
       return <ImageTextSplit {...block} />;
     case 'photoGallery':
       return null;
     case 'featureGrid':
-      return null;
+      return <FeatureGrid {...block} />;
     case 'pricingTable':
       return null;
     case 'dropInSection':
@@ -51,11 +56,13 @@ function BlockSwitch({ block }: { block: Block }) {
     case 'membershipSection':
       return <MembershipSection {...block} />;
     case 'partyPackages':
-      return null;
+      return <PartyPackages {...block} />;
     case 'perksList':
       return null;
     case 'locationBlock':
-      return null;
+      return <LocationMap {...block} />;
+    case 'hoursAddress':
+      return <HoursAddress {...block} />;
     case 'faqAccordion':
       return null;
     case 'ctaBanner':

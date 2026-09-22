@@ -5,7 +5,7 @@
  * produces these structures itself. Underscore-prefixed so it is obviously not
  * part of the content surface.
  */
-import type { LinkKind, PortableTextBlock, PortableTextStyle } from '@/types/content';
+import type { PortableTextBlock, PortableTextStyle } from '@/types/content';
 
 type Paragraph = string | { style: PortableTextStyle; text: string };
 
@@ -36,19 +36,3 @@ export function pt(...paragraphs: Paragraph[]): PortableTextBlock[] {
     };
   });
 }
-
-/** A paragraph that is entirely one link — used for mailto: and tel: contact details. */
-export function ptLink(text: string, href: string, kind: LinkKind = 'external'): PortableTextBlock {
-  const key = digest(`${text}${href}`);
-
-  return {
-    _type: 'block',
-    _key: `b${key}`,
-    style: 'normal',
-    children: [{ _type: 'span', _key: `s${key}`, text, marks: [`l${key}`] }],
-    markDefs: [{ _type: 'link', _key: `l${key}`, href, kind }],
-  };
-}
-
-export const h2 = (text: string) => ({ style: 'h2' as const, text });
-export const h3 = (text: string) => ({ style: 'h3' as const, text });

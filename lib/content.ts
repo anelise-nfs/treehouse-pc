@@ -31,8 +31,28 @@ const pages: Page[] = [homePage, earlyBirdPage];
  */
 export async function getPage(slug: string): Promise<Page | null> {
   const page = pages.find((candidate) => candidate.slug === slug) ?? null;
-  if (page) warnOnHeadingStructure(page);
-  return page;
+  if (!page) return null;
+  warnOnHeadingStructure(page);
+  return resolveSiteReferences(page);
+}
+
+/**
+ * Fills the site-level references a block declares but does not author.
+ *
+ * Hours and the address live once, on SiteSettings. Resolving them here keeps
+ * components on props alone (ARCHITECTURE.md → Prime directive) while still
+ * giving that data a single home, and mirrors what GROQ's `location->` will do
+ * in Phase 2.
+ */
+function resolveSiteReferences(page: Page): Page {
+  return {
+    ...page,
+    blocks: page.blocks.map((block) =>
+      block._type === 'hoursAddress' && !block.location
+        ? { ...block, location: siteSettings.location }
+        : block,
+    ),
+  };
 }
 
 /**

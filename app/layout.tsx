@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { Betania_Patmos, Libre_Baskerville, Quicksand } from 'next/font/google';
+import { SiteFooter } from '@/components/SiteFooter';
 import { SiteShell } from '@/components/SiteShell';
 import { getHeaderLogoSizes, getSiteSettings } from '@/lib/content';
 import './globals.css';
@@ -66,6 +67,17 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           logoSizes={logoSizes}
         >
           {children}
+          {/* Inside SiteShell, not beside it: the footer has to squeeze with the
+              rest of the page when the menu panel opens. */}
+          <SiteFooter
+            siteName={settings.siteName}
+            logoWhite={settings.logoWhite}
+            tagline={settings.tagline}
+            location={settings.location}
+            footerNav={settings.footerNav}
+            legalNav={settings.legalNav}
+            socialLinks={settings.socialLinks}
+          />
         </SiteShell>
       </body>
     </html>
