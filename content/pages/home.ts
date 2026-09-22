@@ -57,11 +57,12 @@ export const homePage: Page = {
       _key: 'built-for-play',
       _type: 'imageTextSplit',
       heading: 'built for play that matters',
+      headingColor: 'tomato',
       imageSide: 'left',
       image: {
-        // PLACEHOLDER: final photography pending.
-        url: '/images/play-slide.jpg',
-        alt: 'A child-height wooden slide winding down from the upper level of the play structure',
+        // Client render, not photography. Final photography still pending.
+        url: '/images/playarea_view4.png',
+        alt: 'The play floor: linked wooden treehouses over artificial grass, with a climbing wall, a tube slide, and paper geese hanging from the ceiling',
       },
       body: pt(
         'Every slide, nook, and climbing structure is thoughtfully designed to grow with your child and support real development: building strength and balance, fine-tuning little hands, sparking imagination, and learning to play together — screen-free, always.',
@@ -72,10 +73,11 @@ export const homePage: Page = {
       _key: 'clean-safe-designed',
       _type: 'imageTextSplit',
       heading: 'clean, safe and thoughtfully designed',
+      headingColor: 'ocean',
       imageSide: 'right',
       image: {
-        // PLACEHOLDER: final photography pending.
-        url: '/images/toddler-zone.jpg',
+        // Client render, not photography. Final photography still pending.
+        url: '/images/playarea_detail.png',
         alt: 'The toddler zone, with a soft mushroom house, a deer cubby, and a miniature camper',
       },
       body: pt(
@@ -95,11 +97,13 @@ export const homePage: Page = {
       _key: 'cafe',
       _type: 'imageTextSplit',
       heading: "a cafe you'll actually love",
+      headingColor: 'pine',
       imageSide: 'left',
       image: {
-        // PLACEHOLDER: final photography pending.
-        url: '/images/cafe-coffee.jpg',
-        alt: 'Two people passing a cup of coffee across a table',
+        // PLACEHOLDER: the client has supplied no cafe image. Both the url and
+        // the alt below change together when the real photograph arrives.
+        url: '/images/placeholder-cafe.svg',
+        alt: 'Placeholder graphic: cafe photography pending',
       },
       body: pt(
         'Good coffee, healthy snacks, comfortable seats – and a calm, beautiful space to gather, connect, and be present while the kids play.',

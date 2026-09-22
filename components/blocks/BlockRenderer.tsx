@@ -1,5 +1,6 @@
 import type { Block } from '@/types/content';
 import { Hero } from './Hero';
+import { ImageTextSplit } from './ImageTextSplit';
 import { PageHeader } from './PageHeader';
 
 /**
@@ -35,7 +36,7 @@ function BlockSwitch({ block }: { block: Block }) {
     case 'richText':
       return null;
     case 'imageTextSplit':
-      return null;
+      return <ImageTextSplit {...block} />;
     case 'photoGallery':
       return null;
     case 'featureGrid':

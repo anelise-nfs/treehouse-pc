@@ -1,0 +1,21 @@
+<!-- Stand-in for the cafe photograph, which the client has not supplied yet.
+     Deliberately flat and obviously unfinished so it cannot be mistaken for
+     final artwork in a review build. Replace the file referenced from
+     /content/pages/home.ts and delete this one. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="800" height="600" role="img">
+  <rect width="800" height="600" fill="#f2ece2"/>
+  <rect x="16" y="16" width="768" height="568" fill="none" stroke="#c9bfae" stroke-width="2" stroke-dasharray="12 10"/>
+
+  <g stroke="#8a8378" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M316 268h150v82a56 56 0 0 1-56 56h-38a56 56 0 0 1-56-56z"/>
+    <path d="M466 292h28a30 30 0 0 1 0 60h-28"/>
+    <path d="M300 424h190"/>
+    <path d="M352 232c0-14 12-18 12-32s-12-18-12-32"/>
+    <path d="M400 232c0-14 12-18 12-32s-12-18-12-32"/>
+  </g>
+
+  <text x="400" y="492" text-anchor="middle" font-family="Quicksand, Avenir, Helvetica, Arial, sans-serif"
+        font-size="26" font-weight="600" fill="#6f6a61" letter-spacing="0.5">Cafe photography pending</text>
+  <text x="400" y="526" text-anchor="middle" font-family="Quicksand, Avenir, Helvetica, Arial, sans-serif"
+        font-size="18" fill="#8a8378">placeholder — not final artwork</text>
+</svg>

@@ -309,14 +309,22 @@ export interface RichTextBlock extends BlockBase {
   backgroundColor?: SurfaceColor;
 }
 
+/**
+ * Script heading colors available to an ImageTextSplit. A subset of the palette,
+ * not all of BandColor: these render as text on linen, where most of the brand
+ * colors are too light to read.
+ */
+export type SplitHeadingColor = 'pine' | 'ocean' | 'tomato' | 'tangerine';
+
 export interface ImageTextSplitBlock extends BlockBase {
   _type: 'imageTextSplit';
   heading?: string;
+  headingColor: SplitHeadingColor;
   body: PortableTextBlock[];
   image: SanityImage;
   /** Desktop only. Mobile always stacks image-above-text for reading order. */
   imageSide: 'left' | 'right';
-  link?: Link;
+  cta?: Link;
   backgroundColor?: SurfaceColor;
   accent?: AccentShape;
 }
