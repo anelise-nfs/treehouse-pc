@@ -70,6 +70,7 @@
 
   /* --- Type scale (fluid, 1.25 ratio, no mobile/desktop fork) ---------- */
   --text-display: clamp(2.25rem, 1.5rem + 3.2vw, 4rem);      /* hero        */
+  --text-hero:    clamp(2.25rem, 1.6rem + 3vw, 3.75rem);     /* hero overlay */
   --text-band:    clamp(1.75rem, 1.25rem + 2.1vw, 2.75rem);  /* band heads  */
   --text-h2:      clamp(1.5rem, 1.2rem + 1.2vw, 2rem);
   --text-h3:      clamp(1.25rem, 1.1rem + 0.6vw, 1.5rem);
@@ -92,6 +93,12 @@
   --spacing-section:    clamp(3rem, 2rem + 4vw, 6rem);   /* between blocks  */
   --spacing-block:      clamp(1.5rem, 1rem + 2vw, 3rem); /* within a block  */
   --spacing-gutter:     clamp(1rem, 0.5rem + 2vw, 2rem); /* page edge       */
+
+  /* Height of the overlaying site header. SiteHeader sets its bar to exactly
+     this, and pageHeader pads its title down by exactly this, so the title is
+     positioned from below the header instead of from the top of the image.
+     Both read the same value, so the two cannot drift apart. */
+  --spacing-header:     clamp(5rem, 3.5rem + 6vw, 8.25rem);
   --spacing-measure:    68ch;                            /* max prose width */
   --spacing-container:  1200px;
 

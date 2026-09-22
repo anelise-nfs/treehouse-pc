@@ -1,4 +1,6 @@
 import type { Block } from '@/types/content';
+import { Hero } from './Hero';
+import { PageHeader } from './PageHeader';
 
 /**
  * Maps content blocks to components.
@@ -25,9 +27,9 @@ export interface BlockRendererProps {
 function BlockSwitch({ block }: { block: Block }) {
   switch (block._type) {
     case 'hero':
-      return null;
+      return <Hero {...block} />;
     case 'pageHeader':
-      return null;
+      return <PageHeader {...block} />;
     case 'sectionBand':
       return null;
     case 'richText':

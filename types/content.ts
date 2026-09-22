@@ -54,11 +54,21 @@ export type SurfaceColor = BandColor | 'linen' | 'white';
  *   outline-ocean     transparent fill, --color-action label and border
  *   outline-tangerine transparent fill, tangerine border, ink label
  *
- * Tangerine is 3.09:1 against linen and fails AA as label text, so on that
- * variant the border carries the color and the label stays ink. Do not add
- * variants, and do not introduce a color to make one work.
+ * Tangerine is 3.09:1 against linen and fails AA as label text, so on the
+ * outline variant the border carries the color and the label stays ink.
+ *
+ * solid-tangerine-ink fills with tangerine and labels in ink (5.44:1), which is
+ * the pairing --color-on-tangerine already encodes. It is the only compliant way
+ * to get the mockup's solid tangerine button; white on tangerine is 3.20:1 and
+ * fails even the large-text threshold.
+ *
+ * Do not introduce a color to make a new variant work.
  */
-export type ButtonVariant = 'solid-ocean' | 'outline-ocean' | 'outline-tangerine';
+export type ButtonVariant =
+  | 'solid-ocean'
+  | 'outline-ocean'
+  | 'outline-tangerine'
+  | 'solid-tangerine-ink';
 
 /**
  * Decorative SVG accents, named after the brand guide's element sheet.
@@ -499,6 +509,13 @@ export type BlockOfType<T extends Block['_type']> = Extract<Block, { _type: T }>
 /* ============================================================================
    Documents
    ========================================================================== */
+
+/**
+ * How large the header wordmark renders. The homepage hero carries a larger
+ * lockup than a sub-page pageHeader; derived from the page's opening block
+ * rather than authored, so it cannot get out of step with the layout.
+ */
+export type HeaderLogoSize = 'default' | 'large';
 
 export interface SeoMeta {
   /** Falls back to the page title when absent. */

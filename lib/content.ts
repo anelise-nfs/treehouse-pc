@@ -6,7 +6,14 @@
  * is deleted. Every function is already `async` so that swap does not touch a
  * single call site.
  */
-import type { FaqItem, Page, PartyPackage, PricingTier, SiteSettings } from '@/types/content';
+import type {
+  FaqItem,
+  HeaderLogoSize,
+  Page,
+  PartyPackage,
+  PricingTier,
+  SiteSettings,
+} from '@/types/content';
 
 import { faqs } from '@/content/faqs';
 import { partyPackages } from '@/content/parties';
@@ -54,6 +61,23 @@ function warnOnHeadingStructure(page: Page): void {
 /** Drives `generateStaticParams`. The homepage is excluded — it has its own route. */
 export async function getAllPageSlugs(): Promise<string[]> {
   return pages.map((page) => page.slug);
+}
+
+/**
+ * Header wordmark size per route path, for the header rendered in the root
+ * layout (which has no access to the active page).
+ *
+ * A page that opens with a hero gets the large lockup; a pageHeader gets the
+ * default. Derived from block structure rather than authored so adding a page
+ * cannot forget to set it.
+ */
+export async function getHeaderLogoSizes(): Promise<Record<string, HeaderLogoSize>> {
+  return Object.fromEntries(
+    pages.map((page) => [
+      page.slug === '' ? '/' : `/${page.slug}`,
+      page.blocks.some((block) => block._type === 'hero') ? 'large' : 'default',
+    ]),
+  );
 }
 
 export async function getSiteSettings(): Promise<SiteSettings> {

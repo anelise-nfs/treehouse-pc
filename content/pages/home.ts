@@ -50,7 +50,7 @@ export const homePage: Page = {
         label: 'reserve your membership now',
         kind: 'internal',
         href: '/early-bird',
-        variant: 'outline-tangerine',
+        variant: 'solid-tangerine-ink',
       },
     },
     {

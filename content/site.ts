@@ -7,11 +7,10 @@ export const siteSettings: SiteSettings = {
   siteName: 'Treehouse',
   tagline: 'neighborhood play cafe',
   logo: {
-    // PLACEHOLDER: stand-in wordmark pending final brand files.
     url: '/logo.svg',
-    alt: 'Treehouse — Park City, Utah',
-    width: 420,
-    height: 140,
+    alt: 'Treehouse',
+    width: 332,
+    height: 65,
   },
   // At launch the hamburger menu holds exactly these two links.
   primaryNav: [

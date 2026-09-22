@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { Betania_Patmos, Libre_Baskerville, Quicksand } from 'next/font/google';
 import { SiteHeader } from '@/components/SiteHeader';
-import { getSiteSettings } from '@/lib/content';
+import { getHeaderLogoSizes, getSiteSettings } from '@/lib/content';
 import './globals.css';
 
 /**
@@ -50,7 +50,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const settings = await getSiteSettings();
+  const [settings, logoSizes] = await Promise.all([getSiteSettings(), getHeaderLogoSizes()]);
 
   return (
     <html lang="en" className={`${script.variable} ${serif.variable} ${sans.variable}`}>
@@ -63,6 +63,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           siteName={settings.siteName}
           logo={settings.logo}
           navLinks={settings.primaryNav}
+          logoSizes={logoSizes}
         />
         {children}
       </body>
