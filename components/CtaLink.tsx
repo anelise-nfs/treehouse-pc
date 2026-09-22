@@ -5,9 +5,9 @@ import type { ButtonVariant, Link } from '@/types/content';
  * Renders an authored Link. Omitting `variant` gives an inline text link;
  * setting it gives a button.
  *
- * Every pairing below is on the approved contrast list. There is no variant
- * that puts white on a light brand color, and adding one is not a styling
- * decision — see ARCHITECTURE.md → Color rule.
+ * Every pairing below is on the approved contrast list except the temporary
+ * solid-tangerine-white. Adding a variant that puts white on a light brand color
+ * is not a styling decision — see ARCHITECTURE.md → Color rule.
  */
 const BUTTON_STYLES: Record<ButtonVariant, string> = {
   'solid-ocean': 'bg-action text-white hover:bg-action-hover',
@@ -15,11 +15,13 @@ const BUTTON_STYLES: Record<ButtonVariant, string> = {
   'outline-tangerine': 'border-2 border-tangerine text-ink',
   // Tangerine fill with an ink label: 5.44:1, the pairing --color-on-tangerine encodes.
   'solid-tangerine-ink': 'bg-tangerine text-on-tangerine',
+  // Temporary, pending the ADA sweep.
+  'solid-tangerine-white': 'bg-tangerine text-white',
 };
 
 const BUTTON_BASE =
-  'inline-flex items-center justify-center min-h-[var(--tap-target)] px-6 ' +
-  'rounded-[var(--radius-pill)] font-sans font-semibold text-[length:var(--text-ui)] ' +
+  'inline-flex items-center justify-center min-h-[var(--tap-target)] px-8 py-3 ' +
+  'rounded-[var(--radius-pill)] font-sans font-semibold text-[length:var(--text-body)] ' +
   'no-underline transition-colors';
 
 export interface CtaLinkProps {

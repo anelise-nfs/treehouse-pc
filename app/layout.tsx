@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { Betania_Patmos, Libre_Baskerville, Quicksand } from 'next/font/google';
-import { SiteHeader } from '@/components/SiteHeader';
+import { SiteShell } from '@/components/SiteShell';
 import { getHeaderLogoSizes, getSiteSettings } from '@/lib/content';
 import './globals.css';
 
@@ -59,13 +59,14 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <a href="#main" className="sr-only focus:not-sr-only">
           Skip to content
         </a>
-        <SiteHeader
+        <SiteShell
           siteName={settings.siteName}
           logo={settings.logo}
           navLinks={settings.primaryNav}
           logoSizes={logoSizes}
-        />
-        {children}
+        >
+          {children}
+        </SiteShell>
       </body>
     </html>
   );

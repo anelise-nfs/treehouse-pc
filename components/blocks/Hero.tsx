@@ -94,7 +94,10 @@ export function Hero({
       <div className="bg-surface px-[var(--spacing-gutter)] pb-[var(--spacing-section)] pt-[calc(var(--spacing-block)+3.5rem)] text-center">
         <PortableText
           blocks={subhead}
-          className="measure mx-auto font-serif text-[length:var(--text-h3)] text-ink"
+          // Not the shared 68ch `measure`, which is sized for running body copy
+          // and leaves this short subhead as one long desktop line. The px is a
+          // second gutter for phones, where the max-width never binds.
+          className="mx-auto max-w-[46ch] px-[var(--spacing-gutter)] font-serif text-[length:var(--text-h3)] text-ink"
         />
         <p className="mt-[var(--spacing-block)]">
           <CtaLink link={primaryCta} />

@@ -48,19 +48,13 @@ export type BandColor =
 export type SurfaceColor = BandColor | 'linen' | 'white';
 
 /**
- * The three button treatments, and the only ones. Measured against linen:
+ * The button treatments, and the only ones. Ratios are against linen.
  *
- *   solid-ocean       --color-action fill, white label      (6.62:1)
- *   outline-ocean     transparent fill, --color-action label and border
- *   outline-tangerine transparent fill, tangerine border, ink label
- *
- * Tangerine is 3.09:1 against linen and fails AA as label text, so on the
- * outline variant the border carries the color and the label stays ink.
- *
- * solid-tangerine-ink fills with tangerine and labels in ink (5.44:1), which is
- * the pairing --color-on-tangerine already encodes. It is the only compliant way
- * to get the mockup's solid tangerine button; white on tangerine is 3.20:1 and
- * fails even the large-text threshold.
+ *   solid-ocean            --color-action fill, white label   (6.62:1)
+ *   outline-ocean          --color-action label and border
+ *   outline-tangerine      tangerine border, ink label
+ *   solid-tangerine-ink    tangerine fill, ink label          (5.44:1)
+ *   solid-tangerine-white  temporary, pending the ADA sweep
  *
  * Do not introduce a color to make a new variant work.
  */
@@ -68,7 +62,8 @@ export type ButtonVariant =
   | 'solid-ocean'
   | 'outline-ocean'
   | 'outline-tangerine'
-  | 'solid-tangerine-ink';
+  | 'solid-tangerine-ink'
+  | 'solid-tangerine-white';
 
 /**
  * Decorative SVG accents, named after the brand guide's element sheet.

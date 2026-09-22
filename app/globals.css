@@ -70,7 +70,7 @@
 
   /* --- Type scale (fluid, 1.25 ratio, no mobile/desktop fork) ---------- */
   --text-display: clamp(2.25rem, 1.5rem + 3.2vw, 4rem);      /* hero        */
-  --text-hero:    clamp(2.25rem, 1.6rem + 3vw, 3.75rem);     /* hero overlay */
+  --text-hero:    clamp(1.125rem, 0.8rem + 1.5vw, 1.875rem); /* hero overlay */
   --text-band:    clamp(1.75rem, 1.25rem + 2.1vw, 2.75rem);  /* band heads  */
   --text-h2:      clamp(1.5rem, 1.2rem + 1.2vw, 2rem);
   --text-h3:      clamp(1.25rem, 1.1rem + 0.6vw, 1.5rem);
@@ -101,6 +101,16 @@
   --spacing-header:     clamp(5rem, 3.5rem + 6vw, 8.25rem);
   --spacing-measure:    68ch;                            /* max prose width */
   --spacing-container:  1200px;
+
+  /* Slide-out menu width above sm, and the amount the page squeezes by. Read for
+     both, so they cannot drift apart. The floor keeps labels readable on a small
+     tablet. Below sm the panel is full-width and nothing squeezes. */
+  --spacing-menu:       max(15vw, 12rem);
+
+  /* Top edge shared by the menu trigger and the first nav label: the header's
+     py-2 + the trigger's mt-2.5 + the icon's 0.875rem inset. Move any of those
+     three and this moves with them. */
+  --spacing-menu-top:   2rem;
 
   /* --- Other ------------------------------------------------------------ */
   --radius-pill: 999px;

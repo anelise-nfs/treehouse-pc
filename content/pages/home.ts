@@ -38,7 +38,7 @@ export const homePage: Page = {
         label: 'early bird pricing',
         kind: 'internal',
         href: '/early-bird',
-        variant: 'solid-ocean',
+        variant: 'solid-tangerine-white',
       },
       scriptHeadline: 'climb higher, imagine bigger, play freely',
       mobileScriptHeadline: 'climb higher, play freely',
@@ -50,7 +50,7 @@ export const homePage: Page = {
         label: 'reserve your membership now',
         kind: 'internal',
         href: '/early-bird',
-        variant: 'solid-tangerine-ink',
+        variant: 'solid-tangerine-white',
       },
     },
     {
