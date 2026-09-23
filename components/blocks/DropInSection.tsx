@@ -6,18 +6,29 @@ import { CONTENT_INSET } from '@/components/layout';
 /**
  * One price badge: a label half above a price half.
  *
- * A circle on desktop and a full-width card below 640px, per ARCHITECTURE.md →
- * Mobile. The two halves split the circle exactly, which is why the height comes
- * from `aspect-square` rather than from the content — text of different lengths
+ * A circle at every width. It stays one at phone sizes because the grid gives it
+ * a full column there — roughly 250px, comfortably above the ~208px its script
+ * label needs — so the rectangular fallback this used to drop to is no longer
+ * earning anything.
+ *
+ * The two halves split the circle exactly, which is why the height comes from
+ * `aspect-square` rather than from the content: text of different lengths
  * ('$28' against 'free with sibling') must not move the divide.
+ */
+/*
+ * Circle size on phones is set by the label's clearance, not by taste. The
+ * script face floors at 28px (ARCHITECTURE.md -> Typography roles) and the
+ * longest label measures 118px there, so it cannot be shrunk to fit. What can
+ * change is the circle: at the height the label sits, a circle is narrower than
+ * its diameter, so 176px left only 17px each side where 208px leaves 31px.
  */
 function Badge({ badge }: { badge: PriceBadge }) {
   return (
-    <div className="mx-auto w-full max-w-64 overflow-hidden rounded-[var(--radius-card)] sm:aspect-square sm:rounded-full">
+    <div className="mx-auto aspect-square w-full max-w-52 overflow-hidden rounded-full sm:max-w-64">
       {/* CONTRAST: provisional. White on the label fills fails AA at any size —
           seafoam 1.49:1, ocean 3.56:1 (large-text bar only), sunshine 1.61:1. */}
       <div
-        className={`${BAND_BG[badge.labelColor]} flex flex-col items-center justify-center px-6 py-4 text-center sm:h-1/2 sm:justify-end sm:pb-4`}
+        className={`${BAND_BG[badge.labelColor]} flex h-1/2 flex-col items-center justify-end px-4 py-4 text-center pb-4 sm:px-6`}
       >
         {/* --text-script-badge, not the subsection size: at 43px the longer
             labels run to the curve inside a 256px circle. Still at the 28px
@@ -33,7 +44,7 @@ function Badge({ badge }: { badge: PriceBadge }) {
       {/* CONTRAST: provisional. White on the price fills fails AA at any size —
           flamingo 2.34:1, lime 2.00:1, sky 1.55:1. */}
       <div
-        className={`${BAND_BG[badge.priceColor]} flex items-center justify-center px-6 py-4 text-center sm:h-1/2 sm:pt-4`}
+        className={`${BAND_BG[badge.priceColor]} flex h-1/2 items-center justify-center px-4 py-4 text-center pt-4 sm:px-6`}
       >
         <p className="text-center">
           <span className="block font-sans text-[length:var(--text-h2)] leading-[var(--leading-heading)] text-white">
@@ -70,7 +81,12 @@ export function DropInSection({
       <SectionTitleBar title={title} color={titleBandColor} align="left" />
 
       <div className={`container-page ${CONTENT_INSET} mt-[var(--spacing-block)]`}>
-        <div className="grid gap-[var(--spacing-block)] sm:grid-cols-3">
+        {/* auto-fit, not a breakpoint: the label is script, which floors at 28px
+            (ARCHITECTURE.md -> Typography roles), so a circle under ~13rem clips
+            its own text. Fixing a column count at `sm` did exactly that between
+            640 and ~1000px. This never produces a circle too small for its
+            label — 1 across on a phone, 2 on a tablet, 3 once there is room. */}
+        <div className="grid gap-[var(--spacing-block)] grid-cols-[repeat(auto-fit,minmax(13rem,1fr))]">
           {badges.map((badge) => (
             <Badge key={badge._key} badge={badge} />
           ))}

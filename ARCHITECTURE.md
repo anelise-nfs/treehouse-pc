@@ -136,7 +136,12 @@ in the design system doc. The load-bearing ones:
   reading order.
 - Decorative accents (squiggles, loops, flowers) are `display: none` below 768px, not repositioned.
   They are atmosphere, not content.
-- Price badge circles become full-width cards below 640px.
+- Price badge circles stay circles at every width. Their grid sizes itself
+  (`auto-fit` with a `13rem` floor) rather than switching column count at a
+  breakpoint, so a circle is never narrower than its script label needs. They
+  previously became full-width cards below 640px; that fallback existed because
+  a fixed 3-across count squeezed them until the label clipped, which the
+  self-sizing grid prevents.
 
 ## Block components
 

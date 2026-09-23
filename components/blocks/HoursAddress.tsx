@@ -24,7 +24,7 @@ export function HoursAddress({ location, anchorId }: HoursAddressBlock) {
 
   return (
     <section id={anchorId} className={`container-page ${CONTENT_INSET} my-[var(--spacing-section)]`}>
-      <div className="grid gap-[var(--spacing-section)] text-center sm:grid-cols-2">
+      <div className="grid gap-[var(--spacing-section)] text-center md:grid-cols-2">
         {hours && hours.length > 0 ? (
           <div>
             <h2 className="font-script text-[length:var(--text-script-sm)] leading-[var(--leading-heading)] text-ink">

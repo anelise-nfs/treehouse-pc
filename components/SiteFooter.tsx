@@ -49,7 +49,7 @@ export function SiteFooter({
   return (
     <footer className="bg-pine text-white">
       <div className="container-page py-[var(--spacing-section)]">
-        <div className="grid gap-[var(--spacing-block)] sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-[var(--spacing-block)] md:grid-cols-2 lg:grid-cols-3">
           <div>
             {logoWhite ? (
               <img
@@ -165,7 +165,7 @@ export function SiteFooter({
           ) : null}
         </div>
 
-        <div className="mt-[var(--spacing-block)] flex flex-col items-start gap-[var(--spacing-gutter)] border-t border-white/25 pt-[var(--spacing-gutter)] font-sans text-[length:var(--text-ui)] sm:flex-row sm:items-center sm:justify-between">
+        <div className="mt-[var(--spacing-block)] flex flex-col items-start gap-[var(--spacing-gutter)] border-t border-white/25 pt-[var(--spacing-gutter)] font-sans text-[length:var(--text-ui)] md:flex-row md:items-center md:justify-between">
           <p>
             © {year} {siteName} Park City
           </p>

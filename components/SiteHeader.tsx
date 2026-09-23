@@ -15,13 +15,12 @@ import type { HeaderLogoSize, Link, SanityImage } from '@/types/content';
 const LOGO_LOCALITY = 'Park City, Utah';
 
 /**
- * The two sizes only differ on desktop. On mobile `large` is the narrower of the
- * two: a phone has no room to spare beside the menu trigger, so the homepage was
- * tuned against the hero image rather than scaled off the sub-page size.
+ * The two sizes differ on desktop (400px against 288px) and match on mobile,
+ * where a phone has no room to spare beside the menu trigger.
  */
 const LOGO_WIDTHS: Record<HeaderLogoSize, string> = {
   default: 'w-52 sm:w-72',
-  large: 'w-44 sm:w-[25rem]',
+  large: 'w-52 sm:w-[25rem]',
 };
 
 export interface SiteHeaderProps {
@@ -124,10 +123,10 @@ export function SiteHeader({
           aria-controls={menuId}
           // -mr moves the bars nearer the edge without shrinking the tap target.
           // mt-2.5 plus the icon's 14px inset matches the wordmark's pt-6 above.
-          className="relative -mr-2 mt-2.5 flex size-[var(--tap-target)] shrink-0 flex-col items-center justify-center gap-[5px]"
+          className="relative -mr-2 mt-2.5 flex size-[var(--tap-target)] shrink-0 flex-col items-center justify-center gap-[4.25px] sm:gap-[5px]"
         >
           {[0, 1, 2].map((bar) => (
-            <span key={bar} aria-hidden="true" className="block h-[2px] w-6 bg-white" />
+            <span key={bar} aria-hidden="true" className="block h-[2.5px] w-6 bg-white sm:h-[2px]" />
           ))}
         </button>
       </div>

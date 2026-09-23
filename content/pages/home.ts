@@ -41,8 +41,7 @@ export const homePage: Page = {
         variant: 'solid-tangerine-white',
       },
       scriptHeadline: 'climb higher, imagine bigger, play freely',
-      mobileScriptHeadline: 'climb higher, play freely',
-      bandColor: 'ocean',
+      bandColor: 'mint',
       subhead: pt(
         "A playground for the kids. A cafe for you. Park City's one and only premium indoor play space for ages 0–12.",
       ),
@@ -50,7 +49,7 @@ export const homePage: Page = {
         label: 'reserve your membership now',
         kind: 'internal',
         href: '/early-bird',
-        variant: 'solid-tangerine-white',
+        variant: 'solid-ocean',
       },
     },
     {

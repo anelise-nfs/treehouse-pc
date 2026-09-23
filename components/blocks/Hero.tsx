@@ -75,9 +75,26 @@ export function Hero({
         {/* Straddles the image's bottom edge: half over the photo, half onto linen. */}
         <div className="absolute inset-x-0 bottom-0 flex translate-y-1/2 justify-center px-[var(--spacing-gutter)]">
           <p
-            className={`${BAND_BG[bandColor]} max-w-full rounded-[var(--radius-card)] px-[clamp(1.5rem,4vw,3rem)] py-[clamp(0.5rem,1.5vw,1rem)] text-center font-script text-[length:var(--text-band)] leading-[var(--leading-heading)] text-white`}
+            // The padding is deliberately lopsided: 0.1em is moved from the top
+            // to the bottom so the script sits slightly high in the band. Its ink
+            // is already centred to within 0.02px, but the descenders (g, p, y)
+            // read as weight below the word and make it look low. Expressed in em
+            // so it scales with --text-band instead of drifting at one size.
+            //
+            // The full headline runs at every width — no shortened mobile
+            // variant. The script face floors at 28px, where the string is 553px,
+            // so on a phone it has to wrap; the widest of its two lines
+            // ('climb higher, imagine') needs 301px, which is why the inner
+            // padding drops to 12px on phones — the band keeps the page's gutter
+            // rather than sitting closer to the screen edge than everything else.
+            // Looser leading keeps the wrap readable.
+            className={`${BAND_BG[bandColor]} max-w-full rounded-[var(--radius-card)] px-3 sm:px-[clamp(1.5rem,4vw,3rem)] pt-[calc(clamp(0.875rem,1.5vw,1rem)-0.1em)] pb-[calc(clamp(0.875rem,1.5vw,1rem)+0.1em)] text-center font-script text-[length:var(--text-band)] leading-[1.35] text-white sm:max-w-full sm:leading-[var(--leading-heading)]`}
           >
-            {/* CONTRAST: provisional here (white on ocean 3.56:1, large-display only). */}
+            {/* CONTRAST: provisional, and a fail at any size. White on mint is
+                2.15:1 — it does not even clear the 3:1 large-display bar that
+                the previous ocean band (3.56:1) scraped past. Set to mint at the
+                client's request so the review build shows their color direction
+                as drawn; resolve in the pre-launch pass. */}
             {mobileScriptHeadline ? (
               <>
                 <span className="md:hidden">{mobileScriptHeadline}</span>

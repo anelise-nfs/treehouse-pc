@@ -17,7 +17,10 @@ function money(amount: number): string {
  */
 function TierCard({ tier }: { tier: PricingTier }) {
   return (
-    <div>
+    // Rounded on the outer wrapper with overflow-hidden, so the two colored
+    // halves clip to the curve and the pair reads as one card. Same radius as
+    // the map and the hero band — every colored graphic on the page shares it.
+    <div className="overflow-hidden rounded-[var(--radius-card)]">
       {/* CONTRAST: provisional. White script on the header fill fails AA —
           lime 2.00:1, sunshine 1.61:1, tangerine 3.20:1 (large-text bar only). */}
       <p

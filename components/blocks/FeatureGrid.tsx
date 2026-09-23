@@ -1,10 +1,11 @@
 import type { FeatureGridBlock } from '@/types/content';
 import { objectPosition } from '@/components/imageFraming';
 
+/** Stacked below the standard breakpoint; see COLUMNS_FROM in components/layout. */
 const COLUMNS: Record<FeatureGridBlock['columns'], string> = {
-  2: 'sm:grid-cols-2',
-  3: 'sm:grid-cols-3',
-  4: 'sm:grid-cols-2 lg:grid-cols-4',
+  2: 'md:grid-cols-2',
+  3: 'md:grid-cols-3',
+  4: 'md:grid-cols-2 lg:grid-cols-4',
 };
 
 /**
