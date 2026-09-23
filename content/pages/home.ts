@@ -2,7 +2,7 @@ import type { Page } from '@/types/content';
 import { partyPackages } from '../parties';
 import { parkCity } from '../location';
 import { pt } from '../_portableText';
-import { earlyBirdMembership } from './_shared';
+import { foundingMembershipSection } from '../shared/foundingMembership';
 
 /**
  * Launch homepage. Copy is verbatim from to_start.png except where marked
@@ -118,7 +118,13 @@ export const homePage: Page = {
       anchorId: 'how-it-works',
       accent: 'rainbow',
     },
-    earlyBirdMembership('early-bird-membership'),
+    foundingMembershipSection('early-bird-membership', {
+      title: 'early bird gets the worm',
+      titleBandColor: 'tangerine',
+      intro: pt(
+        "Founding Members (aka early birds) are the families who believe in what we're building — and we're making it worth your while.",
+      ),
+    }),
     {
       _key: 'drop-in',
       _type: 'dropInSection',

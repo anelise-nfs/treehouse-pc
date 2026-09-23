@@ -368,18 +368,6 @@ export interface FeatureItem {
   link?: Link;
 }
 
-export interface PricingTableBlock extends BlockBase {
-  _type: 'pricingTable';
-  heading?: string;
-  intro?: PortableTextBlock[];
-  tiers: PricingTier[];
-  /** Fine print — annual billing terms, founding-member caveats. */
-  footnote?: string;
-  /** Single CTA for the table as a whole, distinct from any per-tier cta. */
-  cta?: Link;
-  backgroundColor?: SurfaceColor;
-}
-
 /**
  * The whole "early bird gets the worm" section as one block: title band, tier
  * cards, and the intro/CTA/perks column beside them.
@@ -391,8 +379,9 @@ export interface PricingTableBlock extends BlockBase {
  */
 export interface MembershipSectionBlock extends BlockBase {
   _type: 'membershipSection';
-  title: string;
-  titleBandColor: BandColor;
+  /** Omitted where a pageHeader already names the section; the bar is then skipped. */
+  title?: string;
+  titleBandColor?: BandColor;
   tiers: PricingTier[];
   /** Fine print under the last card — annual billing terms. */
   tiersFootnote?: string;
@@ -456,24 +445,6 @@ export interface PartyPackagesBlock extends BlockBase {
   backgroundColor?: SurfaceColor;
 }
 
-export interface PerksListBlock extends BlockBase {
-  _type: 'perksList';
-  heading?: string;
-  intro?: PortableTextBlock[];
-  items: PerkItem[];
-  variant: PerksVariant;
-  backgroundColor?: SurfaceColor;
-}
-
-export type PerksVariant = 'checklist' | 'numbered' | 'cards';
-
-export interface PerkItem {
-  _key: string;
-  title: string;
-  body?: string;
-  icon?: IconName;
-}
-
 /**
  * The map block. Deliberately renderer-agnostic: a flat display address and
  * optional coordinates are what every map implementation needs, so the shape
@@ -524,6 +495,7 @@ export interface FaqAccordionBlock extends BlockBase {
   backgroundColor?: SurfaceColor;
 }
 
+/** Parked for Phase 2 (Memberships, Parties): built, unused by the launch pages. */
 export interface CtaBannerBlock extends BlockBase {
   _type: 'ctaBanner';
   heading: string;
@@ -580,11 +552,9 @@ export type Block =
   | ImageTextSplitBlock
   | PhotoGalleryBlock
   | FeatureGridBlock
-  | PricingTableBlock
   | MembershipSectionBlock
   | DropInSectionBlock
   | PartyPackagesBlock
-  | PerksListBlock
   | LocationBlock
   | HoursAddressBlock
   | FaqAccordionBlock

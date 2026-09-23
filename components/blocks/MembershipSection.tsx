@@ -79,10 +79,12 @@ export function MembershipSection({
 }: MembershipSectionBlock) {
   return (
     <section id={anchorId} className="my-[var(--spacing-section)]">
-      <SectionTitleBar title={title} color={titleBandColor} align="right" />
+      {title ? (
+        <SectionTitleBar title={title} color={titleBandColor ?? 'tangerine'} align="right" />
+      ) : null}
 
       <div
-        className={`container-page ${CONTENT_INSET} mt-[var(--spacing-block)] grid items-start gap-[var(--spacing-block)] md:grid-cols-[1fr_2fr]`}
+        className={`container-page ${CONTENT_INSET} ${title ? 'mt-[var(--spacing-block)]' : ''} grid items-start gap-[var(--spacing-block)] md:grid-cols-[1fr_2fr]`}
       >
         <div className="flex flex-col gap-[var(--spacing-block)]">
           {tiers.map((tier) => (

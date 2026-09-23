@@ -8,6 +8,7 @@ import { MembershipSection } from './MembershipSection';
 import { LocationMap } from './LocationMap';
 import { PageHeader } from './PageHeader';
 import { PartyPackages } from './PartyPackages';
+import { PhotoGallery } from './PhotoGallery';
 import { RichText } from './RichText';
 import { SectionBand } from './SectionBand';
 
@@ -46,25 +47,22 @@ function BlockSwitch({ block }: { block: Block }) {
     case 'imageTextSplit':
       return <ImageTextSplit {...block} />;
     case 'photoGallery':
-      return null;
+      return <PhotoGallery {...block} />;
     case 'featureGrid':
       return <FeatureGrid {...block} />;
-    case 'pricingTable':
-      return null;
     case 'dropInSection':
       return <DropInSection {...block} />;
     case 'membershipSection':
       return <MembershipSection {...block} />;
     case 'partyPackages':
       return <PartyPackages {...block} />;
-    case 'perksList':
-      return null;
     case 'locationBlock':
       return <LocationMap {...block} />;
     case 'hoursAddress':
       return <HoursAddress {...block} />;
     case 'faqAccordion':
       return null;
+    // Parked for Phase 2 (Memberships, Parties): kept deliberately, not dead code.
     case 'ctaBanner':
       return null;
     case 'bookingEmbed':
