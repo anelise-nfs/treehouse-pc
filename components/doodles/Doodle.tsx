@@ -1,3 +1,4 @@
+import type { CSSProperties } from 'react';
 import type { BandColor } from '@/types/content';
 import { DOODLE_SHAPES, type DoodleName, type DoodleShape } from './shapes';
 
@@ -22,6 +23,13 @@ export interface DoodleProps {
   name: DoodleName;
   /** Defaults to the colour the doodle was drawn in. */
   color?: BandColor;
+  /**
+   * Opt into the settle-in entrance. Only decoration-layer doodles want it — the
+   * button hover mark has its own fade and would fight this one.
+   */
+  enter?: boolean;
+  /** Per-doodle entrance variation, as CSS custom properties. */
+  style?: CSSProperties;
   className?: string;
 }
 
@@ -35,7 +43,7 @@ export interface DoodleProps {
  * `fill="currentColor"` is what makes the token colour apply — the source SVGs
  * carry their own fills, which the generator strips.
  */
-export function Doodle({ name, color, className = '' }: DoodleProps) {
+export function Doodle({ name, color, enter, style, className = '' }: DoodleProps) {
   // Widened from the `as const` literal: only one doodle has circles, and the
   // narrowed type would hide that field on every other entry.
   const shape: DoodleShape = DOODLE_SHAPES[name];
@@ -46,6 +54,8 @@ export function Doodle({ name, color, className = '' }: DoodleProps) {
       aria-hidden="true"
       focusable="false"
       role="presentation"
+      data-doodle-enter={enter ? '' : undefined}
+      style={style}
       viewBox={shape.viewBox}
       fill="currentColor"
       className={`${tone} ${className}`}

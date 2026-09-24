@@ -35,6 +35,7 @@ export function LocationMap({ location, decorations, anchorId }: LocationBlock) 
   return (
     <section
       id={anchorId}
+      data-reveal
       className={`container-page ${CONTENT_INSET} relative my-[var(--spacing-section)]`}
     >
       <DecorationLayer decorations={decorations} />
@@ -47,6 +48,7 @@ export function LocationMap({ location, decorations, anchorId }: LocationBlock) 
         {/* label is rendered verbatim; address drives the link, not the display. */}
         <MapVisual label={location.label} />
       </a>
+
     </section>
   );
 }
@@ -77,6 +79,16 @@ function MapVisual({ label }: { label: string }) {
 
       <p className="font-sans text-[length:var(--text-ui)] text-ink-soft underline">
         View on Google Maps
+      </p>
+
+      {/* aria-hidden: the whole card is one link, so this would otherwise be read
+          out as part of its accessible name. It is review scaffolding rather than
+          content — remove it along with this placeholder when the real map lands. */}
+      <p
+        aria-hidden="true"
+        className="font-sans text-[length:var(--text-caption)] text-ink-soft"
+      >
+        placeholder — interactive map to be placed in this block
       </p>
     </div>
   );

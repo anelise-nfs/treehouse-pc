@@ -1,3 +1,4 @@
+import type { CSSProperties } from 'react';
 import type { Decoration, DoodleSlot } from '@/types/content';
 import { Doodle } from './Doodle';
 
@@ -34,6 +35,26 @@ const SLOT_BLEED: Partial<Record<DoodleSlot, string>> = {
   'bottom-left': '-bottom-8 left-2',
   'bottom-right': '-bottom-8 right-2',
 };
+
+/**
+ * Stable pseudo-random from the doodle's own identity.
+ *
+ * Deterministic on purpose: a value drawn at render time would differ between
+ * server and client and would change on every re-render. This gives each
+ * placement a fixed tilt and delay that survive both.
+ */
+function variation(seed: string) {
+  let hash = 2166136261;
+  for (let i = 0; i < seed.length; i += 1) {
+    hash ^= seed.charCodeAt(i);
+    hash = Math.imul(hash, 16777619);
+  }
+  const positive = Math.abs(hash);
+  // ±18–38 degrees, and up to 200ms of stagger.
+  const magnitude = 18 + (positive % 21);
+  const tilt = positive % 2 === 0 ? magnitude : -magnitude;
+  return { tilt, delay: (positive >> 3) % 200 };
+}
 
 export interface DecorationLayerProps {
   decorations?: Decoration[];
@@ -81,6 +102,12 @@ export function DecorationLayer({ decorations }: DecorationLayerProps) {
           key={`${decoration.doodle}-${decoration.slot}-${index}`}
           name={decoration.doodle}
           color={decoration.color}
+          enter
+
+          style={(() => {
+            const { tilt, delay } = variation(`${decoration.doodle}-${decoration.slot}-${index}`);
+            return { '--doodle-tilt': `${tilt}deg`, '--doodle-delay': `${delay}ms` } as CSSProperties;
+          })()}
           className={`absolute ${
             (decoration.bleed ? SLOT_BLEED[decoration.slot] : undefined) ?? SLOT[decoration.slot]
           } ${

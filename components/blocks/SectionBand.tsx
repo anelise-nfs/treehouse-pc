@@ -51,10 +51,13 @@ export function SectionBand({
   return (
     <section
       id={anchorId}
-      className={`${BAND_BG[color]} relative my-[var(--spacing-section)] ${
+      className={`relative my-[var(--spacing-section)] ${
         isPrimary ? 'py-[var(--spacing-block)]' : 'py-[var(--spacing-gutter)]'
       }`}
     >
+      {/* The colour is its own layer rather than the section's background, so it
+          can wipe in on scroll while the heading above it stays still. */}
+      <div aria-hidden="true" data-wipe className={`absolute inset-0 ${BAND_BG[color]}`} />
       <DecorationLayer decorations={decorations} />
       <div className="relative z-10 container-page text-center">
         {eyebrow ? (

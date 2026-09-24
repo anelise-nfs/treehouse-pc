@@ -21,7 +21,8 @@ const COLUMNS: Record<FeatureGridBlock['columns'], string> = {
  */
 export function FeatureGrid({ heading, subheading, items, columns, decorations, anchorId }: FeatureGridBlock) {
   return (
-    <section id={anchorId} className="container-page relative my-[var(--spacing-section)]">
+    <section id={anchorId} data-reveal
+      className="container-page relative my-[var(--spacing-section)]">
       <DecorationLayer decorations={decorations} />
       {/* Ink on linen throughout this block, 16.78:1 for the script and 8.58:1
           for the muted captions. Both clear AA. */}

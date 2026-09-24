@@ -159,6 +159,75 @@
   img, svg, video { max-width: 100%; height: auto; display: block; }
 }
 
+/* ============================================================================
+   Scroll motion
+
+   Every rule here is scoped to .js-motion, which components/ScrollEffects.tsx
+   adds to <html> on mount. Without JavaScript the class never appears and the
+   page renders in its final state — content is never hidden by CSS alone.
+
+   All three effects use opacity, transform and clip only, so none of them can
+   move layout or change the document's size.
+   ========================================================================== */
+
+.js-motion [data-reveal] {
+  opacity: 0;
+  translate: 0 14px;
+  transition: opacity 600ms ease-out, translate 600ms ease-out;
+}
+
+.js-motion [data-reveal][data-shown='true'] {
+  opacity: 1;
+  translate: none;
+}
+
+/* The fill wipes in from its leading edge while the heading above it stays put,
+   so the band assembles rather than flying across the page. */
+.js-motion [data-wipe] {
+  clip-path: inset(0 100% 0 0);
+  transition: clip-path 700ms cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.js-motion [data-wipe][data-wipe-from='right'] {
+  clip-path: inset(0 0 0 100%);
+}
+
+.js-motion [data-wipe][data-shown='true'],
+.js-motion [data-wipe][data-wipe-from='right'][data-shown='true'] {
+  clip-path: inset(0);
+}
+
+/* A doodle settles into place as it comes into view — a slight overshoot on
+   scale and rotation, as if it had just been drawn there. The tilt and delay
+   vary per doodle so a block's marks do not land in unison; both come from a
+   hash of the doodle's own identity, so they are stable across renders.
+
+   `scale` and `rotate` are standalone properties, so they compose with the
+   `translate` the slot classes use for centring rather than fighting it. */
+.js-motion [data-doodle-enter] {
+  opacity: 0;
+  scale: 0.5;
+  rotate: var(--doodle-tilt, 18deg);
+  /* `transform` is free here — the slot classes position with `translate` — so
+     the drop composes with their centring instead of replacing it. A longer
+     travel covers more ground, which is what makes the motion catchable in
+     peripheral vision: these are small marks sitting out in the margins. */
+  transform: translateY(30px);
+  transition:
+    opacity 420ms ease-out,
+    scale 900ms cubic-bezier(0.34, 1.8, 0.58, 1),
+    rotate 900ms cubic-bezier(0.34, 1.8, 0.58, 1),
+    transform 900ms cubic-bezier(0.34, 1.8, 0.58, 1);
+  transition-delay: var(--doodle-delay, 0ms);
+}
+
+.js-motion [data-doodle-enter][data-shown='true'] {
+  opacity: 1;
+  scale: 1;
+  rotate: 0deg;
+  transform: none;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;

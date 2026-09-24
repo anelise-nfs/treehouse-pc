@@ -37,6 +37,7 @@ export function PhotoGallery({
   return (
     <section
       id={anchorId}
+      data-reveal
       className={`container-page ${CONTENT_INSET} relative my-[var(--spacing-section)]`}
     >
       <DecorationLayer decorations={decorations} />

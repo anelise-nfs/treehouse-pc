@@ -50,6 +50,7 @@ export function ImageTextSplit({
   return (
     <section
       id={anchorId}
+      data-reveal
       className="container-page relative grid items-center gap-[var(--spacing-block)] my-[var(--spacing-section)] md:grid-cols-2"
     >
       <DecorationLayer decorations={decorations} />

@@ -25,7 +25,8 @@ export function RichText({
   const centered = align === 'center';
 
   return (
-    <section id={anchorId} className="container-page relative my-[var(--spacing-section)]">
+    <section id={anchorId} data-reveal
+      className="container-page relative my-[var(--spacing-section)]">
       <DecorationLayer decorations={decorations} />
       <div
         className={`${width === 'measure' ? 'measure' : ''} ${

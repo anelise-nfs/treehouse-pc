@@ -22,7 +22,8 @@ export function PartyPackages({
   const columns = packages.length >= 3 ? 'md:grid-cols-3' : 'md:grid-cols-2';
 
   return (
-    <section id={anchorId} className="container-page relative my-[var(--spacing-section)]">
+    <section id={anchorId} data-reveal
+      className="container-page relative my-[var(--spacing-section)]">
       <DecorationLayer decorations={decorations} />
       {heading ? (
         <h2 className="text-center font-script text-[length:var(--text-script-sm)] leading-[var(--leading-heading)] text-ink">

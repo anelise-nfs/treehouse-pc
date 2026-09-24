@@ -79,7 +79,8 @@ export function DropInSection({
   anchorId,
 }: DropInSectionBlock) {
   return (
-    <section id={anchorId} className="relative my-[var(--spacing-section)]">
+    <section id={anchorId} data-reveal
+      className="relative my-[var(--spacing-section)]">
       <DecorationLayer decorations={decorations} />
       <SectionTitleBar title={title} color={titleBandColor} align="left" />
 

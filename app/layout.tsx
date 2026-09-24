@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { Betania_Patmos, Libre_Baskerville, Quicksand } from 'next/font/google';
+import { ScrollEffects } from '@/components/ScrollEffects';
 import { SiteFooter } from '@/components/SiteFooter';
 import { SiteShell } from '@/components/SiteShell';
 import { getHeaderLogoSizes, getSiteSettings } from '@/lib/content';
@@ -56,6 +57,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html lang="en" className={`${script.variable} ${serif.variable} ${sans.variable}`}>
       <body>
+        <ScrollEffects />
         {/* The header overlays the hero, so keyboard users need a way past it. */}
         <a href="#main" className="sr-only focus:not-sr-only">
           Skip to content

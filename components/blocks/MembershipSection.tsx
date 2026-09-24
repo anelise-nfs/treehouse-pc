@@ -80,7 +80,8 @@ export function MembershipSection({
   anchorId,
 }: MembershipSectionBlock) {
   return (
-    <section id={anchorId} className="relative my-[var(--spacing-section)]">
+    <section id={anchorId} data-reveal
+      className="relative my-[var(--spacing-section)]">
       <DecorationLayer decorations={decorations} />
       {title ? (
         <SectionTitleBar title={title} color={titleBandColor ?? 'tangerine'} align="right" />
