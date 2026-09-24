@@ -89,21 +89,21 @@ export interface DecorationLayerProps {
 export function DecorationLayer({ decorations }: DecorationLayerProps) {
   if (!decorations || decorations.length === 0) return null;
 
-  // Clipping is the default guarantee. A layer only opens up when something in
-  // it is meant to hang outside, and even then every horizontal offset stays
-  // non-negative, so the document cannot get wider.
-  const bleeds = decorations.some((decoration) => decoration.bleed);
-
   return (
     <div
       aria-hidden="true"
       // Inset horizontally by the page gutter rather than filling the block:
       // doodles then stop at the same edge the page's content respects, instead
-      // of running right up against the viewport. Vertical stays flush so a
-      // `bleed` doodle can still hang past the top or bottom.
-      className={`pointer-events-none absolute inset-y-0 left-[var(--spacing-gutter)] right-[var(--spacing-gutter)] z-0 hidden select-none md:block ${
-        bleeds ? '' : 'overflow-hidden'
-      }`}
+      // of running right up against the viewport.
+      //
+      // The clip-path is horizontal-only — sides at the layer's edge, top and
+      // bottom pushed far outside it. That keeps the guarantee that matters (a
+      // doodle can never widen the document and raise a horizontal scrollbar)
+      // while letting one taller than its block hang past it. `overflow-hidden`
+      // cannot express this: setting one axis to hidden forces the other to
+      // scroll, and it was slicing the flat bottom off any tall doodle in a
+      // short block.
+      className="pointer-events-none absolute inset-y-0 left-[var(--spacing-gutter)] right-[var(--spacing-gutter)] z-0 hidden select-none [clip-path:inset(-100vh_0_-100vh_0)] md:block"
     >
       {decorations.map((decoration, index) => (
         <Doodle
