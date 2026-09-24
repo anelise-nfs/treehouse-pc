@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
+import { usePathname } from 'next/navigation';
 
 /**
  * The page's scroll motion, in one place.
@@ -26,6 +27,13 @@ import { useEffect } from 'react';
  *    overwriting it.
  */
 export function ScrollEffects() {
+  // Re-runs on every route change. This component lives in the root layout,
+  // which the App Router keeps mounted across client-side navigation — so
+  // without this dependency the effect would run once, on the first page only.
+  // The next page's content would then be hidden by `.js-motion` with nothing
+  // observing it, and would stay invisible until a hard refresh.
+  const pathname = usePathname();
+
   useEffect(() => {
     // Respect the OS setting by doing nothing at all: no hidden states, no
     // observers, no scroll handler. Everything stays in its final position.
@@ -83,7 +91,7 @@ export function ScrollEffects() {
       for (const observer of observers) observer.disconnect();
       root.classList.remove('js-motion');
     };
-  }, []);
+  }, [pathname]);
 
   return null;
 }
