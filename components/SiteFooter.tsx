@@ -10,8 +10,19 @@ function telHref(phone: string): string {
   return `tel:+${digits.length === 10 ? `1${digits}` : digits}`;
 }
 
-/** Shared row styling: every footer link clears the 44px target. */
-const LINK = 'inline-flex min-h-[var(--tap-target)] items-center text-white no-underline';
+/**
+ * Shared row styling for the footer's dense link lists.
+ *
+ * 24px rows: WCAG 2.2's 2.5.8 Target Size (Minimum) at AA. The 44px used for
+ * primary controls is 2.5.5 at AAA, plus platform guidance — not an AA floor.
+ * Each row is its own target at full label width, so it satisfies the criterion
+ * outright rather than relying on the spacing exception. This is the minimum:
+ * anything tighter drops below AA.
+ *
+ * leading-6 matches the min-height. Without it the inherited body leading (1.65)
+ * sets the line box taller than the target and the rows come out at 28px.
+ */
+const LINK = 'inline-flex min-h-6 items-center leading-6 text-white no-underline';
 
 export interface SiteFooterProps {
   siteName: string;
@@ -48,8 +59,8 @@ export function SiteFooter({
 
   return (
     <footer className="bg-pine text-white">
-      <div className="container-page py-[var(--spacing-section)]">
-        <div className="grid gap-[var(--spacing-block)] md:grid-cols-2 lg:grid-cols-3">
+      <div className="container-page py-[var(--spacing-block)] md:pb-[var(--spacing-block)] md:pt-[var(--spacing-section)]">
+        <div className="grid gap-[var(--spacing-gutter)] md:gap-[var(--spacing-block)] md:grid-cols-2 lg:grid-cols-3">
           <div>
             {logoWhite ? (
               <img
@@ -64,13 +75,13 @@ export function SiteFooter({
             )}
 
             {tagline ? (
-              <p className="mt-[var(--spacing-gutter)] font-serif text-[length:var(--text-body)]">
+              <p className="mt-2 font-serif text-[length:var(--text-ui)] leading-[1.4]">
                 {tagline}
               </p>
             ) : null}
 
             {address ? (
-              <p className="mt-[var(--spacing-gutter)] font-sans text-[length:var(--text-ui)]">
+              <p className="mt-2 font-sans text-[length:var(--text-caption)] leading-[1.45]">
                 {address.street}
                 <span className="block">
                   {address.city}, {address.region} {address.postalCode}
@@ -84,7 +95,7 @@ export function SiteFooter({
               <h2 className="font-script text-[length:var(--text-script-badge)] leading-[var(--leading-heading)]">
                 explore
               </h2>
-              <ul className="mt-[var(--spacing-gutter)] flex flex-col">
+              <ul className="mt-3 flex flex-col">
                 {footerNav.map((item) => (
                   <li key={`${item.label}-${item.href}`}>
                     <FooterLink link={item} />
@@ -99,7 +110,7 @@ export function SiteFooter({
               say hello
             </h2>
 
-            <ul className="mt-[var(--spacing-gutter)] flex flex-col">
+            <ul className="mt-3 flex flex-col">
               {location?.email ? (
                 <li>
                   <a href={`mailto:${location.email}`} className={LINK}>
@@ -117,7 +128,7 @@ export function SiteFooter({
             </ul>
 
             {hours && hours.length > 0 ? (
-              <div className="mt-[var(--spacing-gutter)] font-sans text-[length:var(--text-ui)]">
+              <div className="mt-2 font-sans text-[length:var(--text-caption)] leading-[1.45]">
                 {hours.map((entry) => (
                   <p key={entry._key}>
                     {entry.days}
@@ -128,7 +139,7 @@ export function SiteFooter({
             ) : null}
 
             {location?.email ? (
-              <p className="mt-[var(--spacing-gutter)] font-sans text-[length:var(--text-ui)]">
+              <p className="mt-[var(--spacing-gutter)] font-sans text-[length:var(--text-caption)] leading-[1.45]">
                 Interested in partnering or franchising?{' '}
                 <a
                   href={`mailto:${location.email}?subject=${encodeURIComponent(
@@ -165,7 +176,7 @@ export function SiteFooter({
           ) : null}
         </div>
 
-        <div className="mt-[var(--spacing-block)] flex flex-col items-start gap-[var(--spacing-gutter)] border-t border-white/25 pt-[var(--spacing-gutter)] font-sans text-[length:var(--text-ui)] md:flex-row md:items-center md:justify-between">
+        <div className="mt-[var(--spacing-gutter)] flex flex-wrap items-center justify-between gap-x-[var(--spacing-gutter)] border-t border-white/25 pt-2 font-sans text-[length:var(--text-caption)]">
           <p>
             © {year} {siteName} Park City
           </p>

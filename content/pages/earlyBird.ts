@@ -26,7 +26,7 @@ export const earlyBirdPage: Page = {
     {
       _key: 'page-header',
       _type: 'pageHeader',
-      title: 'Early Birds',
+      title: 'hey, early bird!',
       height: 'small',
       image: {
         // PLACEHOLDER: final photography pending.
@@ -38,12 +38,14 @@ export const earlyBirdPage: Page = {
       _key: 'intro',
       _type: 'richText',
       align: 'center',
+      decorations: [{ doodle: 'rainbow', slot: 'top-left', color: 'flamingo' }],
       content: pt(
         "We're selling a limited number of founding membership spots and they will go fast!",
       ),
     },
     foundingMembershipSection('founding-membership', {
       // No title band: the pageHeader above already names this page.
+      decorations: [{ doodle: 'vertscribble', slot: 'top-right', color: 'sunshine' }],
       intro: pt(
         "Be a part of Treehouse from the very beginning! Founding Members are the families who believe in what we're building — and we're making it worth your while.",
         'Join before we open and lock in founding rates for three full years.',
@@ -53,6 +55,7 @@ export const earlyBirdPage: Page = {
       _key: 'render',
       _type: 'photoGallery',
       layout: 'single',
+      decorations: [{ doodle: '3stars', slot: 'top-right', color: 'mint' }],
       images: [
         {
           // The client's floor-plan render. Not photography; to be replaced after opening.

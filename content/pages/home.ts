@@ -28,6 +28,12 @@ export const homePage: Page = {
     {
       _key: 'hero',
       _type: 'hero',
+      // Review-build placements, inferred from the client's mockup. Decoration
+      // only: adjusting or deleting any of these changes nothing but atmosphere.
+      decorations: [
+        { doodle: 'squiggleup', slot: 'top-right', color: 'sunshine', size: 'lg' },
+        { doodle: 'vertscribble', slot: 'bottom-left', color: 'sunshine' },
+      ],
       image: {
         // PLACEHOLDER: final photography pending.
         url: '/images/hero-play-structure.jpg',
@@ -54,6 +60,7 @@ export const homePage: Page = {
     },
     {
       _key: 'built-for-play',
+      decorations: [{ doodle: '3stars', slot: 'top-right', color: 'lime', bleed: true }],
       _type: 'imageTextSplit',
       heading: 'built for play that matters',
       headingColor: 'tomato',
@@ -70,6 +77,7 @@ export const homePage: Page = {
     },
     {
       _key: 'clean-safe-designed',
+      decorations: [{ doodle: 'squiggle', slot: 'bottom-left', color: 'tangerine', size: 'lg' }],
       _type: 'imageTextSplit',
       heading: 'clean, safe and thoughtfully designed',
       headingColor: 'ocean',
@@ -86,6 +94,7 @@ export const homePage: Page = {
     },
     {
       _key: 'band-keepers',
+      decorations: [{ doodle: 'coffee', slot: 'bottom-right', color: 'mint', bleed: true }],
       _type: 'sectionBand',
       heading: 'for kids and their keepers',
       color: 'flamingo',
@@ -94,6 +103,9 @@ export const homePage: Page = {
     },
     {
       _key: 'cafe',
+      anchorId: 'cafe',
+      // Sits below the band above it, which is a separate block.
+      decorations: [{ doodle: '3stars', slot: 'top-left', color: 'seafoam', size: 'lg' }],
       _type: 'imageTextSplit',
       heading: "a cafe you'll actually love",
       headingColor: 'pine',
@@ -111,6 +123,10 @@ export const homePage: Page = {
     },
     {
       _key: 'band-how-it-works',
+      decorations: [
+        { doodle: 'rainbow', slot: 'top-left', color: 'flamingo', size: 'lg' },
+        { doodle: 'm-squig', slot: 'bottom-right', color: 'sunshine', size: 'lg', bleed: true },
+      ],
       _type: 'sectionBand',
       heading: 'how it works',
       color: 'sky',
@@ -121,6 +137,7 @@ export const homePage: Page = {
     foundingMembershipSection('early-bird-membership', {
       title: 'early bird gets the worm',
       titleBandColor: 'tangerine',
+      anchorId: 'memberships',
       intro: pt(
         "Founding Members (aka early birds) are the families who believe in what we're building — and we're making it worth your while.",
       ),
@@ -165,6 +182,9 @@ export const homePage: Page = {
     },
     {
       _key: 'band-parties',
+      decorations: [
+        { doodle: 'squiggle-diagonal', slot: 'top-right', color: 'ocean', bleed: true },
+      ],
       _type: 'sectionBand',
       heading: 'party with us',
       color: 'sunshine',
@@ -173,6 +193,7 @@ export const homePage: Page = {
     },
     {
       _key: 'party-intro',
+      decorations: [{ doodle: 'butterfly', slot: 'left', color: 'flamingo' }],
       _type: 'richText',
       align: 'center',
       content: pt(
@@ -196,6 +217,7 @@ export const homePage: Page = {
     },
     {
       _key: 'pick-your-room',
+      decorations: [{ doodle: 'vertsquiggle', slot: 'top-right', color: 'ocean', size: 'sm' }],
       _type: 'featureGrid',
       heading: 'pick your room',
       subheading: 'three private rooms sized to fit your crew',
@@ -244,6 +266,7 @@ export const homePage: Page = {
     },
     {
       _key: 'location-map',
+      decorations: [{ doodle: 'spiral', slot: 'top-right', color: 'sunshine' }],
       _type: 'locationBlock',
       location: {
         label: 'Treehouse Park City',

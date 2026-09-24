@@ -11,6 +11,7 @@
  */
 import type {
   BandColor,
+  Decoration,
   Link,
   MembershipPerk,
   MembershipSectionBlock,
@@ -61,11 +62,15 @@ export interface FoundingMembershipOptions {
   titleBandColor?: BandColor;
   /** Page-specific: the copy differs between the two pages. */
   intro: PortableTextBlock[];
+  /** Page-specific decoration; the homepage carries doodles, /early-bird does not. */
+  decorations?: Decoration[];
+  /** In-page anchor target, so the footer can link to this section. */
+  anchorId?: string;
 }
 
 export function foundingMembershipSection(
   key: string,
-  { title, titleBandColor, intro }: FoundingMembershipOptions,
+  { title, titleBandColor, intro, decorations, anchorId }: FoundingMembershipOptions,
 ): MembershipSectionBlock {
   return {
     _key: key,
@@ -77,5 +82,7 @@ export function foundingMembershipSection(
     cta: beAnEarlyBird,
     perksTitle: foundingPerksTitle,
     perks: foundingPerks,
+    ...(decorations ? { decorations } : {}),
+    ...(anchorId ? { anchorId } : {}),
   };
 }

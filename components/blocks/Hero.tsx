@@ -1,6 +1,7 @@
 import type { BandColor, HeroBlock } from '@/types/content';
 import { CtaLink } from '@/components/CtaLink';
 import { PortableText } from '@/components/PortableText';
+import { DecorationLayer } from '@/components/doodles/DecorationLayer';
 
 const BAND_BG: Record<BandColor, string> = {
   pine: 'bg-pine',
@@ -35,10 +36,12 @@ export function Hero({
   bandColor,
   subhead,
   primaryCta,
+  decorations,
   anchorId,
 }: HeroBlock) {
   return (
     <section id={anchorId} className="relative overflow-hidden">
+      <DecorationLayer decorations={decorations} />
       {/* bg-ink-soft keeps white overlay text legible before the image paints. */}
       <div className="relative h-[70vh] min-h-[420px] bg-ink-soft md:h-[90vh]">
         <img

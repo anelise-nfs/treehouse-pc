@@ -1,8 +1,17 @@
 import type { PageHeaderBlock, PageHeaderHeight } from '@/types/content';
 
+/**
+ * Sized so the photograph reads as a header image rather than a strip. `small`
+ * lands around half the homepage hero's height; `medium` keeps the same
+ * relationship to it that it always had.
+ *
+ * The old values also put the title on top of the site header overlaying it —
+ * at 390px the h1 started 18px above the header's bottom edge, because the bar
+ * grew past --spacing-header when the wordmark was enlarged.
+ */
 const HEIGHTS: Record<PageHeaderHeight, string> = {
-  small: 'h-[clamp(140px,18vw,200px)]',
-  medium: 'h-[clamp(220px,30vw,380px)]',
+  small: 'h-[clamp(280px,32vw,440px)]',
+  medium: 'h-[clamp(420px,50vw,660px)]',
 };
 
 /**
@@ -36,14 +45,14 @@ export function PageHeader({ title, image, height, anchorId }: PageHeaderBlock) 
 
       <div
         aria-hidden="true"
-        className="absolute inset-0 bg-[linear-gradient(to_top,rgba(0,0,0,0.55),transparent_70%)]"
+        className="absolute inset-0 bg-[linear-gradient(to_top,rgba(0,0,0,0.68),transparent_72%)]"
       />
 
       {/* Padded down by the full header height so the title is placed relative to
           the bottom of the site header rather than the top of the image. At the
           small height's 140px floor this is what keeps the title off the logo. */}
       <div className="absolute inset-0 flex items-center justify-center px-[var(--spacing-gutter)] pb-[clamp(0.5rem,2vw,1.5rem)] pt-[var(--spacing-header)]">
-        <h1 className="text-center font-sans text-[length:var(--text-h2)] font-semibold text-white [text-shadow:0_1px_3px_rgba(0,0,0,0.4)]">
+        <h1 className="text-center font-sans text-[length:var(--text-display)] font-semibold leading-[var(--leading-display)] text-white [text-shadow:0_1px_3px_rgba(0,0,0,0.4)]">
           {title}
         </h1>
       </div>

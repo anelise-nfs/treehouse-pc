@@ -1,5 +1,7 @@
 import type { PhotoGalleryBlock } from '@/types/content';
 import { objectPosition } from '@/components/imageFraming';
+import { CONTENT_INSET } from '@/components/layout';
+import { DecorationLayer } from '@/components/doodles/DecorationLayer';
 
 /** Stacked below the standard breakpoint; see COLUMNS_FROM in components/layout. */
 const GRID: Record<Exclude<PhotoGalleryBlock['layout'], 'single'>, string> = {
@@ -11,18 +13,33 @@ const GRID: Record<Exclude<PhotoGalleryBlock['layout'], 'single'>, string> = {
 /**
  * Authored photography.
  *
+ * Held to the same inset as the membership and location sections, so a
+ * full-width render lines up with the rest of the page rather than running
+ * closer to the viewport edge than anything around it.
+ *
  * 'single' is one image at its own proportions — it is a standalone render,
  * and cropping it to a fixed ratio like ImageTextSplit does would cut the
  * floor plan it exists to show. Every other layout crops to a shared 4:3 so a
  * row of mismatched sources still lines up.
  */
-export function PhotoGallery({ images, layout, heading, caption, anchorId }: PhotoGalleryBlock) {
+export function PhotoGallery({
+  images,
+  layout,
+  heading,
+  caption,
+  decorations,
+  anchorId,
+}: PhotoGalleryBlock) {
   if (images.length === 0) return null;
 
   const single = layout === 'single';
 
   return (
-    <section id={anchorId} className="container-page my-[var(--spacing-section)]">
+    <section
+      id={anchorId}
+      className={`container-page ${CONTENT_INSET} relative my-[var(--spacing-section)]`}
+    >
+      <DecorationLayer decorations={decorations} />
       {heading ? (
         <h2 className="mb-[var(--spacing-block)] text-center font-script text-[length:var(--text-script-sm)] leading-[var(--leading-heading)] text-ink">
           {heading}

@@ -1,5 +1,6 @@
 import type { FeatureGridBlock } from '@/types/content';
 import { objectPosition } from '@/components/imageFraming';
+import { DecorationLayer } from '@/components/doodles/DecorationLayer';
 
 /** Stacked below the standard breakpoint; see COLUMNS_FROM in components/layout. */
 const COLUMNS: Record<FeatureGridBlock['columns'], string> = {
@@ -18,9 +19,10 @@ const COLUMNS: Record<FeatureGridBlock['columns'], string> = {
  * photography arrives at mismatched dimensions and letting each image set its
  * own height leaves the row visibly uneven.
  */
-export function FeatureGrid({ heading, subheading, items, columns, anchorId }: FeatureGridBlock) {
+export function FeatureGrid({ heading, subheading, items, columns, decorations, anchorId }: FeatureGridBlock) {
   return (
-    <section id={anchorId} className="container-page my-[var(--spacing-section)]">
+    <section id={anchorId} className="container-page relative my-[var(--spacing-section)]">
+      <DecorationLayer decorations={decorations} />
       {/* Ink on linen throughout this block, 16.78:1 for the script and 8.58:1
           for the muted captions. Both clear AA. */}
       <h2 className="text-center font-script text-[length:var(--text-script-sm)] leading-[var(--leading-heading)] text-ink">

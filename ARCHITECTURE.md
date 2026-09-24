@@ -121,7 +121,11 @@ Ignore the guide's numbers.
   by accident. `getPage()` warns in development when a page has anything other than one h1 source.
 - Visible `:focus-visible` styles on every interactive element. Never remove outlines without
   replacing them.
-- Minimum 44×44px touch targets.
+- Touch targets: 44×44px for primary controls — buttons, the menu trigger, CTAs.
+  Dense secondary navigation (the footer's link lists) may go to 24×24px, which
+  is WCAG 2.2's 2.5.8 Target Size (Minimum) at AA. 44px is 2.5.5 at AAA plus
+  Apple/Material platform guidance, not an AA requirement; 24px is the floor and
+  nothing should go below it.
 - Alt text on every image. Decorative elements get `alt=""` and `aria-hidden="true"`.
 - Respect `prefers-reduced-motion`.
 
@@ -153,6 +157,23 @@ Pages are composed from a fixed set of block components. The union is defined in
   client will be editing these live in Phase 2
 - Accepts variant and color props as constrained string-literal unions, never an arbitrary string
 - Lives in `/components/blocks/<BlockName>.tsx`
+- Extends `Decorated`, so it can carry doodles
+
+### Decoration
+
+Doodles are decoration, never content. They render in an `aria-hidden`,
+`pointer-events: none` layer behind the block's content, occupy no flow space,
+and are hidden below 768px. Removing any of them changes nothing but atmosphere.
+
+**Every block extends `Decorated`.** The two exceptions are `pageHeader` and the
+site footer — photographic or full-bleed chrome carrying their own fixed scrim,
+where a doodle has nothing to sit against.
+
+Placement is by named slot (`top-left`, `right`, …), never free coordinates, so
+an author cannot drop a doodle onto a paragraph. Horizontal offsets stay inside
+the block: a doodle that hangs off the side widens the document and produces a
+horizontal scrollbar. `bleed` allows vertical overhang only, for the same
+reason.
 
 The constrained unions are deliberate. In Phase 2 these become the author's only styling controls:
 no color pickers, no font or spacing controls, no raw HTML.

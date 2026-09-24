@@ -1,5 +1,6 @@
 import type { BandColor, SectionBandBlock } from '@/types/content';
 import { PortableText } from '@/components/PortableText';
+import { DecorationLayer } from '@/components/doodles/DecorationLayer';
 
 /**
  * CONTRAST: provisional across this whole map. The band label is white on every
@@ -42,6 +43,7 @@ export function SectionBand({
   body,
   color,
   level,
+  decorations,
   anchorId,
 }: SectionBandBlock) {
   const isPrimary = level === 'primary';
@@ -49,11 +51,12 @@ export function SectionBand({
   return (
     <section
       id={anchorId}
-      className={`${BAND_BG[color]} my-[var(--spacing-section)] ${
+      className={`${BAND_BG[color]} relative my-[var(--spacing-section)] ${
         isPrimary ? 'py-[var(--spacing-block)]' : 'py-[var(--spacing-gutter)]'
       }`}
     >
-      <div className="container-page text-center">
+      <DecorationLayer decorations={decorations} />
+      <div className="relative z-10 container-page text-center">
         {eyebrow ? (
           <p className="font-sans text-[length:var(--text-ui)] font-semibold text-white">
             {eyebrow}

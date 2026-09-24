@@ -25,17 +25,19 @@ export const siteSettings: SiteSettings = {
     { label: 'Early Bird', kind: 'internal', href: '/early-bird' },
   ],
   /**
-   * The footer carries the launch pages plus the Phase 2 pages that do not
-   * exist yet. The '#' entries are PLACEHOLDER and must be given real hrefs
-   * before launch, or removed.
+   * The footer carries the launch pages plus the Phase 2 pages that do not exist
+   * yet. Until they do, those four point at the matching homepage section.
+   * Path-qualified rather than bare fragments so they also work from
+   * /early-bird, where a '#cafe' alone would do nothing. Repoint them at real
+   * routes when those pages are built.
    */
   footerNav: [
     { label: 'Home', kind: 'internal', href: '/' },
     { label: 'Early Bird', kind: 'internal', href: '/early-bird' },
-    { label: 'Visit', kind: 'anchor', href: '#' },
-    { label: 'Memberships', kind: 'anchor', href: '#' },
-    { label: 'Parties', kind: 'anchor', href: '#' },
-    { label: 'Cafe', kind: 'anchor', href: '#' },
+    { label: 'Visit', kind: 'internal', href: '/#visit' },
+    { label: 'Memberships', kind: 'internal', href: '/#memberships' },
+    { label: 'Parties', kind: 'internal', href: '/#parties' },
+    { label: 'Cafe', kind: 'internal', href: '/#cafe' },
   ],
   // PLACEHOLDER: real pages pending; the pre-sale terms page lands before launch.
   legalNav: [

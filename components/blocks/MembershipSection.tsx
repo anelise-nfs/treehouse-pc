@@ -3,6 +3,7 @@ import { CtaLink } from '@/components/CtaLink';
 import { PortableText } from '@/components/PortableText';
 import { BAND_BG, SectionTitleBar } from '@/components/SectionTitleBar';
 import { CONTENT_INSET } from '@/components/layout';
+import { DecorationLayer } from '@/components/doodles/DecorationLayer';
 
 /** Whole dollars. No currency library for one symbol — see Dependency discipline. */
 function money(amount: number): string {
@@ -75,10 +76,12 @@ export function MembershipSection({
   cta,
   perksTitle,
   perks,
+  decorations,
   anchorId,
 }: MembershipSectionBlock) {
   return (
-    <section id={anchorId} className="my-[var(--spacing-section)]">
+    <section id={anchorId} className="relative my-[var(--spacing-section)]">
+      <DecorationLayer decorations={decorations} />
       {title ? (
         <SectionTitleBar title={title} color={titleBandColor ?? 'tangerine'} align="right" />
       ) : null}

@@ -69,7 +69,7 @@
   --font-sans:   var(--font-quicksand), sans-serif;
 
   /* --- Type scale (fluid, 1.25 ratio, no mobile/desktop fork) ---------- */
-  --text-display: clamp(2.25rem, 1.5rem + 3.2vw, 4rem);      /* hero        */
+  --text-display: clamp(2rem, 1.5rem + 2.6vw, 3.5rem);       /* pageHeader title */
   --text-hero:    clamp(1.375rem, 0.8rem + 1.5vw, 1.875rem); /* hero overlay */
   --text-band:    clamp(1.75rem, 1.25rem + 2.1vw, 2.75rem);  /* band heads  */
   --text-h2:      clamp(1.5rem, 1.2rem + 1.2vw, 2rem);
@@ -142,6 +142,11 @@
   }
 
   h1, h2, h3, h4 { line-height: var(--leading-heading); text-wrap: balance; }
+
+  /* The site header overlays the page, so an anchored section would scroll to
+     sit underneath it. --spacing-header alone is not enough: the real bar runs
+     taller than the token on phones. */
+  :target { scroll-margin-top: calc(var(--spacing-header) + var(--spacing-block)); }
   p { text-wrap: pretty; }
 
   /* Never remove focus styling without replacing it. */

@@ -15,6 +15,10 @@
  *   - References arrive resolved (GROQ `location->`), not as `{ _ref }`.
  */
 
+import type { DoodleName } from '@/components/doodles/shapes';
+
+export type { DoodleName };
+
 /* ============================================================================
    Primitives
    ========================================================================== */
@@ -64,6 +68,37 @@ export type ButtonVariant =
   | 'outline-tangerine'
   | 'solid-tangerine-ink'
   | 'solid-tangerine-white';
+
+/**
+ * Where a doodle may sit inside a block. Named slots, not coordinates: an author
+ * picks a corner or an edge, so a placement cannot land on top of a paragraph.
+ */
+export type DoodleSlot =
+  | 'top-left'
+  | 'top-right'
+  | 'bottom-left'
+  | 'bottom-right'
+  | 'left'
+  | 'right';
+
+/**
+ * One decorative mark on a block. Pure decoration — it carries no information,
+ * never affects layout, and is hidden from assistive tech. In Phase 2 this is
+ * what the author-facing picker writes.
+ */
+export interface Decoration {
+  doodle: DoodleName;
+  slot: DoodleSlot;
+  /** Defaults to the colour the doodle was drawn in. */
+  color?: BandColor;
+  size?: 'sm' | 'md' | 'lg';
+  /**
+   * Let this doodle hang past the block's top or bottom edge. Vertical only —
+   * horizontal bleed would widen the document and bring back a horizontal
+   * scrollbar, which decoration must never do.
+   */
+  bleed?: boolean;
+}
 
 /**
  * Decorative SVG accents, named after the brand guide's element sheet.
@@ -198,6 +233,19 @@ export interface PortableTextBlock {
    Blocks
    ========================================================================== */
 
+/**
+ * Blocks that can carry doodles. Optional everywhere — decoration is never
+ * required, and a block with none emits no layer at all.
+ *
+ * Every content block extends this. The exceptions are pageHeader and the site
+ * footer: both are photographic or full-bleed chrome with their own fixed
+ * scrim, where a doodle has nothing to sit against. A new block should extend
+ * Decorated unless it is one of those.
+ */
+interface Decorated {
+  decorations?: Decoration[];
+}
+
 interface BlockBase {
   /** Stable identity for React keys and for Phase 2 visual editing overlays. */
   _key: string;
@@ -233,7 +281,7 @@ interface BlockBase {
  * `overlayHeadline` is the page's h1 — it is the substantive statement about
  * what the business is. `scriptHeadline` is display type, not a heading.
  */
-export interface HeroBlock extends BlockBase {
+export interface HeroBlock extends BlockBase, Decorated {
   _type: 'hero';
   image: SanityImage;
   overlayHeadline: string;
@@ -260,7 +308,7 @@ export interface HeroBlock extends BlockBase {
  * is 3.56:1, which passes at 3:1 for large display type and nowhere else — so
  * `mobileHeading` is a shorter string, never a smaller one.
  */
-export interface SectionBandBlock extends BlockBase {
+export interface SectionBandBlock extends BlockBase, Decorated {
   _type: 'sectionBand';
   heading: string;
   /** Shorter script heading for narrow viewports. See ARCHITECTURE.md → Mobile. */
@@ -299,7 +347,7 @@ export interface PageHeaderBlock extends BlockBase {
 
 export type PageHeaderHeight = 'small' | 'medium';
 
-export interface RichTextBlock extends BlockBase {
+export interface RichTextBlock extends BlockBase, Decorated {
   _type: 'richText';
   heading?: string;
   content: PortableTextBlock[];
@@ -321,7 +369,7 @@ export interface RichTextBlock extends BlockBase {
  */
 export type SplitHeadingColor = 'pine' | 'ocean' | 'tomato' | 'tangerine';
 
-export interface ImageTextSplitBlock extends BlockBase {
+export interface ImageTextSplitBlock extends BlockBase, Decorated {
   _type: 'imageTextSplit';
   heading?: string;
   headingColor: SplitHeadingColor;
@@ -334,7 +382,7 @@ export interface ImageTextSplitBlock extends BlockBase {
   accent?: AccentShape;
 }
 
-export interface PhotoGalleryBlock extends BlockBase {
+export interface PhotoGalleryBlock extends BlockBase, Decorated {
   _type: 'photoGallery';
   heading?: string;
   images: SanityImage[];
@@ -349,7 +397,7 @@ export interface PhotoGalleryBlock extends BlockBase {
  */
 export type GalleryLayout = 'single' | 'grid' | 'strip' | 'featured';
 
-export interface FeatureGridBlock extends BlockBase {
+export interface FeatureGridBlock extends BlockBase, Decorated {
   _type: 'featureGrid';
   /** Required: the grid names itself rather than relying on a band above it. */
   heading: string;
@@ -377,7 +425,7 @@ export interface FeatureItem {
  * author reordering or separating them would produce something the design does
  * not account for.
  */
-export interface MembershipSectionBlock extends BlockBase {
+export interface MembershipSectionBlock extends BlockBase, Decorated {
   _type: 'membershipSection';
   /** Omitted where a pageHeader already names the section; the bar is then skipped. */
   title?: string;
@@ -406,7 +454,7 @@ export interface MembershipPerk {
  * The badges are circles that become full-width cards below 640px, per
  * ARCHITECTURE.md → Mobile.
  */
-export interface DropInSectionBlock extends BlockBase {
+export interface DropInSectionBlock extends BlockBase, Decorated {
   _type: 'dropInSection';
   title: string;
   titleBandColor: BandColor;
@@ -436,7 +484,7 @@ export interface PriceBadge {
   priceColor: BandColor;
 }
 
-export interface PartyPackagesBlock extends BlockBase {
+export interface PartyPackagesBlock extends BlockBase, Decorated {
   _type: 'partyPackages';
   heading?: string;
   intro?: PortableTextBlock[];
@@ -451,7 +499,7 @@ export interface PartyPackagesBlock extends BlockBase {
  * does not change when the placeholder becomes a Mapbox static image and later
  * an interactive map. See components/blocks/LocationMap.tsx.
  */
-export interface LocationBlock extends BlockBase {
+export interface LocationBlock extends BlockBase, Decorated {
   _type: 'locationBlock';
   location: MapLocation;
   /** Unused by the placeholder; consumed once a real map renders. */
@@ -482,12 +530,12 @@ export interface MapLocation {
  * hours and the address also appear in the footer and change often, so they
  * have exactly one home.
  */
-export interface HoursAddressBlock extends BlockBase {
+export interface HoursAddressBlock extends BlockBase, Decorated {
   _type: 'hoursAddress';
   location?: Location;
 }
 
-export interface FaqAccordionBlock extends BlockBase {
+export interface FaqAccordionBlock extends BlockBase, Decorated {
   _type: 'faqAccordion';
   heading?: string;
   intro?: PortableTextBlock[];
@@ -496,7 +544,7 @@ export interface FaqAccordionBlock extends BlockBase {
 }
 
 /** Parked for Phase 2 (Memberships, Parties): built, unused by the launch pages. */
-export interface CtaBannerBlock extends BlockBase {
+export interface CtaBannerBlock extends BlockBase, Decorated {
   _type: 'ctaBanner';
   heading: string;
   mobileHeading?: string;
@@ -517,7 +565,7 @@ export type CtaVariant = 'band' | 'card' | 'inline';
  * `fallbackLink` is not optional: embeds get blocked by tracking protection
  * often enough that a plain link out has to always be present.
  */
-export interface BookingEmbedBlock extends BlockBase {
+export interface BookingEmbedBlock extends BlockBase, Decorated {
   _type: 'bookingEmbed';
   heading?: string;
   body?: PortableTextBlock[];
@@ -531,7 +579,7 @@ export interface BookingEmbedBlock extends BlockBase {
 
 export type BookingProvider = 'placeholder' | 'roller' | 'custom';
 
-export interface DividerBlock extends BlockBase {
+export interface DividerBlock extends BlockBase, Decorated {
   _type: 'divider';
   shape: AccentShape;
   color?: BandColor;

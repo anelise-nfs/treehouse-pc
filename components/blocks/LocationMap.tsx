@@ -1,5 +1,6 @@
 import type { LocationBlock } from '@/types/content';
 import { CONTENT_INSET } from '@/components/layout';
+import { DecorationLayer } from '@/components/doodles/DecorationLayer';
 
 /**
  * Google Maps directions, built by encoding the authored address rather than
@@ -30,9 +31,13 @@ function directionsUrl(address: string): string {
  * `zoom` is intentionally unread here — the placeholder has nothing to zoom.
  * It stays in the props so the Mapbox swap needs no content change.
  */
-export function LocationMap({ location, anchorId }: LocationBlock) {
+export function LocationMap({ location, decorations, anchorId }: LocationBlock) {
   return (
-    <section id={anchorId} className={`container-page ${CONTENT_INSET} my-[var(--spacing-section)]`}>
+    <section
+      id={anchorId}
+      className={`container-page ${CONTENT_INSET} relative my-[var(--spacing-section)]`}
+    >
+      <DecorationLayer decorations={decorations} />
       <a
         href={directionsUrl(location.address)}
         target="_blank"

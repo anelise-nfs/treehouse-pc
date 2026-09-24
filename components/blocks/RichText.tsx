@@ -1,5 +1,6 @@
 import type { RichTextBlock } from '@/types/content';
 import { PortableText } from '@/components/PortableText';
+import { DecorationLayer } from '@/components/doodles/DecorationLayer';
 
 /**
  * A passage of authored copy, optionally with a smaller secondary line beneath.
@@ -18,12 +19,14 @@ export function RichText({
   subcopy,
   width = 'measure',
   align = 'left',
+  decorations,
   anchorId,
 }: RichTextBlock) {
   const centered = align === 'center';
 
   return (
-    <section id={anchorId} className="container-page my-[var(--spacing-section)]">
+    <section id={anchorId} className="container-page relative my-[var(--spacing-section)]">
+      <DecorationLayer decorations={decorations} />
       <div
         className={`${width === 'measure' ? 'measure' : ''} ${
           centered ? 'mx-auto text-center' : 'text-left'

@@ -2,6 +2,7 @@ import type { DropInSectionBlock, PriceBadge } from '@/types/content';
 import { PortableText } from '@/components/PortableText';
 import { BAND_BG, SectionTitleBar } from '@/components/SectionTitleBar';
 import { CONTENT_INSET } from '@/components/layout';
+import { DecorationLayer } from '@/components/doodles/DecorationLayer';
 
 /**
  * One price badge: a label half above a price half.
@@ -74,10 +75,12 @@ export function DropInSection({
   badges,
   body,
   footnote,
+  decorations,
   anchorId,
 }: DropInSectionBlock) {
   return (
-    <section id={anchorId} className="my-[var(--spacing-section)]">
+    <section id={anchorId} className="relative my-[var(--spacing-section)]">
+      <DecorationLayer decorations={decorations} />
       <SectionTitleBar title={title} color={titleBandColor} align="left" />
 
       <div className={`container-page ${CONTENT_INSET} mt-[var(--spacing-block)]`}>

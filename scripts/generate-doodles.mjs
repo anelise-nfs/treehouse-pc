@@ -1,0 +1,155 @@
+/**
+ * Regenerates components/doodles/shapes.ts from the SVGs in public/graphics.
+ *
+ * Run after adding or replacing a doodle:  node scripts/generate-doodles.mjs
+ *
+ * The geometry is inlined rather than loaded at runtime so the artwork inherits
+ * `currentColor` and can be recoloured from a token. Each file's own fill is
+ * stripped; its default colour is the nearest brand token to that fill, which is
+ * more reliable than the filename — `campervan.svg` carries no colour suffix at
+ * all. No dependencies: plain regex over simple, repo-owned files.
+ */
+import { readFileSync, writeFileSync, readdirSync } from 'node:fs';
+import { join, basename, extname } from 'node:path';
+
+const SRC = 'public/graphics';
+const OUT = 'components/doodles/shapes.ts';
+
+/** Brand palette, from app/globals.css. */
+const TOKENS = {
+  pine: '#416625', mint: '#6dc19c', tangerine: '#ed671d', flamingo: '#f686b3',
+  seafoam: '#b8dccb', sunshine: '#fdc32b', lime: '#a4c357', tomato: '#ef3f3d',
+  sky: '#b1d5e6', ocean: '#3c8dce',
+};
+
+/** Author-facing name and grouping. Filenames are not usable as labels. */
+const META = {
+  '3dots': ['Three dots', 'Marks'],
+  '3horizontalline': ['Three lines', 'Marks'],
+  '3plus': ['Three plus signs', 'Marks'],
+  '3stars': ['Three asterisks', 'Marks'],
+  '3x': ['Three crosses', 'Marks'],
+  dots: ['Scattered dots', 'Marks'],
+  dash: ['Dashed line', 'Marks'],
+  dashvert: ['Dashed line, vertical', 'Marks'],
+  arrows: ['Arrows', 'Marks'],
+  squiggle: ['Loopy squiggle', 'Squiggles'],
+  squiggleup: ['Rising squiggle', 'Squiggles'],
+  'squiggle-diagonal': ['Diagonal squiggle', 'Squiggles'],
+  'm-squig': ['Bumpy squiggle', 'Squiggles'],
+  vertscribble: ['Vertical scribble', 'Squiggles'],
+  vertsquiggle: ['Vertical squiggle', 'Squiggles'],
+  doublewavevert: ['Double wave, vertical', 'Squiggles'],
+  'wave-line': ['Wave', 'Squiggles'],
+  spiral: ['Spiral', 'Squiggles'],
+  lightning: ['Lightning bolt', 'Squiggles'],
+  butterfly: ['Butterfly', 'Objects'],
+  campervan: ['Camper van', 'Objects'],
+  coffee: ['Coffee cup', 'Objects'],
+  cookie: ['Cookie', 'Objects'],
+  heart: ['Heart', 'Objects'],
+  leaf: ['Leaf', 'Objects'],
+  mushroom: ['Mushroom', 'Objects'],
+  rainbow: ['Rainbow', 'Objects'],
+};
+
+const COLOUR_WORDS = new Set(['pink', 'green', 'orange', 'blue', 'yellow', 'turquoise', 'red', 'purple']);
+const rgb = (hex) => [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16));
+
+/** Nearest brand token to a fill, by RGB distance. */
+function nearestToken(hex) {
+  const [r, g, b] = rgb(hex);
+  let best = 'tangerine';
+  let bestDist = Infinity;
+  for (const [name, value] of Object.entries(TOKENS)) {
+    const [tr, tg, tb] = rgb(value);
+    const dist = (r - tr) ** 2 + (g - tg) ** 2 + (b - tb) ** 2;
+    if (dist < bestDist) { bestDist = dist; best = name; }
+  }
+  return best;
+}
+
+/** Key is the filename minus a trailing colour word, which not every file has. */
+function keyFor(file) {
+  const base = basename(file, extname(file)).trim().replace(/[\s_]+/g, '-').toLowerCase();
+  const parts = base.split('-');
+  if (parts.length > 1 && COLOUR_WORDS.has(parts.at(-1))) parts.pop();
+  return parts.join('-');
+}
+
+const shapes = new Map();
+for (const file of readdirSync(SRC).filter((f) => f.endsWith('.svg')).sort()) {
+  const src = readFileSync(join(SRC, file), 'utf8');
+  const key = keyFor(file);
+  const viewBox = src.match(/viewBox="([^"]+)"/)?.[1];
+  const paths = [...src.matchAll(/<path[^>]*\sd="([^"]+)"/g)].map((m) => m[1]);
+  const circles = [...src.matchAll(/<circle[^>]*cx="([^"]+)"[^>]*cy="([^"]+)"[^>]*r="([^"]+)"/g)]
+    .map((m) => ({ cx: m[1], cy: m[2], r: m[3] }));
+  const fill = src.match(/fill:\s*(#[0-9a-fA-F]{6})/)?.[1];
+  if (!viewBox || paths.length === 0 || !fill) throw new Error(`${file}: unexpected SVG shape`);
+
+  const existing = shapes.get(key);
+  if (existing) {
+    // Same doodle under two colour filenames: one entry, colour is a field.
+    if (JSON.stringify(existing.paths) !== JSON.stringify(paths)) {
+      throw new Error(`${key}: same name, different geometry (${file})`);
+    }
+    continue;
+  }
+  shapes.set(key, { viewBox, paths, circles, defaultColor: nearestToken(fill) });
+}
+
+const missing = [...shapes.keys()].filter((k) => !META[k]);
+if (missing.length) throw new Error(`No label for: ${missing.join(', ')}. Add to META in this script.`);
+
+const body = [...shapes.entries()].map(([key, s]) => {
+  const [label, group] = META[key];
+  return [
+    `  '${key}': {`,
+    `    viewBox: '${s.viewBox}',`,
+    '    paths: [',
+    ...s.paths.map((d) => `      '${d}',`),
+    '    ],',
+    ...(s.circles.length
+      ? ['    circles: [', ...s.circles.map((c) => `      { cx: '${c.cx}', cy: '${c.cy}', r: '${c.r}' },`), '    ],']
+      : []),
+    `    defaultColor: '${s.defaultColor}',`,
+    `    label: '${label}',`,
+    `    group: '${group}',`,
+    '  },',
+  ].join('\n');
+}).join('\n');
+
+writeFileSync(OUT, `/**
+ * Doodle geometry and author-facing metadata.
+ *
+ * GENERATED by scripts/generate-doodles.mjs from /public/graphics — do not edit
+ * by hand. Re-run after adding or replacing a doodle.
+ *
+ * Inlined rather than referenced as <img> so the artwork inherits \`currentColor\`
+ * and can be recoloured from a token. Nothing here carries meaning; see
+ * Doodle.tsx for how the layer is hidden from assistive tech.
+ *
+ * \`label\` and \`group\` exist for the Phase 2 picker: the keys below come from
+ * filenames and are not usable as author-facing names.
+ */
+export interface DoodleShape {
+  viewBox: string;
+  paths: readonly string[];
+  circles?: readonly { cx: string; cy: string; r: string }[];
+  /** Nearest brand token to the colour the artwork was drawn in. */
+  defaultColor: string;
+  /** Human name, for the CMS picker. */
+  label: string;
+  group: 'Marks' | 'Squiggles' | 'Objects';
+}
+
+export const DOODLE_SHAPES = {
+${body}
+} as const satisfies Record<string, DoodleShape>;
+
+export type DoodleName = keyof typeof DOODLE_SHAPES;
+`);
+
+console.log(`${shapes.size} doodles ->  ${OUT}`);
+for (const [k, s] of shapes) console.log(`  ${k.padEnd(20)} ${META[k][1].padEnd(10)} ${s.defaultColor}`);

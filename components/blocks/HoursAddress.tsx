@@ -1,5 +1,6 @@
 import type { HoursAddressBlock, PostalAddress } from '@/types/content';
 import { CONTENT_INSET } from '@/components/layout';
+import { DecorationLayer } from '@/components/doodles/DecorationLayer';
 
 /** 'Park City, UT 84098' — the second line of a US postal address. */
 function localityLine(address: PostalAddress): string {
@@ -17,13 +18,17 @@ function localityLine(address: PostalAddress): string {
  * Script labels are ink on linen at 16.78:1 and the lines beneath are ink-soft
  * at 8.58:1. Both clear AA.
  */
-export function HoursAddress({ location, anchorId }: HoursAddressBlock) {
+export function HoursAddress({ location, decorations, anchorId }: HoursAddressBlock) {
   if (!location) return null;
 
   const { address, hours } = location;
 
   return (
-    <section id={anchorId} className={`container-page ${CONTENT_INSET} my-[var(--spacing-section)]`}>
+    <section
+      id={anchorId}
+      className={`container-page ${CONTENT_INSET} relative my-[var(--spacing-section)]`}
+    >
+      <DecorationLayer decorations={decorations} />
       <div className="grid gap-[var(--spacing-section)] text-center md:grid-cols-2">
         {hours && hours.length > 0 ? (
           <div>

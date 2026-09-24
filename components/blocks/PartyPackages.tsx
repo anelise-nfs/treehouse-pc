@@ -1,6 +1,7 @@
 import type { PartyPackagesBlock } from '@/types/content';
 import { CtaLink } from '@/components/CtaLink';
 import { PortableText } from '@/components/PortableText';
+import { DecorationLayer } from '@/components/doodles/DecorationLayer';
 
 /**
  * Named party options side by side.
@@ -10,11 +11,19 @@ import { PortableText } from '@/components/PortableText';
  * descriptions differ in length and stretching them to match would put ragged
  * whitespace under the shorter one.
  */
-export function PartyPackages({ heading, intro, packages, link, anchorId }: PartyPackagesBlock) {
+export function PartyPackages({
+  heading,
+  intro,
+  packages,
+  link,
+  decorations,
+  anchorId,
+}: PartyPackagesBlock) {
   const columns = packages.length >= 3 ? 'md:grid-cols-3' : 'md:grid-cols-2';
 
   return (
-    <section id={anchorId} className="container-page my-[var(--spacing-section)]">
+    <section id={anchorId} className="container-page relative my-[var(--spacing-section)]">
+      <DecorationLayer decorations={decorations} />
       {heading ? (
         <h2 className="text-center font-script text-[length:var(--text-script-sm)] leading-[var(--leading-heading)] text-ink">
           {heading}
