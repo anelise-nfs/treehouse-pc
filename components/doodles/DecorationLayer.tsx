@@ -56,6 +56,16 @@ function variation(seed: string) {
   return { tilt, delay: (positive >> 3) % 200 };
 }
 
+/**
+ * Doodle widths. `md` and `lg` are double what they were; `sm` is deliberately
+ * unchanged, because the one placement using it — the squiggle beside the party
+ * room cards — is the size the others were scaled up to match.
+ *
+ * Note these size the *width*. A doodle's height follows its own aspect ratio,
+ * so a tall narrow shape reads much larger than a wide flat one at the same
+ * setting — which is why the `sm` squiggle looked bigger than the `md` marks
+ * around it.
+ */
 export interface DecorationLayerProps {
   decorations?: Decoration[];
 }
@@ -111,7 +121,7 @@ export function DecorationLayer({ decorations }: DecorationLayerProps) {
           className={`absolute ${
             (decoration.bleed ? SLOT_BLEED[decoration.slot] : undefined) ?? SLOT[decoration.slot]
           } ${
-            decoration.size === 'lg' ? 'w-28' : decoration.size === 'sm' ? 'w-12' : 'w-20'
+            decoration.size === 'lg' ? 'w-56' : decoration.size === 'sm' ? 'w-12' : 'w-40'
           }`}
         />
       ))}
