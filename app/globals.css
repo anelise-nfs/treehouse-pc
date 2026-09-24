@@ -142,11 +142,6 @@
   }
 
   h1, h2, h3, h4 { line-height: var(--leading-heading); text-wrap: balance; }
-
-  /* The site header overlays the page, so an anchored section would scroll to
-     sit underneath it. --spacing-header alone is not enough: the real bar runs
-     taller than the token on phones. */
-  :target { scroll-margin-top: calc(var(--spacing-header) + var(--spacing-block)); }
   p { text-wrap: pretty; }
 
   /* Never remove focus styling without replacing it. */

@@ -65,6 +65,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           logo={settings.logo}
           navLinks={settings.primaryNav}
           logoSizes={logoSizes}
+          logoWhite={settings.logoWhite}
         >
           {children}
           {/* Inside SiteShell, not beside it: the footer has to squeeze with the

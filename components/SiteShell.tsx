@@ -2,6 +2,7 @@
 
 import { useEffect, useId, useRef, useState } from 'react';
 import NextLink from 'next/link';
+import type { SanityImage } from '@/types/content';
 import { SiteHeader, type SiteHeaderProps } from '@/components/SiteHeader';
 
 /**
@@ -12,6 +13,8 @@ const ITEM_ACCENTS = ['bg-tangerine', 'bg-ocean', 'bg-sunshine', 'bg-flamingo', 
 
 export interface SiteShellProps extends SiteHeaderProps {
   children: React.ReactNode;
+  /** Single-colour wordmark, shown at the foot of the open menu panel. */
+  logoWhite?: SanityImage;
 }
 
 /**
@@ -22,7 +25,7 @@ export interface SiteShellProps extends SiteHeaderProps {
  * Squeeze, not slide: margin-right keeps everything on-screen, at the cost of a
  * visible re-wrap. A transform would animate better but clip the left edge.
  */
-export function SiteShell({ children, ...headerProps }: SiteShellProps) {
+export function SiteShell({ children, logoWhite, ...headerProps }: SiteShellProps) {
   const [open, setOpen] = useState(false);
   const menuId = useId();
   const triggerRef = useRef<HTMLButtonElement>(null);
@@ -93,6 +96,17 @@ export function SiteShell({ children, ...headerProps }: SiteShellProps) {
             </li>
           ))}
         </ul>
+
+        {logoWhite ? (
+          <img
+            src={logoWhite.url}
+            alt=""
+            aria-hidden="true"
+            width={logoWhite.width}
+            height={logoWhite.height}
+            className="mt-auto w-40 self-center px-[var(--spacing-gutter)] pb-[var(--spacing-section)] sm:w-full sm:max-w-[9rem]"
+          />
+        ) : null}
       </nav>
     </>
   );

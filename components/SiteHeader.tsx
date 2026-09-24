@@ -87,9 +87,14 @@ export function SiteHeader({
         {/* pl matches the hamburger icon's own inset inside its tap target, whose
             padding is invisible. pt-6 is the shared top edge — the trigger's
             mt-2.5 plus its 14px inset lands here too. Change one, change both. */}
+        {/* Hidden, not merely stacked behind: on phones the panel covers the
+            full width, so the wordmark would otherwise sit on top of it.
+            `invisible` rather than opacity so it also leaves the tab order. */}
         <NextLink
           href="/"
-          className="relative inline-block pl-[0.625rem] pt-6"
+          className={`relative inline-block pl-[0.625rem] pt-6 ${
+            open ? 'invisible sm:visible' : ''
+          }`}
           aria-label={`${siteName} — home`}
         >
           {logo ? (

@@ -22,7 +22,9 @@ function telHref(phone: string): string {
  * leading-6 matches the min-height. Without it the inherited body leading (1.65)
  * sets the line box taller than the target and the rows come out at 28px.
  */
-const LINK = 'inline-flex min-h-6 items-center leading-6 text-white no-underline';
+const LINK =
+  'inline-flex min-h-6 items-center leading-6 text-white no-underline ' +
+  'hover:underline focus-visible:underline';
 
 export interface SiteFooterProps {
   siteName: string;
