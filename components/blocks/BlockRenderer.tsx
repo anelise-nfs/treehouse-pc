@@ -67,8 +67,6 @@ function BlockSwitch({ block }: { block: Block }) {
       return null;
     case 'bookingEmbed':
       return null;
-    case 'divider':
-      return null;
     default: {
       // If this line errors, a block type was added to the union without a case.
       const unhandled: never = block;

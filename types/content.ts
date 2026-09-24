@@ -579,13 +579,6 @@ export interface BookingEmbedBlock extends BlockBase, Decorated {
 
 export type BookingProvider = 'placeholder' | 'roller' | 'custom';
 
-export interface DividerBlock extends BlockBase, Decorated {
-  _type: 'divider';
-  shape: AccentShape;
-  color?: BandColor;
-  size?: 'sm' | 'md' | 'lg';
-}
-
 /**
  * Every block a page can be composed from, discriminated on `_type`.
  *
@@ -607,8 +600,7 @@ export type Block =
   | HoursAddressBlock
   | FaqAccordionBlock
   | CtaBannerBlock
-  | BookingEmbedBlock
-  | DividerBlock;
+  | BookingEmbedBlock;
 
 /** Convenience for typing a single block component's props by `_type`. */
 export type BlockOfType<T extends Block['_type']> = Extract<Block, { _type: T }>;
