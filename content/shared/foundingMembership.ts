@@ -27,7 +27,7 @@ export const beAnEarlyBird: Link = {
 };
 
 export const foundingFootnote =
-  'Founding memberships are paid annually, up front — locking in your early bird rate and your spot.';
+  'Prices listed are monthly. Founding memberships are paid annually, up front — locking in your early bird rate and your spot.';
 
 export const foundingPerksTitle = 'early birds get:';
 

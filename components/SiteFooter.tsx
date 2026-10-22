@@ -22,9 +22,16 @@ function telHref(phone: string): string {
  * leading-6 matches the min-height. Without it the inherited body leading (1.65)
  * sets the line box taller than the target and the rows come out at 28px.
  */
+/**
+ * overflow-wrap:anywhere, not break-word: only `anywhere` reduces an element's
+ * min-content width. The email is a single unbreakable token, and under WCAG
+ * 1.4.12's letter-spacing it measured 329px against a 288px column — grid items
+ * are min-width:auto, so the column could not shrink and the page scrolled
+ * sideways at 320px. min-w-0 lets the item shrink to match.
+ */
 const LINK =
-  'inline-flex min-h-6 items-center leading-6 text-white no-underline ' +
-  'hover:underline focus-visible:underline';
+  'inline-flex min-h-6 min-w-0 items-center leading-6 text-white no-underline ' +
+  '[overflow-wrap:anywhere] hover:underline focus-visible:underline';
 
 export interface SiteFooterProps {
   siteName: string;

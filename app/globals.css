@@ -14,24 +14,78 @@
    ========================================================================== */
 
 @theme {
-  /* --- Brand palette (unchanged from client guide) --------------------- */
-  --color-mint:      #6dc19c;
-  --color-tangerine: #ed671d;
-  --color-pine:      #416625;
-  --color-flamingo:  #f686b3;
-  --color-seafoam:   #b8dccb;
-  --color-sunshine:  #fdc32b;
-  --color-lime:      #a4c357;
-  --color-tomato:    #ef3f3d;
-  --color-sky:       #b1d5e6;
-  --color-ocean:     #3c8dce;
+  /* --- Brand palette ----------------------------------------------------
+     ACCESSIBILITY REVIEW BUILD (branch: wcag-palette-test). Five colours are
+     darkened so white text on them clears WCAG's 3:1 large-text threshold, and
+     tangerine goes deeper still (4.5:1) because small white text sits on it.
+     Seafoam is deliberately NOT darkened: see its note below.
+     Hue and saturation are untouched and only lightness moved, so these read
+     as the same colours, deeper.
+
+     TO REVERT: put each `was` value back and delete this note. The client's
+     original palette is preserved inline for exactly that purpose — do not
+     remove these comments while the branch is under review.
+
+     This covers large text only: band headings and tier names. Small text on
+     these fills — price notes, badge captions, perk labels — still fails and
+     needs a design change rather than a colour change.
+     -------------------------------------------------------------------- */
+  --color-mint:      #4da17e;  /* was #6dc19c */
+  /* Option A depth (4.5:1), not Option B — the hero button puts small white
+     text on this fill, which 3:1 does not cover. White is now 4.67:1. Note
+     this inverts the fill: ink on it drops to 3.72:1, so --color-on-tangerine
+     below is white, making tangerine the second colour after pine to take
+     white text. */
+  --color-tangerine: #cc4800;  /* was #ed671d */
+  --color-pine:      #416625;  /* unchanged, clears 4.5:1 outright */
+  --color-flamingo:  #dc6e9b;  /* was #f686b3 */
+  /* Left at the client's original, deliberately. Darkening it to #77998a for
+     white text made the pairing that actually ships worse: the nav panel is the
+     only large seafoam surface and it carries ink, which reads 11.72:1 here
+     against 5.56:1 darkened. Nothing on the site puts white on seafoam. */
+  --color-seafoam:   #b8dccb;  /* original, unchanged */
+  --color-sunshine:  #bf8800;  /* was #fdc32b, the one noticeable hue shift */
+  --color-lime:      #7f9c2d;  /* was #a4c357 */
+  --color-tomato:    #ef3f3d;  /* unchanged, already clears 3:1 */
+  --color-sky:       #7597a7;  /* was #b1d5e6 */
+  --color-ocean:     #3c8dce;  /* unchanged, already clears 3:1 */
   --color-linen:     #fffaf5;
+
+  /* --- Doodle palette ---------------------------------------------------
+     The client's original brand colours, kept at full strength for the
+     decoration layer only.
+
+     Doodles carry no information and no text sits on them, so WCAG contrast
+     does not apply to them — there is no reason for them to absorb a change
+     made for text legibility. Keeping them here means the darkened palette
+     above governs anything readable, while the page keeps the original brand
+     colour at its brightest where it is purely decorative.
+
+     These are identical to the originals commented above, so if the darkened
+     palette is reverted this block becomes a duplicate and can be deleted.
+     -------------------------------------------------------------------- */
+  --color-doodle-mint:      #6dc19c;
+  --color-doodle-tangerine: #ed671d;
+  --color-doodle-pine:      #416625;
+  --color-doodle-flamingo:  #f686b3;
+  --color-doodle-seafoam:   #b8dccb;
+  --color-doodle-sunshine:  #fdc32b;
+  --color-doodle-lime:      #a4c357;
+  --color-doodle-tomato:    #ef3f3d;
+  --color-doodle-sky:       #b1d5e6;
+  --color-doodle-ocean:     #3c8dce;
 
   /* --- Semantic roles --------------------------------------------------- */
   --color-ink:        #1a1a1a;  /* body text. 16.78:1 on linen             */
   --color-ink-soft:   #4a4a46;  /* secondary text                          */
   --color-surface:    #fffaf5;  /* page background (linen)                 */
   --color-surface-alt:#ffffff;
+
+  /* Placeholder scaffolding, not brand: matches the greys baked into the
+     placeholder image SVGs so an unfinished block reads the same everywhere.
+     Retires with the last placeholder.                                     */
+  --color-placeholder:        #e4e0d8;
+  --color-placeholder-border: #c2bbac;
 
   /* Action color: ocean darkened until button-size text passes AA.
      Original #3c8dce is 3.56:1 with white — fails. This is 6.62:1.        */
@@ -46,7 +100,8 @@
      -------------------------------------------------------------------- */
   --color-on-pine:      #ffffff;
   --color-on-mint:      var(--color-ink);
-  --color-on-tangerine: var(--color-ink);
+  /* White, not ink: at Option A depth ink is 3.72:1 and fails. White is 4.67:1. */
+  --color-on-tangerine: #ffffff;
   --color-on-flamingo:  var(--color-ink);
   --color-on-seafoam:   var(--color-ink);
   --color-on-sunshine:  var(--color-ink);
@@ -70,10 +125,20 @@
 
   /* --- Type scale (fluid, 1.25 ratio, no mobile/desktop fork) ---------- */
   --text-display: clamp(2rem, 1.5rem + 2.6vw, 3.5rem);       /* pageHeader title */
-  --text-hero:    clamp(1.375rem, 0.8rem + 1.5vw, 1.875rem); /* hero overlay */
+  /* Floored at 1.5rem (24px), not the scale's natural mobile step: this text
+     sits over a photograph and 24px is WCAG's large-text threshold, which drops
+     the requirement from 4.5:1 to 3:1. */
+  --text-hero:    clamp(1.5rem, 0.8rem + 1.5vw, 1.875rem);   /* hero overlay */
   --text-band:    clamp(1.75rem, 1.25rem + 2.1vw, 2.75rem);  /* band heads  */
   --text-h2:      clamp(1.5rem, 1.2rem + 1.2vw, 2rem);
   --text-h3:      clamp(1.25rem, 1.1rem + 0.6vw, 1.5rem);
+
+  /* 24px flat — WCAG's large-text threshold, matching --text-h3's desktop end.
+     For white text on a brand fill, which measures 3.1-3.2:1: over the 3:1
+     large-text bar, under the 4.5:1 small-text one. Size is what decides pass
+     or fail, so these must not shrink on phones the way the scale otherwise
+     would. Used by the section title bars and the compare-at price. */
+  --text-aa-large: 1.5rem;
   --text-body:    clamp(1rem, 0.98rem + 0.1vw, 1.0625rem);   /* never <16px */
   /* Lead paragraph — the short intro that opens a section, set larger than body
      but below a heading. The gap between --text-body and --text-h3 is a 1.41

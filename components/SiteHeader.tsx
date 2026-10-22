@@ -108,8 +108,18 @@ export function SiteHeader({
               />
               {/* The block is exactly as wide as the wordmark, so text-right stays
                   flush with the logo's edge at every size. */}
-              <span className="mt-0.5 block text-right font-sans text-[length:var(--text-body)] font-semibold text-white [text-shadow:0_1px_3px_rgba(0,0,0,0.4)]">
-                {LOGO_LOCALITY}
+              <span className="relative mt-0.5 block text-right font-sans text-[length:var(--text-body)] font-semibold text-white [text-shadow:0_1px_3px_rgba(0,0,0,0.4)]">
+                {/* Live text over a photograph, so the text-shadow alone is not
+                    enough — WCAG gives shadows no credit. On phones this ran to
+                    1.46:1 where the crop puts a pale area behind it. A blurred
+                    wash, no hard edge, and it keeps working for the
+                    author-selectable image in Phase 2. The wordmark above needs
+                    none: logotypes are exempt from 1.4.3. */}
+                <span
+                  aria-hidden="true"
+                  className="pointer-events-none absolute inset-y-0 right-0 w-full rounded-full bg-[rgba(0,0,0,0.45)] shadow-[0_0_28px_18px_rgba(0,0,0,0.45)]"
+                />
+                <span className="relative">{LOGO_LOCALITY}</span>
               </span>
             </span>
           ) : (

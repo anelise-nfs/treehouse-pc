@@ -40,7 +40,7 @@ export const foundingTiers: PricingTier[] = [
     billedAmount: 2820,
     billedInterval: 'year',
     features: [],
-    headerColor: 'sunshine',
+    headerColor: 'pine',
     priceColor: 'mint',
     cta: beAnEarlyBird,
   },
@@ -83,7 +83,7 @@ export const standardTiers: PricingTier[] = [
     amount: 250,
     interval: 'month',
     features: [],
-    headerColor: 'sunshine',
+    headerColor: 'pine',
     priceColor: 'mint',
   },
   {

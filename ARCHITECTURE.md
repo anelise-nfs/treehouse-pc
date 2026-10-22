@@ -74,6 +74,11 @@ Most of the brand palette fails WCAG AA contrast against white text. Measured ra
   `#3c8dce`, which is 3.56:1 and fails at button text size.
 - Never use pine as a _text_ color on a brand-colored background (pine on mint is 3.10:1).
 
+> **Branch `wcag-palette-test` deviates.** That branch darkens the palette, and tangerine to
+> Option A depth (`#cc4800`), where the safe pairing inverts: white is 4.67:1 and ink 3.72:1.
+> Tangerine is the one colour that takes white text there, alongside pine. If that palette ships,
+> this rule needs rewriting; if it is reverted, it stands as written. See the note in globals.css.
+
 If a design direction would put white text on mint, sky, sunshine, lime, flamingo, seafoam,
 tangerine, tomato, or ocean, flag it rather than implementing it. Treehouse is a place of public
 accommodation and the primary audience reads on phones, often outdoors.

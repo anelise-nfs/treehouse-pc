@@ -343,6 +343,8 @@ export interface PageHeaderBlock extends BlockBase {
   title: string;
   image: SanityImage;
   height: PageHeaderHeight;
+  /** Fill behind the title band. Defaults to mint, matching the homepage hero. */
+  bandColor?: BandColor;
 }
 
 export type PageHeaderHeight = 'small' | 'medium';
@@ -473,11 +475,10 @@ export interface PriceBadge {
    */
   price: string;
   /**
-   * Qualifier set smaller beneath the price — 'with sibling' under 'free'. A
-   * separate field rather than a longer `price` string so the component never
-   * has to split one, and so an author controls where the break falls.
+   * Qualifier shown in plain ink beneath the circle — 'up to age 3'. It sits
+   * outside the badge rather than inside it: on the pale fills this was the
+   * least readable text on the page.
    */
-  priceNote?: string;
   note?: string;
   /** Fill behind the label half. The price half below it uses `priceColor`. */
   labelColor: BandColor;

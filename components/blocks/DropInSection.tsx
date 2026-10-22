@@ -25,39 +25,43 @@ import { DecorationLayer } from '@/components/doodles/DecorationLayer';
  */
 function Badge({ badge }: { badge: PriceBadge }) {
   return (
-    <div className="mx-auto aspect-square w-full max-w-52 overflow-hidden rounded-full sm:max-w-64">
-      {/* CONTRAST: provisional. White on the label fills fails AA at any size —
-          seafoam 1.49:1, ocean 3.56:1 (large-text bar only), sunshine 1.61:1. */}
-      <div
-        className={`${BAND_BG[badge.labelColor]} flex h-1/2 flex-col items-center justify-end px-4 py-4 text-center pb-4 sm:px-6`}
-      >
-        {/* --text-script-badge, not the subsection size: at 43px the longer
-            labels run to the curve inside a 256px circle. Still at the 28px
-            script floor on mobile. */}
-        <p className="font-script text-[length:var(--text-script-badge)] leading-[var(--leading-heading)] text-white">
-          {badge.label}
-        </p>
-        {badge.note ? (
-          <p className="font-sans text-[length:var(--text-caption)] text-white">{badge.note}</p>
-        ) : null}
-      </div>
+    <div className="flex flex-col items-center">
+      <div className="aspect-square w-full max-w-52 overflow-hidden rounded-full sm:max-w-64">
+        {/* The label is white on the fill at script size, which floors at 28px
+            and so needs 3:1, not 4.5:1. The three in use clear it: pine 6.66:1,
+            ocean 3.56:1, tangerine 4.67:1. Seafoam would not — it is 1.49:1 —
+            so it is not an option for this slot. */}
+        <div
+          className={`${BAND_BG[badge.labelColor]} flex h-1/2 flex-col items-center justify-end px-4 pb-4 pt-4 text-center sm:px-6`}
+        >
+          {/* --text-script-badge, not the subsection size: at 43px the longer
+              labels run to the curve inside a 256px circle. Still at the 28px
+              script floor on mobile. */}
+          <p className="font-script text-[length:var(--text-script-badge)] leading-[var(--leading-heading)] text-white">
+            {badge.label}
+          </p>
+        </div>
 
-      {/* CONTRAST: provisional. White on the price fills fails AA at any size —
-          flamingo 2.34:1, lime 2.00:1, sky 1.55:1. */}
-      <div
-        className={`${BAND_BG[badge.priceColor]} flex h-1/2 items-center justify-center px-4 py-4 text-center pt-4 sm:px-6`}
-      >
-        <p className="text-center">
-          <span className="block font-sans text-[length:var(--text-h2)] leading-[var(--leading-heading)] text-white">
+        {/* CONTRAST: provisional. White on the price fills fails AA at any size —
+            flamingo 2.34:1, lime 2.00:1, sky 1.55:1. */}
+        <div
+          className={`${BAND_BG[badge.priceColor]} flex h-1/2 items-center justify-center px-4 pb-4 pt-4 text-center sm:px-6`}
+        >
+          <span className="font-sans text-[length:var(--text-h2)] leading-[var(--leading-heading)] text-white">
             {badge.price}
           </span>
-          {badge.priceNote ? (
-            <span className="block font-sans text-[length:var(--text-caption)] text-white">
-              {badge.priceNote}
-            </span>
-          ) : null}
-        </p>
+        </div>
       </div>
+
+      {/* The qualifier sits below the circle in ink rather than inside it in
+          white: on the pale fills it was the least readable text on the badge,
+          and ink on linen is 16.78:1. It also frees the circle to carry just the
+          label and the price. */}
+      {badge.note ? (
+        <p className="mt-[var(--spacing-gutter)] text-center font-sans text-[length:var(--text-body)] text-ink">
+          {badge.note}
+        </p>
+      ) : null}
     </div>
   );
 }

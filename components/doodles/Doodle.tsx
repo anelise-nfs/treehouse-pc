@@ -3,20 +3,23 @@ import type { BandColor } from '@/types/content';
 import { DOODLE_SHAPES, type DoodleName, type DoodleShape } from './shapes';
 
 /**
- * Brand token per doodle colour. Kept as a literal map because Tailwind needs to
- * see the class names to emit them.
+ * Doodle colour per brand token, pointing at the dedicated doodle palette —
+ * the client's original colours at full strength. Decoration is exempt from
+ * contrast rules, so it does not follow the darkened text palette.
+ *
+ * A literal map because Tailwind only emits class names it can see.
  */
 const DOODLE_COLOR: Record<BandColor, string> = {
-  pine: 'text-pine',
-  mint: 'text-mint',
-  tangerine: 'text-tangerine',
-  flamingo: 'text-flamingo',
-  seafoam: 'text-seafoam',
-  sunshine: 'text-sunshine',
-  lime: 'text-lime',
-  tomato: 'text-tomato',
-  sky: 'text-sky',
-  ocean: 'text-ocean',
+  pine: 'text-doodle-pine',
+  mint: 'text-doodle-mint',
+  tangerine: 'text-doodle-tangerine',
+  flamingo: 'text-doodle-flamingo',
+  seafoam: 'text-doodle-seafoam',
+  sunshine: 'text-doodle-sunshine',
+  lime: 'text-doodle-lime',
+  tomato: 'text-doodle-tomato',
+  sky: 'text-doodle-sky',
+  ocean: 'text-doodle-ocean',
 };
 
 export interface DoodleProps {

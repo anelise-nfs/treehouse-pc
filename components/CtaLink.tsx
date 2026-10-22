@@ -6,15 +6,16 @@ import { Doodle } from '@/components/doodles/Doodle';
  * Button treatments for an authored Link. Omitting `variant` gives an inline
  * text link; setting it gives a button.
  *
- * Every pairing below is on the approved contrast list except the temporary
- * solid-tangerine-white. Adding a variant that puts white on a light brand color
- * is not a styling decision — see ARCHITECTURE.md → Color rule.
+ * Every pairing below is on the approved contrast list. Adding a variant that
+ * puts white on a light brand color is not a styling decision — see
+ * ARCHITECTURE.md → Color rule.
  *
  * Hover states are paired with focus-visible throughout, so a keyboard user gets
  * the same feedback as a mouse user. The outline variants fill on hover, which
  * is the most legible change available to them; both filled pairings stay on the
- * approved contrast list when they do (white on action 6.62:1, ink on tangerine
- * 5.44:1). The solid tangerines darken by filter rather than by a second token.
+ * approved contrast list when they do (white on action 6.62:1, white on
+ * tangerine 4.67:1). The solid tangerines darken by filter rather than by a
+ * second token.
  */
 const BUTTON_STYLES: Record<ButtonVariant, string> = {
   'solid-ocean': 'bg-action text-white hover:bg-action-hover focus-visible:bg-action-hover',
@@ -24,9 +25,10 @@ const BUTTON_STYLES: Record<ButtonVariant, string> = {
   'outline-tangerine':
     'border-2 border-tangerine text-ink hover:bg-tangerine hover:text-on-tangerine ' +
     'focus-visible:bg-tangerine focus-visible:text-on-tangerine',
-  // Tangerine fill with an ink label: 5.44:1, the pairing --color-on-tangerine encodes.
+  // NAME IS NOW STALE: --color-on-tangerine is white at Option A depth, so this
+  // renders identically to solid-tangerine-white. Both are 4.67:1. Collapsing
+  // the two is a type + content change, left for the palette decision.
   'solid-tangerine-ink': 'bg-tangerine text-on-tangerine hover:brightness-90 focus-visible:brightness-90',
-  // Temporary, pending the ADA sweep.
   'solid-tangerine-white': 'bg-tangerine text-white hover:brightness-90 focus-visible:brightness-90',
 };
 

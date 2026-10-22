@@ -57,16 +57,18 @@ export function LocationMap({ location, decorations, anchorId }: LocationBlock) 
  * THE SWAP POINT. Replace this body with the Mapbox <img> and nothing outside
  * this function needs to change.
  *
- * All three text colors here are ink or ink-soft on seafoam — 11.72:1 and
- * 5.99:1, both clear AA. The pin is decorative and labelled by the text below.
+ * Deliberately unbranded: the grey fill and dashed edge are the same treatment
+ * as the placeholder image SVGs, so every unfinished block on the page reads as
+ * unfinished. Text is ink and ink-soft on the placeholder grey — 13.22:1 and
+ * 6.76:1, both clear AA. The pin is decorative and labelled by the text below.
  */
 function MapVisual({ label }: { label: string }) {
   return (
-    <div className="flex aspect-[4/3] flex-col items-center justify-center gap-[var(--spacing-gutter)] rounded-[var(--radius-card)] bg-seafoam px-[var(--spacing-gutter)] text-center md:aspect-[2/1]">
+    <div className="flex aspect-[4/3] flex-col items-center justify-center gap-[var(--spacing-gutter)] rounded-[var(--radius-card)] border-2 border-dashed border-[var(--color-placeholder-border)] bg-[var(--color-placeholder)] px-[var(--spacing-gutter)] text-center md:aspect-[2/1]">
       <svg
         aria-hidden="true"
         viewBox="0 0 24 24"
-        className="size-10 fill-none stroke-pine"
+        className="size-10 fill-none stroke-ink-soft"
         strokeWidth="1.75"
         strokeLinecap="round"
         strokeLinejoin="round"

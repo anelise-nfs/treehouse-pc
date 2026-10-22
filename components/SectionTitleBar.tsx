@@ -47,10 +47,13 @@ export function SectionTitleBar({ title, color, align }: SectionTitleBarProps) {
           align === 'left' ? 'text-left' : 'text-right'
         }`}
       >
-        {/* --text-lead on phones, not --text-h3: at 20px the longest title we
-            expect ('early bird gets the worm') measures 235px against 230px of
-            usable bar and broke to two lines. */}
-        <h2 className="font-sans text-[length:var(--text-lead)] font-semibold leading-[var(--leading-heading)] text-white md:text-[length:var(--text-h3)]">
+        {/* --text-aa-large, not --text-h3: this previously dropped to
+            --text-lead (18px) on phones to keep the longest title we expect
+            ('early bird gets the worm') on one line, but 18px put white on the
+            lime fill at 3.14:1 against a 4.5:1 requirement. 24px clears the bar
+            as large text instead, at the cost of that title wrapping to two
+            lines on a phone. Unchanged at desktop width. */}
+        <h2 className="font-sans text-[length:var(--text-aa-large)] font-semibold leading-[var(--leading-heading)] text-white">
           {title}
         </h2>
       </div>
