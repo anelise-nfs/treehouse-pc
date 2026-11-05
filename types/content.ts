@@ -284,14 +284,15 @@ interface BlockBase {
 export interface HeroBlock extends BlockBase, Decorated {
   _type: 'hero';
   image: SanityImage;
-  overlayHeadline: string;
-  overlayCta?: Link;
+  /** The h1, set in the script face. */
   scriptHeadline: string;
   /** Script type is illegible at 375px past a certain length. */
   mobileScriptHeadline?: string;
-  bandColor: BandColor;
-  subhead: PortableTextBlock[];
+  /** The h2 beneath it. */
+  overlayHeadline: string;
   primaryCta: Link;
+  /** Edge colour echoed along the S-curve seam behind the photograph. */
+  bandColor: BandColor;
 }
 
 /**
@@ -616,6 +617,12 @@ export type BlockOfType<T extends Block['_type']> = Extract<Block, { _type: T }>
  * rather than authored, so it cannot get out of step with the layout.
  */
 export type HeaderLogoSize = 'default' | 'large';
+
+/**
+ * What sits behind the header on a given route, which decides how it draws
+ * itself: ink on a light surface, white over a protective scrim on a photo.
+ */
+export type HeaderSurface = 'light' | 'photo';
 
 export interface SeoMeta {
   /** Falls back to the page title when absent. */

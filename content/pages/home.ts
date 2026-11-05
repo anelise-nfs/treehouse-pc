@@ -28,29 +28,18 @@ export const homePage: Page = {
     {
       _key: 'hero',
       _type: 'hero',
-      // Review-build placements, inferred from the client's mockup. Decoration
-      // only: adjusting or deleting any of these changes nothing but atmosphere.
-      decorations: [
-        { doodle: 'squiggleup', slot: 'top-right', color: 'sunshine', size: 'lg' },
-        { doodle: 'vertscribble', slot: 'bottom-left', color: 'sunshine' },
-      ],
+      // No decorations: both previous placements landed on the photograph, and
+      // the hero now positions its own marks against the seam. The field still
+      // works if any are wanted back.
       image: {
         // PLACEHOLDER: final photography pending.
         url: '/images/hero-play-structure.jpg',
         alt: 'The Treehouse play structure: wooden climbing towers, slides, and a vintage camper, with paper geese hanging from the ceiling',
       },
       overlayHeadline: "Park City's one and only indoor playground opening this winter!",
-      overlayCta: {
-        label: 'early bird pricing',
-        kind: 'internal',
-        href: '/early-bird',
-        variant: 'solid-tangerine-white',
-      },
       scriptHeadline: 'climb higher, imagine bigger, play freely',
+      mobileScriptHeadline: 'climb higher, play freely',
       bandColor: 'mint',
-      subhead: pt(
-        "A playground for the kids. A cafe for you. Park City's one and only premium indoor play space for ages 0–12.",
-      ),
       primaryCta: {
         label: 'reserve your membership now',
         kind: 'internal',

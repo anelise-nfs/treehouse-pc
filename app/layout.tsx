@@ -3,7 +3,7 @@ import { Betania_Patmos, Libre_Baskerville, Quicksand } from 'next/font/google';
 import { ScrollEffects } from '@/components/ScrollEffects';
 import { SiteFooter } from '@/components/SiteFooter';
 import { SiteShell } from '@/components/SiteShell';
-import { getHeaderLogoSizes, getSiteSettings } from '@/lib/content';
+import { getHeaderLogoSizes, getHeaderSurfaces, getSiteSettings } from '@/lib/content';
 import './globals.css';
 
 /**
@@ -52,7 +52,11 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const [settings, logoSizes] = await Promise.all([getSiteSettings(), getHeaderLogoSizes()]);
+  const [settings, logoSizes, headerSurfaces] = await Promise.all([
+    getSiteSettings(),
+    getHeaderLogoSizes(),
+    getHeaderSurfaces(),
+  ]);
 
   return (
     <html lang="en" className={`${script.variable} ${serif.variable} ${sans.variable}`}>
@@ -67,6 +71,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           logo={settings.logo}
           navLinks={settings.primaryNav}
           logoSizes={logoSizes}
+          headerSurfaces={headerSurfaces}
           logoWhite={settings.logoWhite}
         >
           {children}

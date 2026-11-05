@@ -69,8 +69,8 @@ export function SiteShell({ children, logoWhite, ...headerProps }: SiteShellProp
       {/* relative is load-bearing: SiteHeader is absolute, and without a
           positioned ancestor it would stay full-width while the content squeezed. */}
       <div
-        className={`relative transition-[margin-right] duration-300 ease-out ${
-          open ? 'sm:mr-[var(--spacing-menu)]' : 'mr-0'
+        className={`relative transition-[margin-left] duration-300 ease-out ${
+          open ? 'sm:ml-[var(--spacing-menu)]' : 'ml-0'
         }`}
       >
         <SiteHeader
@@ -89,8 +89,8 @@ export function SiteShell({ children, logoWhite, ...headerProps }: SiteShellProp
         id={menuId}
         inert={!open}
         aria-label="Main"
-        className={`fixed inset-y-0 right-0 z-40 flex h-dvh w-full flex-col bg-seafoam transition-transform duration-300 ease-out sm:w-[var(--spacing-menu)] ${
-          open ? 'translate-x-0' : 'translate-x-full'
+        className={`fixed inset-y-0 left-0 z-40 flex h-dvh w-full flex-col bg-seafoam transition-transform duration-300 ease-out sm:w-[var(--spacing-menu)] ${
+          open ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
         {/* Mobile clears the header, which overlays the full-width panel there.

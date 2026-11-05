@@ -9,6 +9,7 @@
 import type {
   FaqItem,
   HeaderLogoSize,
+  HeaderSurface,
   Page,
   PartyPackage,
   PricingTier,
@@ -96,6 +97,24 @@ export async function getHeaderLogoSizes(): Promise<Record<string, HeaderLogoSiz
     pages.map((page) => [
       page.slug === '' ? '/' : `/${page.slug}`,
       page.blocks.some((block) => block._type === 'hero') ? 'large' : 'default',
+    ]),
+  );
+}
+
+/**
+ * What the header is sitting on, which decides whether it draws itself in ink
+ * or in white over a scrim.
+ *
+ * Derived from the opening block like the logo size above, and for the same
+ * reason: a hero opens with a linen text column under the header, a pageHeader
+ * opens with a photograph. Authoring it would let the two fall out of step with
+ * the layout they describe.
+ */
+export async function getHeaderSurfaces(): Promise<Record<string, HeaderSurface>> {
+  return Object.fromEntries(
+    pages.map((page) => [
+      page.slug === '' ? '/' : `/${page.slug}`,
+      page.blocks.some((block) => block._type === 'hero') ? 'light' : 'photo',
     ]),
   );
 }
