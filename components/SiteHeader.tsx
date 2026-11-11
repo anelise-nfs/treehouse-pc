@@ -5,17 +5,18 @@ import NextLink from 'next/link';
 import type { HeaderLogoSize, HeaderSurface, Link, SanityImage } from '@/types/content';
 
 /**
- * NOTE: both sizes are now 18rem on desktop, so the distinction currently buys
- * nothing — `large` was 25rem until the hero redesign. Left in place rather than
+ * NOTE: both sizes are identical, so the distinction currently buys nothing —
+ * `large` was 25rem until the hero redesign. Left in place rather than
  * collapsed because removing HeaderLogoSize touches the type, lib/content and
  * every call site, which is a bigger change than this one.
  *
  * The step is at lg, not sm, because that is where the hero's two columns
- * begin. Below it the wordmark is 10rem and sits opposite the trigger.
+ * begin. Below it the wordmark sits opposite the trigger, and 15rem is as wide
+ * as it goes: at 320px anything larger runs into the trigger beside it.
  */
 const LOGO_WIDTHS: Record<HeaderLogoSize, string> = {
-  default: 'w-48 lg:w-72',
-  large: 'w-48 lg:w-[18rem]',
+  default: 'w-60 lg:w-80',
+  large: 'w-60 lg:w-80',
 };
 
 export interface SiteHeaderProps {
@@ -81,13 +82,21 @@ export function SiteHeader({
           instead. Below lg the lockup is just the wordmark, close enough to the
           trigger's height that centring both is simpler and lets the bar
           collapse to its tallest child. */}
-      {/* The trigger leads, then the wordmark. From lg they sit together on the
+      {/* The top padding is built to equal the gap on the left of the visible
+          hamburger bars, so the inset off the top of the viewport matches the
+          inset off its left edge. That gap is not the gutter: the button box is
+          wider than the bars it holds and carries a negative margin, so it is
+          the gutter, less that margin, plus half the difference between the tap
+          target and the bar width. Both terms change at lg — a wider bar and a
+          deeper negative margin — hence the second value.
+
+          The trigger leads, then the wordmark. From lg they sit together on the
           left, so the wordmark's edge is the line the hero's text column aligns
           to. Below lg there is no such column, and pushing the wordmark to the
           right edge balances the bar and buys back the width the two of them
           were sharing. Source order is the visual order either way, so the tab
           order needs no override. */}
-      <div className="relative flex min-h-[var(--spacing-header-compact)] items-center justify-between gap-3 px-[var(--spacing-gutter)] py-2 lg:min-h-[var(--spacing-header)] lg:items-start lg:justify-start lg:gap-7">
+      <div className="relative flex min-h-[var(--spacing-header-compact)] items-start justify-between gap-3 px-[var(--spacing-gutter)] pb-2 pt-[calc(var(--spacing-gutter)-0.5rem+(var(--tap-target)-1.25rem)/2)] lg:min-h-[var(--spacing-header)] lg:justify-start lg:gap-7 lg:pt-[calc(var(--spacing-gutter)-1rem+(var(--tap-target)-2rem)/2)]">
         {/* Only over a photograph. On a light surface the header draws itself in
             ink instead, and a dark wash there would be a smudge protecting
             nothing. Sized to the bar rather than to --spacing-header: the
@@ -117,13 +126,13 @@ export function SiteHeader({
           // this taller than 44px on desktop, and a fixed height would have
           // clipped it. The minimum still holds on phones, where the label is
           // hidden and the bars alone would otherwise leave a 16px target.
-          className="relative -ml-2 flex min-h-[var(--tap-target)] lg:-ml-4 min-w-[var(--tap-target)] shrink-0 flex-col items-center justify-center gap-[4.25px] lg:mt-2.5 sm:gap-[5px]"
+          className="relative -ml-2 flex min-h-[var(--tap-target)] lg:-ml-4 min-w-[var(--tap-target)] shrink-0 flex-col items-center justify-start gap-[4.25px] sm:gap-[5px]"
         >
           {[0, 1, 2].map((bar) => (
             <span
               key={bar}
               aria-hidden="true"
-              className={`block h-[2.5px] w-6 sm:h-[2px] lg:w-9 ${onPhoto ? 'bg-white' : 'bg-mint lg:bg-ink'}`}
+              className={`block h-[2.5px] w-5 sm:h-[2px] lg:w-8 ${onPhoto ? 'bg-white' : 'bg-mint lg:bg-ink'}`}
             />
           ))}
 
@@ -157,7 +166,7 @@ export function SiteHeader({
             `invisible` rather than opacity so it also leaves the tab order. */}
         <NextLink
           href="/"
-          className={`relative flex items-center lg:block lg:pt-6 ${
+          className={`relative flex items-start lg:block ${
             open ? 'invisible sm:visible' : ''
           }`}
           aria-label={`${siteName} — home`}

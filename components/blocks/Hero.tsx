@@ -109,9 +109,9 @@ const FLOATERS = [
   // positions are tied to where the seam actually falls, so widening the media
   // box moves them: the curve sweeps left as it descends, and the lower a mark
   // sits the less linen there is to its right.
-  { name: 'butterfly', color: 'flamingo', motion: 'hero-float', at: 'left-[36%] top-[7%] w-20', duration: '7.5s', tilt: '-10deg' },
+  { name: '3stars', color: 'sunshine', motion: 'hero-float', at: 'left-[36%] top-[7%] w-20', duration: '7.5s', tilt: '-10deg' },
   { name: 'leaf', color: 'lime', motion: 'hero-float', at: 'left-[38%] top-[31%] w-10', duration: '11s', tilt: '18deg' },
-  { name: 'vertscribble', color: 'sunshine', motion: 'hero-scribble', at: 'left-[7%] bottom-[6%] w-12', duration: '6.5s', tilt: '6deg' },
+  { name: 'vertscribble', color: 'flamingo', motion: 'hero-scribble', at: 'left-[7%] bottom-[6%] w-12', duration: '6.5s', tilt: '6deg' },
 ] as const;
 
 /**
@@ -304,7 +304,7 @@ function AfterBand({ heading, body, cta, image, color = 'mint' }: HeroAfterBand)
 
               Stacked, there is no seam to clear horizontally, so it runs full
               width with top padding for the wave instead. */}
-          <div className="hero-band-text hero-band-hold flex h-full flex-col justify-center px-[var(--spacing-gutter)] pb-[var(--spacing-block)] pt-[calc(var(--spacing-block)+8vw)] lg:ml-auto lg:w-[56.5vw] lg:px-0 lg:pr-[5vw] lg:py-0">
+          <div className="hero-band-text flex h-full flex-col justify-center px-[var(--spacing-gutter)] pb-[var(--spacing-block)] pt-[calc(var(--spacing-block)+8vw)] lg:ml-auto lg:w-[56.5vw] lg:px-0 lg:pr-[5vw] lg:py-0">
             <h2 className="font-script text-[length:var(--text-script-sm)] leading-[var(--leading-heading)] text-white">
               {heading}
             </h2>
@@ -339,7 +339,7 @@ function AfterBand({ heading, body, cta, image, color = 'mint' }: HeroAfterBand)
             relative z-10 is load-bearing: the panel is absolutely positioned
             and would otherwise paint over this once it goes full bleed. The
             ring has to sit in front of the colour, not under it. */}
-        <div className="relative z-10 order-1 flex items-center justify-center px-[var(--spacing-gutter)] pb-[var(--spacing-block)] pt-14 lg:order-none lg:py-0 lg:min-h-[62vh] lg:w-[38%] lg:justify-start lg:py-0 lg:pl-[5.75vw]">
+        <div className="relative z-10 order-1 flex items-center justify-center px-[var(--spacing-gutter)] pb-2 pt-6 lg:order-none lg:py-0 lg:min-h-[62vh] lg:w-[38%] lg:justify-start lg:py-0 lg:pl-[5.75vw]">
           <img
             src={image.url}
             alt=""

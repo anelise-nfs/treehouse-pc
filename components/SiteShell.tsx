@@ -127,10 +127,10 @@ export function SiteShell({ children, logoWhite, ...headerProps }: SiteShellProp
             no entrance animation — the panel slides in and carries it along.
 
             From sm only: on a phone the panel is a full-screen takeover carrying
-            the wordmark, and the butterfly would be competing decoration. It
+            the wordmark, and the mark would be competing decoration. It
             belongs to the narrow desktop strip, which is otherwise empty. */}
         <Doodle
-          name="butterfly"
+          name="rainbow"
           color="flamingo"
           className="pointer-events-none absolute bottom-6 right-6 hidden w-18 sm:block"
         />

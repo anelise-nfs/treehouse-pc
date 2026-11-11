@@ -196,10 +196,12 @@
      reader actually sees. Anything that changes one has to change the other, so
      they are the same number.
 
-     The floor is the 44px menu trigger (the tallest thing in the bar, since the
-     wordmark is shorter and the locality line is hidden here) plus the bar's
-     padding, plus a little room so the wordmark is not touching the photo. */
-  --spacing-header-compact: 4.25rem;
+     The floor is the wordmark plus the bar's padding, which now insets from
+     the top by the same amount the hamburger insets from the left — a deeper
+     offset than before, so this grew with it. Measured: the lockup ends at
+     72px at the widest stacked width, and this leaves clearance beneath it.
+     Too small and the wordmark lands on the photograph. */
+  --spacing-header-compact: 5.25rem;
   --spacing-measure:    68ch;                            /* max prose width */
   --spacing-container:  1200px;
 
@@ -564,38 +566,50 @@
    under the ring for good. */
 @media (prefers-reduced-motion: no-preference) and (max-width: 63.9375rem) {
   @supports (animation-timeline: scroll()) {
-    /* A transform, not margin-top. Margin changed the flex layout — it pulled
-       the ring up with the panel and shrank the container — where a transform
-       moves only the paint. 17rem clears the whole ring — the wave's own low
-       point included, which a shorter lift left poking out onto linen — while
-       its high point still stops short of the hero's button. The ring carries
-       a little top padding to make that window exist; the space reads as
-       filled now that the colour sits in it rather than as empty linen. */
-    @keyframes hero-band-settle {
-      from { transform: translateY(-17rem); }
-      to   { transform: none; }
-    }
+    /* The colour grows upward rather than sliding up: a negative margin pulls
+       the box's top edge above its laid-out position while an equal padding
+       puts the content back where it was. The two cancel, so the flex layout
+       and the block's bottom edge never move — only the top does.
 
+       A plain transform did slide the whole block, which carried the bottom
+       edge up with it and left the colour short of full height at rest. Margin
+       alone changed the flex layout and dragged the ring along with it.
+
+       How far it lifts is the whole balance of this block: too little and the
+       ring's edge pokes out above the fill, too much and the wave's crest runs
+       into the hero's button. The distance is measured from the panel's
+       laid-out top, so the ring's own padding and this number move together —
+       trim the padding without trimming the lift and the colour climbs into
+       the button.
+
+       14rem is as far as it goes on narrow phones: the hero's tagline wraps to
+       an extra line there, which pushes the button down and leaves the fill
+       only a few pixels of slack beneath it. From 24rem up the tagline fits
+       and 16rem gives the ring a clear margin on every part of the wave while
+       the crest still stops short of the button. */
     .hero-band-rise {
+      --hero-band-lift: 14rem;
       animation: hero-band-settle linear both;
       animation-timeline: scroll(root block);
       animation-range: 45vh 85vh;
     }
 
-    /* The exact inverse of the lift above, on the copy inside the panel. The
-       lift is meant to move the colour, not the words: carried along with it
-       the heading rode up into the tree-ring. Equal and opposite leaves the
-       copy where it was laid out, so the ring keeps its own clear space and
-       only the fill travels. Same range and timing, or the two drift apart. */
-    @keyframes hero-band-text-hold {
-      from { transform: translateY(17rem); }
-      to   { transform: none; }
+    @media (min-width: 24rem) {
+      .hero-band-rise {
+        --hero-band-lift: 16rem;
+      }
     }
 
-    .hero-band-hold {
-      animation: hero-band-text-hold linear both;
-      animation-timeline: scroll(root block);
-      animation-range: 45vh 85vh;
+    @keyframes hero-band-settle {
+      from {
+        margin-top: calc(-1 * var(--hero-band-lift));
+        padding-top: var(--hero-band-lift);
+      }
+      to {
+        margin-top: 0;
+        padding-top: 0;
+      }
     }
+
   }
 }

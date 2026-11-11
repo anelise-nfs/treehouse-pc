@@ -7,11 +7,15 @@ export const siteSettings: SiteSettings = {
   siteName: 'Treehouse',
   // PLACEHOLDER: footer strapline, not from the brand guide.
   tagline: "Park City's indoor play cafe",
+  // v2 artwork from the client, trimmed of the transparent padding the supplied
+  // file carried (4.7% each side, 14.2% top and bottom) so the image box is the
+  // wordmark itself — the header aligns the trigger to this edge. Its colours
+  // are deeper than the SVG it replaces, which read as washed out.
   logo: {
-    url: '/images/logo_treehouse_full-color.svg',
+    url: '/images/logo_treehouse_v2.png',
     alt: 'Treehouse',
-    width: 332,
-    height: 65,
+    width: 2176,
+    height: 430,
   },
   logoWhite: {
     url: '/images/logo_treehouse_white.svg',
