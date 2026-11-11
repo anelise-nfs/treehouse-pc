@@ -373,6 +373,19 @@
   }
 }
 
+/* The seam of the band below the hero, which picks the curve up where the
+   photograph's left it. Same switch, same breakpoint: vertical once the halves
+   sit side by side, a wave along the band's top edge while stacked. */
+.hero-seam-after {
+  clip-path: url(#hero-seam-after-horizontal);
+}
+
+@media (min-width: 64rem) {
+  .hero-seam-after {
+    clip-path: url(#hero-seam-after-vertical);
+  }
+}
+
 /* Hero motion is declared only inside `no-preference`. The global reduce block
    further up would already flatten it, but defining it here means a
    reduced-motion visitor never starts an animation at all — they get the
@@ -470,9 +483,20 @@
        grown widths now differ per breakpoint, and a literal here would have
        snapped every viewport back to the xl pair the moment the scroll
        started. */
+    /* Two phases. The first is the slow widening that runs while the hero is
+       on screen. The second takes the panel past the viewport's own width, so
+       the seam travels off the left edge and the colour goes full bleed — it is
+       a width change rather than a clip change because clip-path cannot
+       animate between two url() references.
+
+       It completes around 95vh of scroll, by which point the hero is roughly a
+       tenth visible and the band's text sits near the middle of the screen. The
+       hero's photograph shares this animation and widens with it; its own text
+       is centred at 50vh and has left the viewport before the second phase
+       starts. */
     @keyframes hero-media-grow {
       from { width: var(--hero-media-w); }
-      to   { width: var(--hero-media-w-end); }
+      to   { width: var(--hero-media-w-full, var(--hero-media-w-end)); }
     }
 
     /* A transform, not a width: the text column reflows if its box changes, and
@@ -484,17 +508,94 @@
       to   { transform: scale(0.89); }
     }
 
+    /* One ramp with an ease-in, not two linear phases and not a constant rate.
+       The two phases met at a six-fold jump in speed, which read as the
+       expansion suddenly taking off; a constant rate fixed that but lost the
+       slow open, and starting it from scroll 0 drove the seam through the
+       hero's headline while that was still on screen.
+
+       Easing in solves all three at once: it moves from the first pixel of
+       scroll, is gentle enough early that the headline is clear until it has
+       gone, and accelerates smoothly instead of stepping. Everything that
+       scrolls with it shares this curve and this range, so nothing starts
+       before anything else. */
     .hero-media-scroll {
-      animation: hero-media-grow linear both;
+      animation: hero-media-grow ease-in both;
       animation-timeline: scroll(root block);
-      animation-range: 0 80vh;
+      animation-range: 0 95vh;
     }
 
     .hero-text-scroll {
       transform-origin: left center;
-      animation: hero-text-ease linear both;
+      animation: hero-text-ease ease-in both;
       animation-timeline: scroll(root block);
-      animation-range: 0 80vh;
+      animation-range: 0 95vh;
+    }
+
+    /* The band's copy grows as the colour sweeps out behind it. One transform
+       does both halves of that: scaling from a right-centre origin makes the
+       type larger and walks its left edge outward, while the right edge stays
+       pinned where it already sits. Same timeline and range as the panel, and
+       the same two-phase shape — most of the growth lands in the second phase,
+       as the block reaches full bleed. */
+    @keyframes hero-band-text-grow {
+      from { transform: scale(1); }
+      to   { transform: scale(1.16); }
+    }
+
+    .hero-band-text {
+      transform-origin: right center;
+      animation: hero-band-text-grow ease-in both;
+      animation-timeline: scroll(root block);
+      animation-range: 0 95vh;
+    }
+  }
+}
+
+/* Stacked only — note the max-width. The colour block starts pulled up behind
+   the tree-ring, so the ring reads as sitting on the fill rather than stranded
+   on linen above it, then settles to its laid-out position as the ring passes
+   the middle of the screen. Above this width the two sit side by side and
+   there is nothing to settle.
+
+   margin-top is animated rather than set as a base class on purpose: with
+   `both` fill the from-state applies before the range, so a browser without
+   scroll-driven animations gets the settled layout instead of a block stuck
+   under the ring for good. */
+@media (prefers-reduced-motion: no-preference) and (max-width: 63.9375rem) {
+  @supports (animation-timeline: scroll()) {
+    /* A transform, not margin-top. Margin changed the flex layout — it pulled
+       the ring up with the panel and shrank the container — where a transform
+       moves only the paint. 17rem clears the whole ring — the wave's own low
+       point included, which a shorter lift left poking out onto linen — while
+       its high point still stops short of the hero's button. The ring carries
+       a little top padding to make that window exist; the space reads as
+       filled now that the colour sits in it rather than as empty linen. */
+    @keyframes hero-band-settle {
+      from { transform: translateY(-17rem); }
+      to   { transform: none; }
+    }
+
+    .hero-band-rise {
+      animation: hero-band-settle linear both;
+      animation-timeline: scroll(root block);
+      animation-range: 45vh 85vh;
+    }
+
+    /* The exact inverse of the lift above, on the copy inside the panel. The
+       lift is meant to move the colour, not the words: carried along with it
+       the heading rode up into the tree-ring. Equal and opposite leaves the
+       copy where it was laid out, so the ring keeps its own clear space and
+       only the fill travels. Same range and timing, or the two drift apart. */
+    @keyframes hero-band-text-hold {
+      from { transform: translateY(17rem); }
+      to   { transform: none; }
+    }
+
+    .hero-band-hold {
+      animation: hero-band-text-hold linear both;
+      animation-timeline: scroll(root block);
+      animation-range: 45vh 85vh;
     }
   }
 }

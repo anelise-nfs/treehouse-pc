@@ -87,7 +87,7 @@ export function SiteHeader({
           right edge balances the bar and buys back the width the two of them
           were sharing. Source order is the visual order either way, so the tab
           order needs no override. */}
-      <div className="relative flex min-h-[var(--spacing-header-compact)] items-center justify-between gap-3 px-[var(--spacing-gutter)] py-2 lg:min-h-[var(--spacing-header)] lg:items-start lg:justify-start lg:gap-5">
+      <div className="relative flex min-h-[var(--spacing-header-compact)] items-center justify-between gap-3 px-[var(--spacing-gutter)] py-2 lg:min-h-[var(--spacing-header)] lg:items-start lg:justify-start lg:gap-7">
         {/* Only over a photograph. On a light surface the header draws itself in
             ink instead, and a dark wash there would be a smudge protecting
             nothing. Sized to the bar rather than to --spacing-header: the
@@ -107,17 +107,40 @@ export function SiteHeader({
           aria-label={open ? 'Close menu' : 'Open menu'}
           aria-expanded={open}
           aria-controls={menuId}
-          // -ml moves the bars nearer the edge without shrinking the tap target.
+          // -ml moves the bars nearer the edge without shrinking the tap
+          // target, and goes further at lg to give the wordmark room. The
+          // header's gap grows by the same 8px there, so the wordmark itself
+          // does not move — the hero's text column is aligned to its left edge
+          // and would have to follow it.
           // mt-2.5 plus the icon's 14px inset matches the wordmark's pt-6 below.
-          className="relative -ml-2 flex size-[var(--tap-target)] shrink-0 flex-col items-center justify-center gap-[4.25px] lg:mt-2.5 sm:gap-[5px]"
+          // min-h/min-w rather than a fixed size: the label below the bars makes
+          // this taller than 44px on desktop, and a fixed height would have
+          // clipped it. The minimum still holds on phones, where the label is
+          // hidden and the bars alone would otherwise leave a 16px target.
+          className="relative -ml-2 flex min-h-[var(--tap-target)] lg:-ml-4 min-w-[var(--tap-target)] shrink-0 flex-col items-center justify-center gap-[4.25px] lg:mt-2.5 sm:gap-[5px]"
         >
           {[0, 1, 2].map((bar) => (
             <span
               key={bar}
               aria-hidden="true"
-              className={`block h-[2.5px] w-6 sm:h-[2px] ${onPhoto ? 'bg-white' : 'bg-mint lg:bg-ink'}`}
+              className={`block h-[2.5px] w-6 sm:h-[2px] lg:w-9 ${onPhoto ? 'bg-white' : 'bg-mint lg:bg-ink'}`}
             />
           ))}
+
+          {/* Desktop only, and the bars widen to 2.25rem there to match this
+              label's 34.7px rather than the other way round — sized down to the
+              24px bar the word would have had to run at 9px.
+
+              Left as real text rather than aria-hidden: the
+              button's accessible name is "Open menu"/"Close menu", both of
+              which contain this visible word, so WCAG's Label in Name holds. */}
+          <span
+            className={`mt-1 hidden font-sans text-[length:var(--text-caption)] font-semibold leading-none lg:block ${
+              onPhoto ? 'text-white' : 'text-ink'
+            }`}
+          >
+            menu
+          </span>
         </button>
 
         {/* pt-6 is the shared top edge from lg — the trigger's mt-2.5 plus its

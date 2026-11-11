@@ -281,6 +281,25 @@ interface BlockBase {
  * `overlayHeadline` is the page's h1 — it is the substantive statement about
  * what the business is. `scriptHeadline` is display type, not a heading.
  */
+/**
+ * The band directly beneath the hero.
+ *
+ * Part of HeroBlock rather than a block of its own because its seam continues
+ * the hero's curve: the two share a clip-path endpoint, a width variable and a
+ * scroll animation, and separating them would let any of the three drift. It
+ * cannot be placed anywhere else, and nothing else can sit between the two.
+ */
+export interface HeroAfterBand {
+  /** Script heading, white on the fill. */
+  heading: string;
+  body: PortableTextBlock[];
+  cta?: Link;
+  /** Decorative graphic on the linen side. */
+  image: SanityImage;
+  /** Fill on the colour side. Defaults to mint. */
+  color?: BandColor;
+}
+
 export interface HeroBlock extends BlockBase, Decorated {
   _type: 'hero';
   image: SanityImage;
@@ -293,6 +312,8 @@ export interface HeroBlock extends BlockBase, Decorated {
   primaryCta: Link;
   /** Edge colour echoed along the S-curve seam behind the photograph. */
   bandColor: BandColor;
+  /** Optional band below, whose seam continues this one's curve. */
+  afterBand?: HeroAfterBand;
 }
 
 /**

@@ -51,7 +51,11 @@ export function ImageTextSplit({
     <section
       id={anchorId}
       data-reveal
-      className="container-page relative grid items-center gap-[var(--spacing-block)] my-[var(--spacing-section)] md:grid-cols-2"
+      // 1.4x --spacing-section, not the token alone: these blocks read as
+      // cramped against their neighbours at the base step. Margins collapse
+      // between adjacent sections, so the larger of the two wins and the gap
+      // to a neighbouring band grows with it.
+      className="container-page relative grid items-center gap-[var(--spacing-block)] my-[calc(var(--spacing-section)*1.4)] md:grid-cols-2"
     >
       <DecorationLayer decorations={decorations} />
       {/* Image first in the DOM unconditionally, so mobile stacks it above the
