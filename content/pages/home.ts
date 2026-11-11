@@ -28,43 +28,48 @@ export const homePage: Page = {
     {
       _key: 'hero',
       _type: 'hero',
-      // Review-build placements, inferred from the client's mockup. Decoration
-      // only: adjusting or deleting any of these changes nothing but atmosphere.
-      decorations: [
-        { doodle: 'squiggleup', slot: 'top-right', color: 'sunshine', size: 'lg' },
-        { doodle: 'vertscribble', slot: 'bottom-left', color: 'sunshine' },
-      ],
+      // No decorations: both previous placements landed on the photograph, and
+      // the hero now positions its own marks against the seam. The field still
+      // works if any are wanted back.
       image: {
         // PLACEHOLDER: final photography pending.
         url: '/images/hero-play-structure.jpg',
         alt: 'The Treehouse play structure: wooden climbing towers, slides, and a vintage camper, with paper geese hanging from the ceiling',
       },
       overlayHeadline: "Park City's one and only indoor playground opening this winter!",
-      overlayCta: {
-        label: 'early bird pricing',
-        kind: 'internal',
-        href: '/early-bird',
-        variant: 'solid-tangerine-white',
-      },
       scriptHeadline: 'climb higher, imagine bigger, play freely',
+      mobileScriptHeadline: 'climb higher, play freely',
       bandColor: 'mint',
-      subhead: pt(
-        "A playground for the kids. A cafe for you. Park City's one and only premium indoor play space for ages 0–12.",
-      ),
       primaryCta: {
         label: 'reserve your membership now',
         kind: 'internal',
         href: '/early-bird',
         variant: 'solid-ocean',
       },
+      // Rendered by the hero, not as a block of its own: its seam continues the
+      // hero's curve. PLACEHOLDER copy pending the client's.
+      afterBand: {
+        heading: 'more than a playground',
+        color: 'mint',
+        image: {
+          url: '/graphics/treering.png',
+          alt: '',
+        },
+        body: pt(
+          'Treehouse is a gathering space — not just somewhere to drop in, but somewhere to belong. Our calendar stays full of classes, workshops, and activities that bring families back week after week, where neighbors become friends over coffee and kids find something new to love each visit. A living, breathing part of our community.',
+        ),
+      },
     },
     {
       _key: 'built-for-play',
-      decorations: [{ doodle: '3stars', slot: 'top-right', color: 'lime', bleed: true }],
+      // bleed, not a smaller size: at sm the stars shrank to 34px against the
+      // squiggle's 102px. md matches it, and lifting past the block's top edge
+      // is what keeps them off the vertically centred copy.
+      decorations: [{ doodle: '3stars', slot: 'top-left', color: 'sunshine', bleed: true }],
       _type: 'imageTextSplit',
       heading: 'built for play that matters',
       headingColor: 'tomato',
-      imageSide: 'left',
+      imageSide: 'right',
       image: {
         // Client render, not photography. Final photography still pending.
         url: '/images/playarea_view4.png',
@@ -77,11 +82,13 @@ export const homePage: Page = {
     },
     {
       _key: 'clean-safe-designed',
-      decorations: [{ doodle: 'squiggle', slot: 'bottom-left', color: 'tangerine', size: 'lg' }],
+      // Doodle on the right: the image sits left in this block, and a
+      // bottom-left mark landed on the photograph.
+      decorations: [{ doodle: 'squiggle', slot: 'bottom-right', color: 'tangerine', size: 'lg' }],
       _type: 'imageTextSplit',
       heading: 'clean, safe and thoughtfully designed',
       headingColor: 'ocean',
-      imageSide: 'right',
+      imageSide: 'left',
       image: {
         // Client render, not photography. Final photography still pending.
         url: '/images/playarea_detail.png',
@@ -93,23 +100,22 @@ export const homePage: Page = {
       accent: 'squiggle',
     },
     {
-      _key: 'band-keepers',
-      decorations: [{ doodle: 'coffee', slot: 'bottom-right', color: 'mint', bleed: true }],
-      _type: 'sectionBand',
-      heading: 'for kids and their keepers',
-      color: 'flamingo',
-      level: 'primary',
-      accent: 'flowers',
-    },
-    {
       _key: 'cafe',
       anchorId: 'cafe',
-      // Sits below the band above it, which is a separate block.
-      decorations: [{ doodle: '3stars', slot: 'top-left', color: 'seafoam', size: 'lg' }],
+      // Top-left, on the text side, since the image sits right in this block.
+      // A cup rather than a repeat of the stars, which moved to the first.
+      //
+      // Top rather than bottom because the cup's artwork is tall — 142px at the
+      // default size — and this block's copy leaves only 114px beneath it, so
+      // it crossed the last line however far it bled. There is more room above
+      // the copy than below it.
+      decorations: [{ doodle: 'coffee', slot: 'top-left', color: 'mint', bleed: true }],
       _type: 'imageTextSplit',
-      heading: "a cafe you'll actually love",
+      // Carries the headline the removed sectionBand used to. The anchor stays
+      // 'cafe' — the footer links to it and the copy is still about the cafe.
+      heading: 'for kids and their keepers',
       headingColor: 'pine',
-      imageSide: 'left',
+      imageSide: 'right',
       image: {
         // PLACEHOLDER: the client has supplied no cafe image. Both the url and
         // the alt below change together when the real photograph arrives.
@@ -117,19 +123,22 @@ export const homePage: Page = {
         alt: 'Placeholder graphic: cafe photography pending',
       },
       body: pt(
-        'Good coffee, healthy snacks, comfortable seats – and a calm, beautiful space to gather, connect, and be present while the kids play.',
+        "A cafe you'll actually love with good coffee, healthy snacks, comfortable seats – and a calm, beautiful space to gather, connect, and be present while the kids play.",
       ),
       accent: 'loop',
     },
     {
       _key: 'band-how-it-works',
       decorations: [
-        { doodle: 'rainbow', slot: 'top-left', color: 'flamingo', size: 'lg' },
+        // Was flamingo, which the band now is: a pink mark on a pink fill came
+        // to 1.33:1 and all but vanished. Seafoam is the lightest option
+        // against it at 2.10:1.
+        { doodle: 'rainbow', slot: 'top-left', color: 'seafoam', size: 'lg' },
         { doodle: 'm-squig', slot: 'bottom-right', color: 'sunshine', size: 'lg', bleed: true },
       ],
       _type: 'sectionBand',
       heading: 'how it works',
-      color: 'sky',
+      color: 'flamingo',
       level: 'primary',
       anchorId: 'how-it-works',
       accent: 'rainbow',

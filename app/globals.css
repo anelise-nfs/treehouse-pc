@@ -125,6 +125,23 @@
 
   /* --- Type scale (fluid, 1.25 ratio, no mobile/desktop fork) ---------- */
   --text-display: clamp(2rem, 1.5rem + 2.6vw, 3.5rem);       /* pageHeader title */
+  /* The homepage hero's h1, a step under --text-display. Floored at 1.875rem
+     (30px) rather than the scale's natural step: the line is set in mint, which
+     is 3.01:1 on linen and only legal as WCAG large text, so it must never drop
+     under 24px.
+
+     Applied as the generated `text-hero-title` utility, not as
+     text-[length:var(--text-hero-title)]. Tailwind tree-shakes a --text-* token
+     that no utility references, and the arbitrary-value form did not count as a
+     reference — the variable was dropped from the output and the h1 fell back
+     to the inherited 17px. */
+  --text-hero-title: clamp(1.875rem, 1.45rem + 2.2vw, 3rem);
+  /* The same h1 once the columns split. A steeper ramp that does not reach its
+     cap until about 1325: on the flatter --text-hero-title the headline was
+     already at its 3rem maximum by 1160, while the column kept narrowing, and
+     the text ran into the seam.
+ */
+  --text-split-title: clamp(2.25rem, 0.6rem + 2.9vw, 3rem);
   /* Floored at 1.5rem (24px), not the scale's natural mobile step: this text
      sits over a photograph and 24px is WCAG's large-text threshold, which drops
      the requirement from 4.5:1 to 3:1. */
@@ -172,6 +189,17 @@
      positioned from below the header instead of from the top of the image.
      Both read the same value, so the two cannot drift apart. */
   --spacing-header:     clamp(5rem, 3.5rem + 6vw, 8.25rem);
+  /* The header below lg, and the strip the homepage hero reserves underneath
+     it before the photograph starts. ONE token for both on purpose: they were
+     two, and they disagreed — the bar was 60px while the hero reserved 84px, so
+     the wordmark sat centred in the bar but visibly high in the white space a
+     reader actually sees. Anything that changes one has to change the other, so
+     they are the same number.
+
+     The floor is the 44px menu trigger (the tallest thing in the bar, since the
+     wordmark is shorter and the locality line is hidden here) plus the bar's
+     padding, plus a little room so the wordmark is not touching the photo. */
+  --spacing-header-compact: 4.25rem;
   --spacing-measure:    68ch;                            /* max prose width */
   --spacing-container:  1200px;
 
@@ -184,6 +212,8 @@
      py-2 + the trigger's mt-2.5 + the icon's 0.875rem inset. Move any of those
      three and this moves with them. */
   --spacing-menu-top:   2rem;
+
+
 
   /* --- Other ------------------------------------------------------------ */
   --radius-pill: 999px;
@@ -321,4 +351,251 @@
 @utility accent-decorative {
   display: none;
   @media (width >= 48rem) { display: block; }
+}
+
+/* ============================================================================
+   Hero
+   ========================================================================== */
+
+/* Which S-curve the hero's photograph is cut with. The paths themselves live in
+   Hero.tsx as objectBoundingBox clipPaths, so they scale with the element; this
+   only decides which one applies. Vertical seam once the halves sit side by
+   side (lg and up), horizontal while stacked. The split starts at lg, not md:
+   at 768 two columns put the headline on four lines and pushed the button past
+   the seam onto the photograph. */
+.hero-seam {
+  clip-path: url(#hero-seam-horizontal);
+}
+
+@media (min-width: 64rem) {
+  .hero-seam {
+    clip-path: url(#hero-seam-vertical);
+  }
+}
+
+/* The seam of the band below the hero, which picks the curve up where the
+   photograph's left it. Same switch, same breakpoint: vertical once the halves
+   sit side by side, a wave along the band's top edge while stacked. */
+.hero-seam-after {
+  clip-path: url(#hero-seam-after-horizontal);
+}
+
+@media (min-width: 64rem) {
+  .hero-seam-after {
+    clip-path: url(#hero-seam-after-vertical);
+  }
+}
+
+/* Hero motion is declared only inside `no-preference`. The global reduce block
+   further up would already flatten it, but defining it here means a
+   reduced-motion visitor never starts an animation at all — they get the
+   finished layout, with the text at its resting opacity rather than relying on
+   a 0.01ms animation to reveal it. */
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes hero-rise {
+    from {
+      opacity: 0;
+      transform: translateY(1.5rem);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  /* Slow and shallow deliberately: enough that the photograph is not quite
+     still behind the seam, not so much that it reads as a slideshow. The scale
+     floor is above 1 so the clipped edges never pull away from the curve. */
+  @keyframes hero-drift {
+    0%,
+    100% {
+      transform: scale(1.04);
+    }
+    50% {
+      transform: scale(1.09) translate3d(0, -1%, 0);
+    }
+  }
+
+  @keyframes hero-float {
+    0%,
+    100% {
+      transform: translate3d(0, 0, 0) rotate(var(--hero-float-tilt, 0deg));
+    }
+    50% {
+      transform: translate3d(0, -0.9rem, 0)
+        rotate(calc(var(--hero-float-tilt, 0deg) + 6deg));
+    }
+  }
+
+  /* `both` holds the from-state through the stagger delay, so a late item is
+     invisible rather than flashing in at full opacity and then animating. */
+  .hero-rise {
+    animation: hero-rise 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+  .hero-rise-1 { animation-delay: 0.08s; }
+  .hero-rise-2 { animation-delay: 0.22s; }
+  .hero-rise-3 { animation-delay: 0.36s; }
+
+  .hero-drift {
+    animation: hero-drift 26s ease-in-out infinite;
+  }
+
+  .hero-float {
+    animation: hero-float var(--hero-float-duration, 8s) ease-in-out infinite;
+  }
+
+  /* A livelier variant for the scribble. It is a loose scrawl rather than a
+     leaf or a butterfly, so it carries roughly twice the travel and a wider
+     rotation swing without looking unstable. Four waypoints, not two, and the
+     rotation reverses at the midpoint so it does not read as a plain sine. */
+  @keyframes hero-scribble {
+    0%, 100% {
+      transform: translate3d(0, 0, 0) rotate(var(--hero-float-tilt, 0deg));
+    }
+    25% {
+      transform: translate3d(0.35rem, -1.1rem, 0)
+        rotate(calc(var(--hero-float-tilt, 0deg) + 14deg));
+    }
+    50% {
+      transform: translate3d(-0.2rem, -1.8rem, 0)
+        rotate(calc(var(--hero-float-tilt, 0deg) - 7deg));
+    }
+    75% {
+      transform: translate3d(-0.45rem, -0.8rem, 0)
+        rotate(calc(var(--hero-float-tilt, 0deg) + 9deg));
+    }
+  }
+
+  .hero-scribble {
+    animation: hero-scribble var(--hero-float-duration, 8s) ease-in-out infinite;
+  }
+}
+
+/* As the first viewport scrolls away the photograph grows and the text column
+   eases back, so the split shifts slightly rather than sitting still.
+   Scroll-driven animations only — no JS, no scroll listener. Browsers without
+   `animation-timeline` simply get the static layout, which is why the whole
+   block sits behind @supports as well as the motion query. Desktop only: below
+   md the two halves stack and there is no split to shift. */
+@media (prefers-reduced-motion: no-preference) and (min-width: 64rem) {
+  @supports (animation-timeline: scroll()) {
+    /* Reads the width off the element instead of hardcoding it: the base and
+       grown widths now differ per breakpoint, and a literal here would have
+       snapped every viewport back to the xl pair the moment the scroll
+       started. */
+    /* Two phases. The first is the slow widening that runs while the hero is
+       on screen. The second takes the panel past the viewport's own width, so
+       the seam travels off the left edge and the colour goes full bleed — it is
+       a width change rather than a clip change because clip-path cannot
+       animate between two url() references.
+
+       It completes around 95vh of scroll, by which point the hero is roughly a
+       tenth visible and the band's text sits near the middle of the screen. The
+       hero's photograph shares this animation and widens with it; its own text
+       is centred at 50vh and has left the viewport before the second phase
+       starts. */
+    @keyframes hero-media-grow {
+      from { width: var(--hero-media-w); }
+      to   { width: var(--hero-media-w-full, var(--hero-media-w-end)); }
+    }
+
+    /* A transform, not a width: the text column reflows if its box changes, and
+       a rewrapping headline mid-scroll is far more noticeable than the effect
+       itself. Origin left keeps it anchored to the column's left edge, which
+       the wordmark above is aligned to. */
+    @keyframes hero-text-ease {
+      from { transform: scale(1); }
+      to   { transform: scale(0.89); }
+    }
+
+    /* One ramp with an ease-in, not two linear phases and not a constant rate.
+       The two phases met at a six-fold jump in speed, which read as the
+       expansion suddenly taking off; a constant rate fixed that but lost the
+       slow open, and starting it from scroll 0 drove the seam through the
+       hero's headline while that was still on screen.
+
+       Easing in solves all three at once: it moves from the first pixel of
+       scroll, is gentle enough early that the headline is clear until it has
+       gone, and accelerates smoothly instead of stepping. Everything that
+       scrolls with it shares this curve and this range, so nothing starts
+       before anything else. */
+    .hero-media-scroll {
+      animation: hero-media-grow ease-in both;
+      animation-timeline: scroll(root block);
+      animation-range: 0 95vh;
+    }
+
+    .hero-text-scroll {
+      transform-origin: left center;
+      animation: hero-text-ease ease-in both;
+      animation-timeline: scroll(root block);
+      animation-range: 0 95vh;
+    }
+
+    /* The band's copy grows as the colour sweeps out behind it. One transform
+       does both halves of that: scaling from a right-centre origin makes the
+       type larger and walks its left edge outward, while the right edge stays
+       pinned where it already sits. Same timeline and range as the panel, and
+       the same two-phase shape — most of the growth lands in the second phase,
+       as the block reaches full bleed. */
+    @keyframes hero-band-text-grow {
+      from { transform: scale(1); }
+      to   { transform: scale(1.16); }
+    }
+
+    .hero-band-text {
+      transform-origin: right center;
+      animation: hero-band-text-grow ease-in both;
+      animation-timeline: scroll(root block);
+      animation-range: 0 95vh;
+    }
+  }
+}
+
+/* Stacked only — note the max-width. The colour block starts pulled up behind
+   the tree-ring, so the ring reads as sitting on the fill rather than stranded
+   on linen above it, then settles to its laid-out position as the ring passes
+   the middle of the screen. Above this width the two sit side by side and
+   there is nothing to settle.
+
+   margin-top is animated rather than set as a base class on purpose: with
+   `both` fill the from-state applies before the range, so a browser without
+   scroll-driven animations gets the settled layout instead of a block stuck
+   under the ring for good. */
+@media (prefers-reduced-motion: no-preference) and (max-width: 63.9375rem) {
+  @supports (animation-timeline: scroll()) {
+    /* A transform, not margin-top. Margin changed the flex layout — it pulled
+       the ring up with the panel and shrank the container — where a transform
+       moves only the paint. 17rem clears the whole ring — the wave's own low
+       point included, which a shorter lift left poking out onto linen — while
+       its high point still stops short of the hero's button. The ring carries
+       a little top padding to make that window exist; the space reads as
+       filled now that the colour sits in it rather than as empty linen. */
+    @keyframes hero-band-settle {
+      from { transform: translateY(-17rem); }
+      to   { transform: none; }
+    }
+
+    .hero-band-rise {
+      animation: hero-band-settle linear both;
+      animation-timeline: scroll(root block);
+      animation-range: 45vh 85vh;
+    }
+
+    /* The exact inverse of the lift above, on the copy inside the panel. The
+       lift is meant to move the colour, not the words: carried along with it
+       the heading rode up into the tree-ring. Equal and opposite leaves the
+       copy where it was laid out, so the ring keeps its own clear space and
+       only the fill travels. Same range and timing, or the two drift apart. */
+    @keyframes hero-band-text-hold {
+      from { transform: translateY(17rem); }
+      to   { transform: none; }
+    }
+
+    .hero-band-hold {
+      animation: hero-band-text-hold linear both;
+      animation-timeline: scroll(root block);
+      animation-range: 45vh 85vh;
+    }
+  }
 }

@@ -28,10 +28,16 @@ const SLOT: Record<DoodleSlot, string> = {
 /**
  * Bleeding variants: same horizontal placement, lifted past the block's edge.
  * Only the vertical offset changes — see `bleed` on Decoration for why.
+ *
+ * The top offset is deeper than the bottom one. Blocks centre their copy
+ * vertically, so a tall mark bleeding upward still met the heading at -8; the
+ * marks that bleed downward sit under a paragraph that ends higher and clear it
+ * at that distance. Measured against the heading's glyph box, not its element
+ * box, which is taller than the text it holds.
  */
 const SLOT_BLEED: Partial<Record<DoodleSlot, string>> = {
-  'top-left': 'left-2 -top-8',
-  'top-right': 'right-2 -top-8',
+  'top-left': 'left-2 -top-24',
+  'top-right': 'right-2 -top-24',
   'bottom-left': '-bottom-8 left-2',
   'bottom-right': '-bottom-8 right-2',
 };
