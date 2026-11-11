@@ -11,13 +11,11 @@ import type {
   HeaderLogoSize,
   HeaderSurface,
   Page,
-  PartyPackage,
   PricingTier,
   SiteSettings,
 } from '@/types/content';
 
 import { faqs } from '@/content/faqs';
-import { partyPackages } from '@/content/parties';
 import { pricingTiers } from '@/content/pricing';
 import { siteSettings } from '@/content/site';
 import { earlyBirdPage } from '@/content/pages/earlyBird';
@@ -126,10 +124,6 @@ export async function getSiteSettings(): Promise<SiteSettings> {
 /** Founding tiers first, then the standard rates that apply after opening. */
 export async function getPricing(): Promise<PricingTier[]> {
   return pricingTiers;
-}
-
-export async function getPartyPackages(): Promise<PartyPackage[]> {
-  return partyPackages;
 }
 
 export async function getFaqs(): Promise<FaqItem[]> {

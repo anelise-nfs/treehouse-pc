@@ -1,5 +1,4 @@
 import type { Page } from '@/types/content';
-import { partyPackages } from '../parties';
 import { parkCity } from '../location';
 import { pt } from '../_portableText';
 import { foundingMembershipSection } from '../shared/foundingMembership';
@@ -199,69 +198,30 @@ export const homePage: Page = {
       level: 'primary',
       anchorId: 'parties',
     },
+    // One party, described once. There were two named packages and a grid of
+    // three rooms above this; both are gone. ROLLER assigns the room by party
+    // size, so the room was never a guest's choice to make, and the packages
+    // collapsed into a single party type.
+    //
+    // A richText block rather than the partyPackages block that used to sit
+    // here: with one unnamed party there is no card grid left to render, and
+    // no booking action at launch means no CTA either. The partyPackages block
+    // type is still wired into the renderer if Phase 2 brings tiers back.
     {
       _key: 'party-intro',
       decorations: [{ doodle: 'butterfly', slot: 'left', color: 'flamingo' }],
       _type: 'richText',
       align: 'center',
+      // PLACEHOLDER COPY — awaiting client. The first paragraph is the only
+      // line that survived from the two-package version; the price is a
+      // stand-in.
       content: pt(
         "The easiest birthday you'll ever throw. Your party includes a private room for two full hours plus play access for all your little guests — so the kids climb, explore, and celebrate while you actually enjoy the day.",
+        '$40 per child, with optional add-ons.',
       ),
-      subcopy: pt(
-        'Choose the level of help that fits your style: bring your own, or let us handle everything.',
-      ),
-    },
-    {
-      _key: 'party-packages',
-      _type: 'partyPackages',
-      packages: partyPackages,
-      link: {
-        label: 'get this party started',
-        // PLACEHOLDER: routes to email until the ROLLER booking flow exists.
-        kind: 'external',
-        href: 'mailto:fontaine@treehouseparkcity.com?subject=Party%20inquiry',
-        variant: 'solid-ocean',
-      },
-    },
-    {
-      _key: 'pick-your-room',
-      decorations: [{ doodle: 'vertsquiggle', slot: 'top-right', color: 'ocean', size: 'sm' }],
-      _type: 'featureGrid',
-      heading: 'pick your room',
-      subheading: 'three private rooms sized to fit your crew',
-      columns: 3,
-      items: [
-        {
-          _key: 'the-nook',
-          title: 'the nook',
-          // PLACEHOLDER: room photography pending; all three share one stand-in.
-          image: {
-            url: '/images/placeholder-room.svg',
-            alt: 'Placeholder graphic: photography of Nook pending',
-          },
-          caption: 'up to 16 kids',
-        },
-        {
-          _key: 'the-den',
-          title: 'the den',
-          // PLACEHOLDER: room photography pending; all three share one stand-in.
-          image: {
-            url: '/images/placeholder-room.svg',
-            alt: 'Placeholder graphic: photography of Den pending',
-          },
-          caption: 'up to 24 kids',
-        },
-        {
-          _key: 'the-grove',
-          title: 'the grove',
-          // PLACEHOLDER: room photography pending; all three share one stand-in.
-          image: {
-            url: '/images/placeholder-room.svg',
-            alt: 'Placeholder graphic: photography of Grove pending',
-          },
-          caption: 'up to 48 kids',
-        },
-      ],
+      // subcopy, not a CTA: there is nothing to book yet, and this reads as a
+      // note rather than an invitation to act.
+      subcopy: pt('Parties will be available to book when we open this winter.'),
     },
     {
       _key: 'band-come-see-us',
