@@ -190,6 +190,17 @@ no color pickers, no font or spacing controls, no raw HTML.
 - Prefer clarity over cleverness. This code needs to be readable by a future developer who did not
   write it.
 
+## Environment variables
+
+`NEXT_PUBLIC_GOOGLE_MAPS_STATIC_KEY` — Google Maps Static API key for the
+location block. Unset by default: the block renders a branded placeholder
+instead, so the build, the dev server and the review site all work without it.
+Set it in `.env.local` locally (`.gitignore` covers `.env*`) and in the deploy
+environment for production. It is `NEXT_PUBLIC_` because a static map URL
+carries its key in the page HTML either way; what makes that safe is an HTTP
+referrer restriction on the key in Google Cloud Console, not secrecy. See
+`lib/map.ts`.
+
 ## Placeholders currently in play
 
 Logo, icon set, and decorative SVGs are placeholders pending final brand files. Photography for the

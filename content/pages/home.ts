@@ -249,15 +249,22 @@ export const homePage: Page = {
     },
     {
       _key: 'location-map',
-      decorations: [{ doodle: 'spiral', slot: 'top-right', color: 'sunshine' }],
+      // No decoration: this block renders a real map now, and a doodle over
+      // map tiles reads as a rendering fault rather than as atmosphere.
       _type: 'locationBlock',
       location: {
         label: 'Treehouse Park City',
         address: '1209 Center Dr, Park City, UT 84098',
-        // PLACEHOLDER: approximate. Confirm the exact pin before the map goes live.
+        // UNUSED, and approximate. The map geocodes `address` above — the same
+        // string the directions link uses — so nothing reads these numbers and
+        // they have never been verified. Delete or correct them at the next
+        // content review; leaving them risks someone trusting them later.
         coordinates: { lat: 40.719, lng: -111.539 },
       },
-      zoom: 15,
+      // Desktop framing, one step wider than it started: at 15 and tighter the
+      // surroundings stop reading as Park City. The phone crop derives its own
+      // tighter zoom from this — see LocationMap.
+      zoom: 14,
     },
     {
       _key: 'hours-address',

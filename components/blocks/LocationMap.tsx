@@ -1,6 +1,7 @@
 import type { LocationBlock } from '@/types/content';
 import { CONTENT_INSET } from '@/components/layout';
 import { DecorationLayer } from '@/components/doodles/DecorationLayer';
+import { hasMapKey, staticMapUrl } from '@/lib/map';
 
 /**
  * Google Maps directions, built by encoding the authored address rather than
@@ -13,25 +14,24 @@ function directionsUrl(address: string): string {
 /**
  * The map.
  *
- * PHASE 2 — the visual inside `MapVisual` below is the only part that changes.
- * The props (`location.address`, `location.coordinates`, `zoom`) are already the
- * inputs a real map needs, so swapping the renderer is not a schema change:
+ * A real map when a Google Maps Static API key is configured, and the branded
+ * placeholder when it is not — so the build, the dev server and the review
+ * site all work with no key present, and the key arriving is a deploy setting
+ * rather than a code change. See lib/map.ts.
  *
- *   now      this branded placeholder card
- *   next     a Mapbox Static Images URL built from coordinates + zoom, as an
- *            <img> — still no runtime map dependency, still one request
- *   later    interactive Mapbox GL, if panning is ever wanted
+ * Google Static over Google Embed: an iframe cannot carry our own pin, and it
+ * swallows clicks, so the card could no longer link out to directions. Both
+ * are things this block already did as a placeholder and should not lose by
+ * gaining a map.
  *
- * Mapbox over the Google Embed deliberately: Google's embed cannot be
- * brand-styled, and it forces a keyed, billed embed to load on every pageview.
- * A static image with a muted Treehouse style keeps the page free of any
- * runtime map dependency. Launch needs a Mapbox account on the client's own
- * free tier.
- *
- * `zoom` is intentionally unread here — the placeholder has nothing to zoom.
- * It stays in the props so the Mapbox swap needs no content change.
+ * `location.coordinates` is unread. The static map geocodes `address`, the
+ * same string the directions link uses, so there is no second value to keep
+ * correct — which matters, because the authored coordinates are marked
+ * approximate.
  */
-export function LocationMap({ location, decorations, anchorId }: LocationBlock) {
+export function LocationMap({ location, zoom = 15, decorations, anchorId }: LocationBlock) {
+  const mapped = hasMapKey();
+
   return (
     <section
       id={anchorId}
@@ -43,19 +43,91 @@ export function LocationMap({ location, decorations, anchorId }: LocationBlock) 
         href={directionsUrl(location.address)}
         target="_blank"
         rel="noopener noreferrer"
-        className="block no-underline"
+        className="group block no-underline"
       >
         {/* label is rendered verbatim; address drives the link, not the display. */}
-        <MapVisual label={location.label} />
+        {mapped ? (
+          <StaticMap address={location.address} zoom={zoom} />
+        ) : (
+          <MapVisual label={location.label} />
+        )}
       </a>
-
     </section>
   );
 }
 
 /**
- * THE SWAP POINT. Replace this body with the Mapbox <img> and nothing outside
- * this function needs to change.
+ * The phone crop's zoom, one step tighter than the authored one.
+ *
+ * The two crops are shown at wildly different sizes — about 990px wide on a
+ * desktop against 278px on a phone — so the same zoom level means the phone is
+ * showing the same area shrunk to a quarter of the width, where every street
+ * name is illegible. Zooming in trades area for a map you can actually read.
+ *
+ * One step, not two. The arithmetic says nearly two levels would match the
+ * desktop's detail-per-pixel, but at that zoom the phone loses every landmark
+ * that makes the location recognisable — the highway exit, the junction — and
+ * a map of one unlabelled block is no more use than a small one.
+ *
+ * Clamped because Google's scale runs out around 21.
+ */
+function phoneZoom(zoom: number): number {
+  return Math.min(zoom + 1, 20);
+}
+
+/**
+ * The real map: one image, two crops.
+ *
+ * Two sources rather than one stretched image because Google caps a static
+ * map at 640 per side (1280 delivered at scale 2). A single wide image
+ * cropped to a phone's 4:3 box would throw away half those pixels and most of
+ * the surrounding streets with them, so each shape is requested at the ratio
+ * it will be shown at — and at its own zoom, since the two are shown at very
+ * different sizes. `<picture>` fetches only the one that matches.
+ *
+ * The caption sits below the image, never over it. Text on a map is the same
+ * unverifiable-contrast problem as text on a photograph — the backdrop varies
+ * per pixel and changes whenever the tiles do.
+ *
+ * alt="" on the image: it is the caption beneath that names the place, and the
+ * whole card is one link, so describing the map here would only lengthen that
+ * link's accessible name with a duplicate.
+ */
+function StaticMap({ address, zoom }: { address: string; zoom: number }) {
+  const wide = staticMapUrl({ address, zoom, width: 640, height: 320 });
+  const tall = staticMapUrl({ address, zoom: phoneZoom(zoom), width: 640, height: 480 });
+
+  return (
+    <div>
+      <picture>
+        {/* 48rem is Tailwind's md, the width the placeholder also changes
+            aspect at, so the two treatments crop at the same breakpoint. */}
+        <source media="(min-width: 48rem)" srcSet={wide} width={640} height={320} />
+        <img
+          src={tall}
+          alt=""
+          width={640}
+          height={480}
+          className="block aspect-[4/3] w-full rounded-[var(--radius-card)] object-cover md:aspect-[2/1]"
+        />
+      </picture>
+
+      {/* The visible text is the link's accessible name, with nothing added
+          by aria-label. An aria-label naming the place — "View Treehouse Park
+          City on Google Maps" — would not contain this string contiguously,
+          which is exactly what WCAG's Label in Name forbids. The section
+          heading above and the address below already give the context that
+          2.4.4 asks for. */}
+      <p className="mt-[var(--spacing-gutter)] text-center font-sans text-[length:var(--text-ui)] text-ink-soft">
+        <span className="underline group-hover:no-underline">view on Google Maps</span>
+      </p>
+    </div>
+  );
+}
+
+/**
+ * The no-key fallback, unchanged. Still what renders locally and on any build
+ * without NEXT_PUBLIC_GOOGLE_MAPS_STATIC_KEY set.
  *
  * Deliberately unbranded: the grey fill and dashed edge are the same treatment
  * as the placeholder image SVGs, so every unfinished block on the page reads as
