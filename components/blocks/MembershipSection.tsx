@@ -124,7 +124,7 @@ export function MembershipSection({
                 mailing-list opt-in and is optional — a page without one
                 renders exactly as it did before. */}
             <span className="inline-flex flex-wrap items-center justify-center gap-[var(--spacing-gutter)]">
-              <CtaLink link={cta} />
+              {cta ? <CtaLink link={cta} /> : null}
               {secondaryCta ? <CtaLink link={secondaryCta} /> : null}
             </span>
           </p>
@@ -144,7 +144,18 @@ export function MembershipSection({
                 <p className="font-sans text-[length:var(--text-ui)] font-semibold text-pine">
                   {perk.label}
                 </p>
-                <p className="font-serif text-[length:var(--text-body)] text-ink">
+                {/* 50ch, not the 68ch of `measure`: this column runs to about
+                    630px on a wide screen, and a perk is one sentence, so the
+                    full measure let it stretch the width of the tier cards
+                    beside it.
+
+                    50ch is the narrowest cap that costs nothing. Measured at
+                    1024, 1280 and 1440, every perk keeps the same line count;
+                    at 46ch the last one gains a line. Below roughly 1100px the
+                    column is already narrower than this and the cap does
+                    nothing, which is correct — the problem was only ever at
+                    the wide end. */}
+                <p className="max-w-[50ch] font-serif text-[length:var(--text-body)] text-ink">
                   {perk.description}
                 </p>
               </li>

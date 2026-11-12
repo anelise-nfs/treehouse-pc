@@ -56,8 +56,12 @@ export const earlyBirdPage: Page = {
       decorations: [{ doodle: 'vertscribble', slot: 'top-right', color: 'sunshine' }],
       intro: pt(
         "Be a part of Treehouse from the very beginning! Founding Members are the families who believe in what we're building — and we're making it worth your while.",
-        'Join before we open and lock in founding rates for three full years.',
+        'Early bird memberships will go on sale soon. Join before we open and lock in founding rates for three full years. Sign up for email alerts at the link below to get early access!',
       ),
+      // TEMPORARY, until the sale opens: the copy above now points at the
+      // newsletter opt-in as the thing to do, so 'be an early bird' would be a
+      // second, competing button — and on this page it linked here anyway.
+      showPrimaryCta: false,
     }),
     {
       _key: 'render',

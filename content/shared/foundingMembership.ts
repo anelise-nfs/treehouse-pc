@@ -82,11 +82,28 @@ export interface FoundingMembershipOptions {
   decorations?: Decoration[];
   /** In-page anchor target, so the footer can link to this section. */
   anchorId?: string;
+  /**
+   * Drop the 'be an early bird' button. /early-bird does while the sale is
+   * not open — on that page the button pointed at the page you are already
+   * on, and there is nothing to buy yet. The newsletter opt-in beside it
+   * stays and becomes the only action.
+   *
+   * TEMPORARY: remove this option, and the `false` at its call site, when
+   * founding memberships go on sale.
+   */
+  showPrimaryCta?: boolean;
 }
 
 export function foundingMembershipSection(
   key: string,
-  { title, titleBandColor, intro, decorations, anchorId }: FoundingMembershipOptions,
+  {
+    title,
+    titleBandColor,
+    intro,
+    decorations,
+    anchorId,
+    showPrimaryCta = true,
+  }: FoundingMembershipOptions,
 ): MembershipSectionBlock {
   return {
     _key: key,
@@ -95,7 +112,7 @@ export function foundingMembershipSection(
     tiers: foundingTiers,
     tiersFootnote: foundingFootnote,
     intro,
-    cta: beAnEarlyBird,
+    ...(showPrimaryCta ? { cta: beAnEarlyBird } : {}),
     secondaryCta: joinTheEmailClub,
     perksTitle: foundingPerksTitle,
     perks: foundingPerks,

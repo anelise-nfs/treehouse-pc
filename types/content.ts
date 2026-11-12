@@ -511,7 +511,12 @@ export interface MembershipSectionBlock extends BlockBase, Decorated {
   /** Fine print under the last card — annual billing terms. */
   tiersFootnote?: string;
   intro: PortableTextBlock[];
-  cta: Link;
+  /**
+   * Optional: /early-bird drops it while the sale is not open, leaving the
+   * newsletter opt-in below as the only action. A section with neither is
+   * valid too — it just reads as information.
+   */
+  cta?: Link;
   /**
    * Optional second button beside the primary one, for the newsletter opt-in.
    * Separate from `cta` rather than an array: the two are not peers, and the
