@@ -238,7 +238,19 @@
    ========================================================================== */
 
 @layer base {
-  html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+  /* No scroll-behavior: smooth here, deliberately.
+     
+     It applies to every programmatic scroll, including the one the App Router
+     performs on navigation — so following a link from halfway down one page
+     rendered the next page at the old offset and then animated it upward,
+     which reads as the new page scrolling itself. Measured: 1969px, then ~800ms
+     of travel.
+
+     In-page anchors now jump instantly. That is the better behaviour for the
+     one that matters most, the skip link, where an animated scroll delays the
+     keyboard user it exists to help. Reduced-motion users were already getting
+     instant jumps via the override further down this file. */
+  html { -webkit-text-size-adjust: 100%; }
 
   body {
     background: var(--color-surface);
