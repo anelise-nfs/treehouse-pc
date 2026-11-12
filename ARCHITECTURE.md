@@ -66,22 +66,42 @@ value, a px font size, or an arbitrary margin in a component.
 
 ### Color rule (non-negotiable — accessibility)
 
-Most of the brand palette fails WCAG AA contrast against white text. Measured ratios drove this rule:
+**Ink on a brand fill is the default. White is the exception, and on most colors it is only
+legal at large sizes.** Measured against the palette that ships today:
 
-- **White text on `pine` only** (`#416625`, 6.66:1).
-- **Ink text (`#1a1a1a`) on every other brand color.** All pass comfortably, 4.5:1 to 11.7:1.
+| fill | white text | ink text |
+| --- | --- | --- |
+| `pine` | **6.66** any size | 2.61 fails |
+| `tangerine` | **4.67** any size | 3.72 large only |
+| `tomato` | 3.85 large only | **4.52** any size |
+| `ocean` | 3.56 large only | **4.88** any size |
+| `lime` | 3.14 large only | **5.55** any size |
+| `mint` | 3.13 large only | **5.57** any size |
+| `sky` / `sunshine` / `flamingo` | 3.11–3.12 large only | **5.58–5.59** any size |
+| `seafoam` | 1.49 **fails at any size** | **11.72** any size |
+
+"Large" is WCAG's threshold: 24px, or 18.66px at weight 700. 600 is not bold enough to qualify.
+
+Rules that follow from the table:
+
+- **Ink on everything except pine.** Pine is the only fill where ink fails.
+- **White is fine on pine and tangerine at any size.** On every other fill it is a pass *only*
+  while the text stays large — so on those, the size is the compliance. Shrink the type and it
+  fails. Several components say so at the point of use.
+- **Never white on seafoam.** It fails at every size.
 - **Buttons use `--color-action` (`#256093`)**, a darkened ocean at 6.62:1. Never the original
   `#3c8dce`, which is 3.56:1 and fails at button text size.
-- Never use pine as a _text_ color on a brand-colored background (pine on mint is 3.10:1).
+- **Never pine as a _text_ color on a brand fill** — pine on mint is 2.13:1.
+- **No fill can carry both white and ink at 4.5:1.** White needs luminance ≤ 0.183 and ink needs
+  ≥ 0.233, so a mid-tone always fails one of them. If a surface needs both, it needs two surfaces.
 
-> **Branch `wcag-palette-test` deviates.** That branch darkens the palette, and tangerine to
-> Option A depth (`#cc4800`), where the safe pairing inverts: white is 4.67:1 and ink 3.72:1.
-> Tangerine is the one colour that takes white text there, alongside pine. If that palette ships,
-> this rule needs rewriting; if it is reverted, it stands as written. See the note in globals.css.
+If a design direction would put white text at body size on anything but pine or tangerine, flag it
+rather than implementing it. Treehouse is a place of public accommodation and the primary audience
+reads on phones, often outdoors.
 
-If a design direction would put white text on mint, sky, sunshine, lime, flamingo, seafoam,
-tangerine, tomato, or ocean, flag it rather than implementing it. Treehouse is a place of public
-accommodation and the primary audience reads on phones, often outdoors.
+> These figures replace an earlier version of this section written before the palette was darkened,
+> which recorded the original colors (mint 2.15:1, sky 1.55:1 and so on) and described the darkened
+> set as an unmerged branch. That palette shipped.
 
 ### Typography roles
 

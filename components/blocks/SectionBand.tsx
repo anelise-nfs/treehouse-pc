@@ -3,12 +3,26 @@ import { PortableText } from '@/components/PortableText';
 import { DecorationLayer } from '@/components/doodles/DecorationLayer';
 
 /**
- * CONTRAST: provisional across this whole map. The band label is white on every
- * color, per the client's design, and white clears AA on pine alone (6.66:1).
- * Ocean 3.56:1, tomato 3.85:1 and tangerine 3.20:1 clear the 3:1 large-text bar
- * and nothing else; mint 2.15:1, flamingo 2.34:1, lime 2.00:1, sunshine 1.61:1,
- * sky 1.55:1 and seafoam 1.49:1 fail outright. Deferred to the pre-launch a11y
- * pass — ARCHITECTURE.md's color rule is the fix (ink on everything but pine).
+ * CONTRAST: the band label is white on every fill, per the client's design,
+ * and it passes — but only because it is always large text. The label is set
+ * in --text-script-sm, which floors at 28px, so WCAG's 3:1 large-text bar
+ * applies rather than 4.5:1.
+ *
+ * Measured against the current palette: pine 6.66, tangerine 4.67, tomato
+ * 3.85, ocean 3.56, lime 3.14, mint 3.13, sky 3.12, sunshine 3.12, flamingo
+ * 3.11. Pine and tangerine clear 4.5:1 outright; the rest sit just above 3:1.
+ *
+ * So the size is the compliance here. Anything that lets this label render
+ * under 28px breaks seven of the ten colors at once.
+ *
+ * SEAFOAM IS THE EXCEPTION: white on it is 1.49:1, which fails even as large
+ * text. No band uses it today. If one ever does, it needs ink, not white —
+ * --color-on-seafoam is already ink for exactly this reason.
+ *
+ * These numbers superseded a much worse set. The earlier note here recorded
+ * mint at 2.15, flamingo 2.34, lime 2.00 and so on, and called them outright
+ * failures; those were measured before the palette was darkened and are no
+ * longer what the site renders.
  */
 const BAND_BG: Record<BandColor, string> = {
   pine: 'bg-pine',

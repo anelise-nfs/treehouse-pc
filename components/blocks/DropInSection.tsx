@@ -42,8 +42,16 @@ function Badge({ badge }: { badge: PriceBadge }) {
           </p>
         </div>
 
-        {/* CONTRAST: provisional. White on the price fills fails AA at any size —
-            flamingo 2.34:1, lime 2.00:1, sky 1.55:1. */}
+        {/* CONTRAST: white on the price fills passes, on the same terms as the
+            section bands — the price is set in --text-h2, which floors at
+            24px, so the 3:1 large-text bar applies. Flamingo 3.11:1, lime
+            3.14:1, sky 3.12:1 against the current palette.
+            The margin is thin and it is the size holding it: drop this below
+            24px and all three fail.
+
+            The figures this note used to carry — flamingo 2.34, lime 2.00,
+            sky 1.55, and the claim that they failed at any size — predate the
+            palette darkening. */}
         <div
           className={`${BAND_BG[badge.priceColor]} flex h-1/2 items-center justify-center px-4 pb-4 pt-4 text-center sm:px-6`}
         >

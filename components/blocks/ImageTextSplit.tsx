@@ -13,11 +13,12 @@ import { DecorationLayer } from '@/components/doodles/DecorationLayer';
  */
 const HEADING_COLOR: Record<SplitHeadingColor, string> = {
   pine: 'text-pine',
-  // CONTRAST: provisional (ocean on linen 3.44:1 — clears the 3:1 large-text bar only).
+  // On linen: ocean 3.44:1 — large text only.
   ocean: 'text-ocean',
-  // CONTRAST: provisional (tomato on linen 3.72:1 — clears the 3:1 large-text bar only).
+  // On linen: tomato 3.72:1 — large text only.
   tomato: 'text-tomato',
-  // CONTRAST: provisional (tangerine on linen 3.09:1 — clears the 3:1 large-text bar only).
+  // On linen: tangerine 4.50:1 — clears AA at any size. (An earlier note here
+  // said 3.09:1, measured before tangerine was darkened to #cc4800.)
   tangerine: 'text-tangerine',
 };
 
@@ -32,10 +33,12 @@ const HEADING_COLOR: Record<SplitHeadingColor, string> = {
  * cannot collapse, so against a band's margin the two stacked and produced a
  * ~180px gap where neighbouring bands showed 90px.
  *
- * CONTRAST: the client's chosen heading colors are below the 4.5:1 AA needs for
- * normal text. They are not below the 3:1 large-text bar, and --text-script-sm
- * cannot render under 28px, so as built these clear AA at the large-text
- * threshold. Retained as-drawn pending the pre-launch accessibility pass.
+ * CONTRAST: all four heading colors pass on linen as built. Pine 6.42:1 and
+ * tangerine 4.50:1 clear 4.5:1 outright; ocean 3.44:1 and tomato 3.72:1 pass
+ * as large text, which they always are — --text-script-sm floors at 28px.
+ *
+ * So for ocean and tomato the size is the compliance. These are heading colors
+ * only; the same tokens on body copy would fail.
  */
 export function ImageTextSplit({
   image,

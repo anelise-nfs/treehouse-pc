@@ -33,11 +33,17 @@ export interface SectionTitleBarProps {
  * Sans, not the script face: the client's design reserves script for the
  * labels inside these sections.
  *
- * CONTRAST: provisional. White on the fill is the worst pairing in either
- * section that uses this — tangerine 3.20:1, lime 2.00:1. --text-h3 is 24px on
- * desktop, so tangerine alone clears the 3:1 large-text bar there; at 20px on
- * mobile nothing here does, and 600 weight is not the bold that would lower the
- * threshold to 18.66px.
+ * CONTRAST: white on the fill, at 24px from --text-aa-large, so the 3:1
+ * large-text bar applies. The two fills in use measure tangerine 4.67:1 and
+ * lime 3.14:1 — tangerine clears 4.5:1 outright, lime passes as large text
+ * only. See the note on the heading below for why the size is fixed at 24px
+ * rather than following the type scale.
+ *
+ * 600 weight does not help: WCAG's lower 18.66px threshold needs bold, which
+ * is 700.
+ *
+ * The earlier figures here — tangerine 3.20, lime 2.00, and a 20px mobile size
+ * — predate both the palette darkening and the move to --text-aa-large.
  */
 export function SectionTitleBar({ title, color, align }: SectionTitleBarProps) {
   return (

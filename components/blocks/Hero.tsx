@@ -244,14 +244,27 @@ function AfterBand({ heading, body, cta, image, color = 'mint' }: HeroAfterBand)
               {heading}
             </h2>
 
-            {/* CONTRAST: provisional. White on mint is 3.13:1. The heading above
-                clears it — the script face floors at 28px, so the 3:1 large-text
-                bar applies — but this paragraph runs at --text-body and needs
-                4.5:1. Kept white at the client's request so the review build
-                shows the colour direction as drawn; pine would be 6.66:1. */}
+            {/* Ink, not white, and the only text on this band that is. White on
+                mint is 3.13:1: fine for the heading above, which is large text
+                and has only a 3:1 bar, but this paragraph runs at --text-body
+                and needs 4.5:1. Ink on the same mint is 5.57:1 and passes at
+                any size, so the background colour is untouched.
+
+                Two alternatives were tried and rejected. Holding white and
+                raising this to 24px passes as large text, but by 0.13, and 54
+                words at that size fills a phone screen. Darkening mint until
+                white clears 4.5:1 lands near #3f8367 — close enough to pine to
+                not be mint any more, and it would drop ink on mint to 3.86:1,
+                breaking the 'party with us' band and the mint price badges,
+                which rely on --color-on-mint being ink. No shade satisfies
+                both: white needs luminance <= 0.183, ink needs >= 0.233.
+
+                An earlier note here offered pine at 6.66:1 as the fix. That is
+                white-on-pine, a different pairing; pine text on mint is
+                2.13:1, worse than the white it was meant to replace. */}
             <PortableText
               blocks={body}
-              className="measure mt-[var(--spacing-gutter)] font-serif text-[length:var(--text-body)] text-white"
+              className="measure mt-[var(--spacing-gutter)] font-serif text-[length:var(--text-body)] text-ink"
             />
 
             {cta ? (
