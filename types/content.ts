@@ -942,9 +942,16 @@ export interface SiteSettings {
 export interface SocialLink {
   _key: string;
   platform: SocialPlatform;
-  url: string;
+  /**
+   * Optional, because a row of icons is a design element that has to look
+   * complete before every account exists. An entry without a url renders as
+   * the glyph alone — no link, and hidden from assistive tech, so nobody is
+   * offered a destination that is not there. Add the url and it becomes a
+   * real link with no other change.
+   */
+  url?: string;
   /** Accessible name; defaults to the platform name when absent. */
   label?: string;
 }
 
-export type SocialPlatform = 'instagram' | 'facebook' | 'tiktok' | 'youtube';
+export type SocialPlatform = 'instagram' | 'facebook' | 'x' | 'tiktok' | 'youtube';

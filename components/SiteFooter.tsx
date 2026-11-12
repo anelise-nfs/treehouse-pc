@@ -1,6 +1,7 @@
 import NextLink from 'next/link';
 import type { Link, Location, SanityImage, SocialLink } from '@/types/content';
 import { NewsletterSignup } from '@/components/NewsletterSignup';
+import { SocialIcon } from '@/components/SocialIcon';
 
 /**
  * Shared row styling for the footer's dense link lists.
@@ -69,6 +70,15 @@ function EmailText({ address }: { address: string }) {
     </>
   );
 }
+
+/** Accessible names, since a glyph has no text of its own. */
+const PLATFORM_NAMES: Record<SocialLink['platform'], string> = {
+  instagram: 'Instagram',
+  facebook: 'Facebook',
+  x: 'X',
+  tiktok: 'TikTok',
+  youtube: 'YouTube',
+};
 
 export interface SiteFooterProps {
   siteName: string;
@@ -198,15 +208,47 @@ export function SiteFooter({
               </p>
             ) : null}
 
+            {/* One row of glyphs rather than a list of platform names: this
+                sits directly under the contact details and should read as a
+                row of marks, not a second set of links competing with the
+                email address above it.
+
+                44px targets around a 20px glyph. The footer's text links are
+                allowed down to 24px (ARCHITECTURE.md → Accessibility
+                baseline) because each is a full-width row; an icon has no
+                label to widen it, so it gets the primary-control size. */}
             {socialLinks && socialLinks.length > 0 ? (
-              <ul className="mt-[var(--spacing-gutter)] flex flex-wrap justify-center gap-x-[var(--spacing-gutter)] lg:justify-start">
-                {socialLinks.map((social) => (
-                  <li key={social._key}>
-                    <a href={social.url} target="_blank" rel="noopener noreferrer" className={LINK}>
-                      {social.label ?? social.platform}
-                    </a>
-                  </li>
-                ))}
+              <ul className="mt-[var(--spacing-gutter)] flex justify-center gap-1 lg:-ml-3 lg:justify-start">
+                {socialLinks.map((social) => {
+                  const name = social.label ?? PLATFORM_NAMES[social.platform];
+                  const box =
+                    'flex min-h-[var(--tap-target)] min-w-[var(--tap-target)] items-center justify-center';
+
+                  return (
+                    <li key={social._key}>
+                      {social.url ? (
+                        <a
+                          href={social.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          aria-label={name}
+                          className={`${box} text-white transition-opacity duration-200 ease-out hover:opacity-70 focus-visible:opacity-70`}
+                        >
+                          <SocialIcon platform={social.platform} className="size-5" />
+                        </a>
+                      ) : (
+                        /* No url yet. A span, not an <a href="#">: a link that
+                           goes nowhere is a dead end for a keyboard or screen
+                           reader user, and aria-hidden keeps the placeholder
+                           out of their way entirely. Visually the row still
+                           reads as three. */
+                        <span aria-hidden="true" className={`${box} text-white`}>
+                          <SocialIcon platform={social.platform} className="size-5" />
+                        </span>
+                      )}
+                    </li>
+                  );
+                })}
               </ul>
             ) : null}
           </div>

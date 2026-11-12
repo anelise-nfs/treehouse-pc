@@ -72,11 +72,21 @@ export const siteSettings: SiteSettings = {
     { label: 'Terms', kind: 'anchor', href: '#' },
   ],
   /**
-   * Empty on purpose: the accounts exist but the URLs are not confirmed. The
-   * footer renders this column only when it is non-empty, so adding entries
-   * here is the only step needed.
+   * Instagram is live. Facebook and X are placeholders: the row reads as
+   * complete, but an entry with no `url` renders as the glyph alone rather
+   * than as a link to nowhere. Paste the urls in when the client confirms
+   * them and they become links — no other change.
    */
-  socialLinks: [],
+  socialLinks: [
+    {
+      _key: 'instagram',
+      platform: 'instagram',
+      url: 'https://www.instagram.com/treehouse.parkcity',
+    },
+    // PLACEHOLDER: awaiting the client's accounts.
+    { _key: 'facebook', platform: 'facebook' },
+    { _key: 'x', platform: 'x' },
+  ],
   defaultSeo: {
     description:
       "A playground for the kids. A cafe for you. Park City's one and only premium indoor play space for ages 0–12.",
