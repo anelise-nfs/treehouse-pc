@@ -3,6 +3,7 @@
 import { usePathname } from 'next/navigation';
 import NextLink from 'next/link';
 import type { HeaderLogoSize, HeaderSurface, Link, SanityImage } from '@/types/content';
+import { MenuTrigger } from '@/components/MenuTrigger';
 
 /**
  * NOTE: both sizes are identical, so the distinction currently buys nothing —
@@ -70,25 +71,39 @@ export function SiteHeader({
   const onPhoto = (headerSurfaces[pathname] ?? 'photo') === 'photo';
 
   return (
-    <header className="absolute inset-x-0 top-0 z-50">
+    /* Sticky below lg, absolute from it.
+     *
+     * Below lg this is a real bar: it is in flow, it is cream, and it pins to
+     * the top so the wordmark and the menu stay reachable the whole way down
+     * the page — the same behaviour the sub-page bar has, so the header works
+     * identically on every page at phone and tablet width.
+     *
+     * From lg it goes back to being an overlay on the hero with nothing behind
+     * it, which is the homepage's desktop treatment and is unchanged. Nothing
+     * on the desktop homepage sticks.
+     *
+     * The hero no longer reserves a strip of linen for this to sit over — it
+     * cannot, now that the bar occupies its own height below lg. See the
+     * hero's own note. */
+    <header className="sticky top-0 z-50 border-b border-ink/10 bg-linen lg:absolute lg:inset-x-0 lg:top-0 lg:border-0 lg:bg-transparent">
       {/* min-height, not height: the default lockup is comfortably shorter than
           the token, so pages that position themselves below the header (every
           pageHeader) still get exactly --spacing-header. The homepage's larger
           lockup is allowed to push the bar taller, and nothing there measures
           from the token. */}
-      {/* items-start from lg: the lockup and the 44px trigger are very different
-          heights there, so centring drifted their top edges apart by a different
-          amount at every breakpoint, and each element's own padding sets it
-          instead. Below lg the lockup is just the wordmark, close enough to the
-          trigger's height that centring both is simpler and lets the bar
-          collapse to its tallest child. */}
-      {/* The top padding is built to equal the gap on the left of the visible
-          hamburger bars, so the inset off the top of the viewport matches the
-          inset off its left edge. That gap is not the gutter: the button box is
-          wider than the bars it holds and carries a negative margin, so it is
-          the gutter, less that margin, plus half the difference between the tap
-          target and the bar width. Both terms change at lg — a wider bar and a
-          deeper negative margin — hence the second value.
+      {/* Below lg this is a solid bar with a height of its own, so its contents
+          are simply centred in it. They used to be top-aligned and pushed down
+          by a padding derived from the gutter, so that the inset off the top of
+          the viewport matched the inset off its left edge — which worked while
+          the header was a transparent overlay with no bar to sit in. Against a
+          fixed-height bar it drifts: the padding grows with the viewport and
+          the bar does not, so by 768 the whole lockup sat 6px low with the
+          space above it nearly three times the space below.
+
+          From lg the overlay returns and so does that padding. There the
+          lockup and the 44px trigger are very different heights, so centring
+          drifted their top edges apart by a different amount at every
+          breakpoint, and each element's own padding sets it instead.
 
           The trigger leads, then the wordmark. From lg they sit together on the
           left, so the wordmark's edge is the line the hero's text column aligns
@@ -96,7 +111,7 @@ export function SiteHeader({
           right edge balances the bar and buys back the width the two of them
           were sharing. Source order is the visual order either way, so the tab
           order needs no override. */}
-      <div className="relative flex min-h-[var(--spacing-header-compact)] items-start justify-between gap-3 px-[var(--spacing-gutter)] pb-2 pt-[calc(var(--spacing-gutter)-0.5rem+(var(--tap-target)-1.25rem)/2)] lg:min-h-[var(--spacing-header)] lg:justify-start lg:gap-7 lg:pt-[calc(var(--spacing-gutter)-1rem+(var(--tap-target)-2rem)/2)]">
+      <div className="relative flex min-h-[var(--spacing-header-compact)] items-center justify-between gap-3 px-[var(--spacing-gutter)] py-2 lg:min-h-[var(--spacing-header)] lg:items-start lg:justify-start lg:gap-7 lg:pb-2 lg:pt-[calc(var(--spacing-gutter)-1rem+(var(--tap-target)-2rem)/2)]">
         {/* Only over a photograph. On a light surface the header draws itself in
             ink instead, and a dark wash there would be a smudge protecting
             nothing. Sized to the bar rather than to --spacing-header: the
@@ -105,52 +120,21 @@ export function SiteHeader({
         {onPhoto ? (
           <div
             aria-hidden="true"
-            className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_bottom,rgba(0,0,0,0.5),transparent)]"
+            // From lg only. Below it the bar draws itself cream and sits on
+            // nothing, so a dark wash there would be a smudge over a solid
+            // fill rather than protection over a photograph.
+            className="pointer-events-none absolute inset-0 hidden bg-[linear-gradient(to_bottom,rgba(0,0,0,0.5),transparent)] lg:block"
           />
         ) : null}
 
-        <button
-          ref={triggerRef}
-          type="button"
-          onClick={onToggle}
-          aria-label={open ? 'Close menu' : 'Open menu'}
-          aria-expanded={open}
-          aria-controls={menuId}
-          // -ml moves the bars nearer the edge without shrinking the tap
-          // target, and goes further at lg to give the wordmark room. The
-          // header's gap grows by the same 8px there, so the wordmark itself
-          // does not move — the hero's text column is aligned to its left edge
-          // and would have to follow it.
-          // mt-2.5 plus the icon's 14px inset matches the wordmark's pt-6 below.
-          // min-h/min-w rather than a fixed size: the label below the bars makes
-          // this taller than 44px on desktop, and a fixed height would have
-          // clipped it. The minimum still holds on phones, where the label is
-          // hidden and the bars alone would otherwise leave a 16px target.
-          className="relative -ml-2 flex min-h-[var(--tap-target)] lg:-ml-4 min-w-[var(--tap-target)] shrink-0 flex-col items-center justify-start gap-[4.25px] sm:gap-[5px]"
-        >
-          {[0, 1, 2].map((bar) => (
-            <span
-              key={bar}
-              aria-hidden="true"
-              className={`block h-[2.5px] w-5 sm:h-[2px] lg:w-8 ${onPhoto ? 'bg-white' : 'bg-mint lg:bg-ink'}`}
-            />
-          ))}
-
-          {/* Desktop only, and the bars widen to 2.25rem there to match this
-              label's 34.7px rather than the other way round — sized down to the
-              24px bar the word would have had to run at 9px.
-
-              Left as real text rather than aria-hidden: the
-              button's accessible name is "Open menu"/"Close menu", both of
-              which contain this visible word, so WCAG's Label in Name holds. */}
-          <span
-            className={`mt-1 hidden font-sans text-[length:var(--text-caption)] font-semibold leading-none lg:block ${
-              onPhoto ? 'text-white' : 'text-ink'
-            }`}
-          >
-            menu
-          </span>
-        </button>
+        <MenuTrigger
+          open={open}
+          onToggle={onToggle}
+          menuId={menuId}
+          triggerRef={triggerRef}
+          onPhoto={onPhoto}
+          withLabel
+        />
 
         {/* pt-6 is the shared top edge from lg — the trigger's mt-2.5 plus its
             14px inset lands here too. Change one, change both.

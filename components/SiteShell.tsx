@@ -1,9 +1,11 @@
 'use client';
 
 import { useEffect, useId, useRef, useState } from 'react';
+import { usePathname } from 'next/navigation';
 import NextLink from 'next/link';
-import type { SanityImage } from '@/types/content';
+import type { HeaderVariant, Link, SanityImage } from '@/types/content';
 import { SiteHeader, type SiteHeaderProps } from '@/components/SiteHeader';
+import { SiteTopNav } from '@/components/SiteTopNav';
 import { Doodle } from '@/components/doodles/Doodle';
 
 /**
@@ -35,6 +37,17 @@ export interface SiteShellProps extends SiteHeaderProps {
   children: React.ReactNode;
   /** Single-colour wordmark, shown at the foot of the open menu panel. */
   logoWhite?: SanityImage;
+  /**
+   * Which header each route wears, keyed by path. Authored per page and passed
+   * down from the root layout, which has no access to the active route.
+   *
+   * An unlisted path falls back to 'overlay' — the treatment that existed
+   * before this map did, so a route outside the content layer (the /doodles
+   * scratch page) keeps behaving as it always has.
+   */
+  headerVariants: Record<string, HeaderVariant>;
+  /** The sub-page bar's links. Unused by the overlay header. */
+  topNav: Link[];
 }
 
 /**
@@ -45,10 +58,18 @@ export interface SiteShellProps extends SiteHeaderProps {
  * Squeeze, not slide: margin-right keeps everything on-screen, at the cost of a
  * visible re-wrap. A transform would animate better but clip the left edge.
  */
-export function SiteShell({ children, logoWhite, ...headerProps }: SiteShellProps) {
+export function SiteShell({
+  children,
+  logoWhite,
+  headerVariants,
+  topNav,
+  ...headerProps
+}: SiteShellProps) {
+  const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const menuId = useId();
   const triggerRef = useRef<HTMLButtonElement>(null);
+  const variant = headerVariants[pathname] ?? 'overlay';
 
   useEffect(() => {
     if (!open) return;
@@ -64,6 +85,16 @@ export function SiteShell({ children, logoWhite, ...headerProps }: SiteShellProp
     return () => document.removeEventListener('keydown', onKeyDown);
   }, [open]);
 
+  /* Both variants get the panel now. The sub-page bar shows its links inline
+     from md, but below that it falls back to the homepage's hamburger, and
+     that button needs the same panel behind it — so the drawer, the open
+     state and the squeeze wrapper are shared rather than branched.
+
+     The squeeze animates margin-left, not a transform. That matters here: a
+     transform on this wrapper would make it the containing block for the
+     sticky bar inside it and quietly stop the bar sticking. A margin does not. */
+  const toggle = () => setOpen((wasOpen) => !wasOpen);
+
   return (
     <>
       {/* relative is load-bearing: SiteHeader is absolute, and without a
@@ -73,13 +104,25 @@ export function SiteShell({ children, logoWhite, ...headerProps }: SiteShellProp
           open ? 'sm:ml-[var(--spacing-menu)]' : 'ml-0'
         }`}
       >
-        <SiteHeader
-          {...headerProps}
-          open={open}
-          menuId={menuId}
-          triggerRef={triggerRef}
-          onToggle={() => setOpen((wasOpen) => !wasOpen)}
-        />
+        {variant === 'topbar' ? (
+          <SiteTopNav
+            siteName={headerProps.siteName}
+            logo={headerProps.logo}
+            links={topNav}
+            open={open}
+            menuId={menuId}
+            triggerRef={triggerRef}
+            onToggle={toggle}
+          />
+        ) : (
+          <SiteHeader
+            {...headerProps}
+            open={open}
+            menuId={menuId}
+            triggerRef={triggerRef}
+            onToggle={toggle}
+          />
+        )}
         {children}
       </div>
 

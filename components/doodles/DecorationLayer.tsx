@@ -63,17 +63,70 @@ function variation(seed: string) {
 }
 
 /**
- * Doodle widths. `md` and `lg` are double what they were; `sm` is deliberately
- * unchanged, because the one placement using it — the squiggle beside the party
- * room cards — is the size the others were scaled up to match.
+ * Doodle widths, keyed by the size an author picks.
  *
- * Note these size the *width*. A doodle's height follows its own aspect ratio,
- * so a tall narrow shape reads much larger than a wide flat one at the same
- * setting — which is why the `sm` squiggle looked bigger than the `md` marks
- * around it.
+ * These size the *width*. A doodle's height follows its own aspect ratio, so a
+ * tall narrow shape reads much larger than a wide flat one at the same step.
+ *
+ * `md` and `lg` are double what they originally were. `sm` was left behind at
+ * 48px when they grew, which put a 112px hole in the middle of the scale: the
+ * sub-page header wanted a mark smaller than the default without it vanishing,
+ * and there was nothing between the two. `sm` moved into that gap and `xs`
+ * took its old value, so nothing that was 48px had to change size — only its
+ * name.
  */
+const WIDTH: Record<NonNullable<Decoration['size']>, string> = {
+  xs: 'w-12',
+  sm: 'w-24',
+  md: 'w-40',
+  lg: 'w-56',
+};
+/**
+ * Smallest viewport the layer appears at. 'md' is the site-wide default, set by
+ * ARCHITECTURE.md → Mobile: these are margin decoration and a phone has no
+ * margin to spare.
+ *
+ * 'lg' is for a block whose two columns only split at lg. While such a block is
+ * stacked, its copy spans the full width and the corner slots are no longer
+ * margin at all — they are on top of the text.
+ */
+const VISIBILITY = {
+  md: 'hidden md:block',
+  lg: 'hidden lg:block',
+} as const;
+
+/**
+ * The box the slots are corners of.
+ *
+ * 'gutter' is the site-wide default: the page gutter on both sides, the
+ * block's full height. Doodles then stop at the same edge the page's content
+ * respects instead of running up against the viewport.
+ *
+ * 'header' is the sub-page opener's title column. Its left and bottom edges
+ * match 'gutter', so a bottom-left mark lands in the same place, but the top
+ * and right are pulled off the corner — that column is short and its title is
+ * vertically centred, so a mark tight into the top-right corner sat up against
+ * the nav bar above it. Nudging the bounds rather than the slot keeps this to
+ * one caller: the slot map is shared by every block on the site.
+ */
+const BOUNDS = {
+  gutter: 'inset-y-0 left-[var(--spacing-gutter)] right-[var(--spacing-gutter)]',
+  header: 'bottom-0 top-6 left-[var(--spacing-gutter)] right-2',
+} as const;
+
 export interface DecorationLayerProps {
   decorations?: Decoration[];
+  /** See VISIBILITY. Defaults to the site-wide 'md'. */
+  from?: keyof typeof VISIBILITY;
+  /** See BOUNDS. Defaults to the site-wide 'gutter'. */
+  bounds?: keyof typeof BOUNDS;
+  /**
+   * The settle-in entrance every other block's doodles use. Defaults on.
+   * Switched off by a block that is deliberately static — the sub-page header
+   * animates nothing, and marks drifting into place would be the only movement
+   * on it.
+   */
+  enter?: boolean;
 }
 
 /**
@@ -92,15 +145,18 @@ export interface DecorationLayerProps {
  *
  * Returns null when a block has no decorations, so nothing is emitted at all.
  */
-export function DecorationLayer({ decorations }: DecorationLayerProps) {
+export function DecorationLayer({
+  decorations,
+  from = 'md',
+  bounds = 'gutter',
+  enter = true,
+}: DecorationLayerProps) {
   if (!decorations || decorations.length === 0) return null;
 
   return (
     <div
       aria-hidden="true"
-      // Inset horizontally by the page gutter rather than filling the block:
-      // doodles then stop at the same edge the page's content respects, instead
-      // of running right up against the viewport.
+      // Which edges the slots measure from is set by BOUNDS above, not here.
       //
       // The clip-path is horizontal-only — sides at the layer's edge, top and
       // bottom pushed far outside it. That keeps the guarantee that matters (a
@@ -109,7 +165,7 @@ export function DecorationLayer({ decorations }: DecorationLayerProps) {
       // cannot express this: setting one axis to hidden forces the other to
       // scroll, and it was slicing the flat bottom off any tall doodle in a
       // short block.
-      className="pointer-events-none absolute inset-y-0 left-[var(--spacing-gutter)] right-[var(--spacing-gutter)] z-0 hidden select-none [clip-path:inset(-100vh_0_-100vh_0)] md:block"
+      className={`pointer-events-none absolute z-0 select-none [clip-path:inset(-100vh_0_-100vh_0)] ${BOUNDS[bounds]} ${VISIBILITY[from]}`}
     >
       {decorations.map((decoration, index) => (
         <Doodle
@@ -118,7 +174,7 @@ export function DecorationLayer({ decorations }: DecorationLayerProps) {
           key={`${decoration.doodle}-${decoration.slot}-${index}`}
           name={decoration.doodle}
           color={decoration.color}
-          enter
+          enter={enter}
 
           style={(() => {
             const { tilt, delay } = variation(`${decoration.doodle}-${decoration.slot}-${index}`);
@@ -126,9 +182,7 @@ export function DecorationLayer({ decorations }: DecorationLayerProps) {
           })()}
           className={`absolute ${
             (decoration.bleed ? SLOT_BLEED[decoration.slot] : undefined) ?? SLOT[decoration.slot]
-          } ${
-            decoration.size === 'lg' ? 'w-56' : decoration.size === 'sm' ? 'w-12' : 'w-40'
-          }`}
+          } ${WIDTH[decoration.size ?? 'md']}`}
         />
       ))}
     </div>

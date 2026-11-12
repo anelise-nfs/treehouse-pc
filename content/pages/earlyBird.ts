@@ -15,6 +15,7 @@ export const earlyBirdPage: Page = {
   _type: 'page',
   title: 'hey, early bird!',
   slug: 'early-bird',
+  headerVariant: 'topbar',
   seo: {
     title: 'Founding memberships — Treehouse Park City',
     description:
@@ -26,6 +27,13 @@ export const earlyBirdPage: Page = {
     {
       _key: 'page-header',
       _type: 'pageHeader',
+      // Colours chosen against what follows rather than in isolation: the
+      // block below this one carries a flamingo spiral and a sunshine
+      // squiggle, so neither repeats here.
+      decorations: [
+        { doodle: '3plus', slot: 'top-right', color: 'mint', size: 'sm' },
+        { doodle: '3stars', slot: 'bottom-left', color: 'ocean', size: 'sm', bleed: true },
+      ],
       title: 'hey, early bird!',
       height: 'small',
       image: {
@@ -55,7 +63,8 @@ export const earlyBirdPage: Page = {
       _key: 'render',
       _type: 'photoGallery',
       layout: 'single',
-      decorations: [{ doodle: '3stars', slot: 'top-right', color: 'mint' }],
+      // 'xs' is what this was before the scale gained a step; the name changed, the size did not.
+      decorations: [{ doodle: '3stars', slot: 'top-right', color: 'mint', size: 'xs' }],
       images: [
         {
           // The client's floor-plan render. Not photography; to be replaced after opening.

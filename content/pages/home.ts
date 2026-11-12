@@ -16,6 +16,9 @@ export const homePage: Page = {
   _type: 'page',
   title: 'Treehouse Park City',
   slug: '',
+  // The overlay header belongs to this page alone: it is the only one that
+  // opens on a full-bleed photograph for a transparent bar to sit on.
+  headerVariant: 'overlay',
   seo: {
     title: 'Treehouse — neighborhood play cafe in Park City, Utah',
     description:

@@ -91,7 +91,20 @@ export interface Decoration {
   slot: DoodleSlot;
   /** Defaults to the colour the doodle was drawn in. */
   color?: BandColor;
-  size?: 'sm' | 'md' | 'lg';
+  /**
+   * Width step. The heights follow each doodle's own aspect ratio, so a tall
+   * narrow shape reads much larger than a flat one at the same step.
+   *
+   *   xs   48px   a punctuation mark beside something small
+   *   sm   96px   a corner accent in a compact block
+   *   md  160px   the default, tuned for the full-width image/text blocks
+   *   lg  224px
+   *
+   * 'sm' used to be 48px with nothing between it and the default's 160. The
+   * sub-page header needed a mark in that gap — 160 dwarfed a 50px title and
+   * 48 read as a speck — so the step moved in and 'xs' took the old value.
+   */
+  size?: 'xs' | 'sm' | 'md' | 'lg';
   /**
    * Let this doodle hang past the block's top or bottom edge. Vertical only —
    * horizontal bleed would widen the document and bring back a horizontal
@@ -185,6 +198,30 @@ export interface Link {
 }
 
 export type LinkKind = 'internal' | 'external' | 'anchor';
+
+/**
+ * One entry in the site navigation: a reference to a page, not a URL.
+ *
+ * This is the Sanity shape, built now so Phase 2 is a storage swap and not a
+ * rework. In Sanity `page` becomes a reference field whose options are the
+ * page documents themselves, so an editor picks any page from a list and the
+ * path is derived from that page's slug. They cannot type a URL, which means
+ * they cannot point the nav at a route that does not exist, and renaming a
+ * page's slug moves its nav entry with it.
+ *
+ * /lib/content.ts resolves these to Links at the edge, so nav components keep
+ * taking plain Links and know nothing about pages.
+ */
+export interface NavItem {
+  /** The target page's slug. The homepage's slug is the empty string. */
+  page: string;
+  /**
+   * Overrides the page's own title in the nav. Usually set: page titles are
+   * written for the page ('hey, early bird!') and nav labels for the bar
+   * ('Early Bird').
+   */
+  label?: string;
+}
 
 /* ---------------------------------------------------------------------------
    Portable text
@@ -345,30 +382,41 @@ export interface SectionBandBlock extends BlockBase, Decorated {
 export type BandLevel = 'primary' | 'secondary';
 
 /**
- * Sub-page opener: a title over a photograph, with the site header overlaying it
- * exactly as it does the homepage hero. Image background only — there is no
- * solid-color variant.
+ * Sub-page opener: the page's h1 on linen beside a photograph, split by the
+ * same S-curve the homepage hero uses.
+ *
+ * Nothing overlays the photograph — not the title, not the site header, which
+ * on these pages is the solid cream top bar sitting above this block in normal
+ * flow. That is the point of the treatment: no text on an image means no
+ * contrast that varies per pixel, and no wordmark on one either.
+ *
+ * Shorter than the hero and deliberately still: the hero's scroll choreography
+ * and the colour band and tree ring beneath it are homepage-specific and have
+ * no counterpart here.
  *
  * `title` is the page's h1 on any page that uses this block.
- *
- * Fixed treatment, not author-facing, for the same reason as the hero's:
- *
- *   height small   clamp(140px, 18vw, 200px)
- *   height medium  clamp(220px, 30vw, 380px)
- *   title          --text-h2 scale, Quicksand semibold, centered, white
- *   scrim          rgba(0,0,0,0.55) at the bottom fading to transparent ~70% up
- *   title shadow   0 1px 3px rgba(0,0,0,0.4)
  */
-export interface PageHeaderBlock extends BlockBase {
+export interface PageHeaderBlock extends BlockBase, Decorated {
   _type: 'pageHeader';
   /** Title case. Renders as the h1. */
   title: string;
   image: SanityImage;
   height: PageHeaderHeight;
-  /** Fill behind the title band. Defaults to mint, matching the homepage hero. */
+  /**
+   * The seam's painted edge — the offset echo of the curve behind the photo,
+   * the same device the hero uses. Defaults to mint, matching it.
+   */
   bandColor?: BandColor;
+  /**
+   * `decorations` renders inside the linen title column rather than across the
+   * whole block, so 'top-right' and 'bottom-left' are the corners of the text
+   * area and not of the photograph. Those two are the slots this opener is
+   * built around; the others resolve, but the column is short and a mark in
+   * the middle of one of its edges has nowhere to sit.
+   */
 }
 
+/** Total section height, not the photograph's: the two columns share it. */
 export type PageHeaderHeight = 'small' | 'medium';
 
 export interface RichTextBlock extends BlockBase, Decorated {
@@ -640,8 +688,29 @@ export type BlockOfType<T extends Block['_type']> = Extract<Block, { _type: T }>
 export type HeaderLogoSize = 'default' | 'large';
 
 /**
+ * Which site header a page gets.
+ *
+ * 'overlay' is the homepage treatment: a transparent bar sitting on the hero,
+ * with the hamburger that opens the slide-in panel. 'topbar' is the sub-page
+ * treatment: a solid cream bar in normal flow, sticky, wordmark left and the
+ * links laid out across it, with no panel at all.
+ *
+ * Authored per page rather than derived from the blocks, unlike the two
+ * settings below it. Which header a page wears is an editorial decision — the
+ * client's, not something to be read off whether block zero happens to be a
+ * hero — and inferring it meant a page could change its chrome by having its
+ * opening block swapped.
+ */
+export type HeaderVariant = 'overlay' | 'topbar';
+
+/**
  * What sits behind the header on a given route, which decides how it draws
  * itself: ink on a light surface, white over a protective scrim on a photo.
+ *
+ * Only consulted for 'overlay' pages — the top bar is opaque and paints itself
+ * the same way everywhere. With the homepage the only overlay page today, the
+ * 'photo' branch is currently unreachable; it stays because the overlay header
+ * is still general, and a second overlay page would need it.
  */
 export type HeaderSurface = 'light' | 'photo';
 
@@ -659,6 +728,12 @@ export interface Page {
   title: string;
   /** Flattened from Sanity's slug object. Home is ''. */
   slug: string;
+  /**
+   * Required, with no default: a new page has to say which header it wears.
+   * An optional field would have let one be added without the decision being
+   * made, and it would have defaulted to whatever the homepage happens to use.
+   */
+  headerVariant: HeaderVariant;
   seo?: SeoMeta;
   blocks: Block[];
   /**
@@ -805,8 +880,17 @@ export interface SiteSettings {
    * than a filter over the full-color logo, which would muddy it.
    */
   logoWhite?: SanityImage;
-  /** At launch: the two links inside the hamburger menu. */
+  /** At launch: the links inside the homepage's hamburger menu. */
   primaryNav: Link[];
+  /**
+   * The sub-page top bar's horizontal nav, as references to pages rather than
+   * as hand-written links — see NavItem.
+   *
+   * A separate list from primaryNav: the two serve different pages and will
+   * not stay in step. The top bar is where Visit, Memberships, Parties and
+   * Cafe land as those pages are built, while the homepage panel stays short.
+   */
+  topNav?: NavItem[];
   footerNav?: Link[];
   navCta?: Link;
   socialLinks?: SocialLink[];

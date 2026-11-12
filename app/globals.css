@@ -189,12 +189,11 @@
      positioned from below the header instead of from the top of the image.
      Both read the same value, so the two cannot drift apart. */
   --spacing-header:     clamp(5rem, 3.5rem + 6vw, 8.25rem);
-  /* The header below lg, and the strip the homepage hero reserves underneath
-     it before the photograph starts. ONE token for both on purpose: they were
-     two, and they disagreed — the bar was 60px while the hero reserved 84px, so
-     the wordmark sat centred in the bar but visibly high in the white space a
-     reader actually sees. Anything that changes one has to change the other, so
-     they are the same number.
+  /* The height of the header below lg, on every page: the homepage's sticky
+     cream bar and the sub-page bar's phone layout are the same bar and read
+     the same number. It is also what the homepage hero subtracts from the
+     viewport, since the bar now sits above it in flow rather than floating
+     over a strip the hero reserved.
 
      The floor is the wordmark plus the bar's padding, which now insets from
      the top by the same amount the hamburger insets from the left — a deeper
@@ -202,6 +201,13 @@
      72px at the widest stacked width, and this leaves clearance beneath it.
      Too small and the wordmark lands on the photograph. */
   --spacing-header-compact: 5.25rem;
+  /* The sub-page top bar's minimum height. A floor, not a fixed height: the bar
+     is sticky and in flow, so it may grow — the nav wraps to a second row
+     rather than overflowing once there are more links than fit. Sized to the
+     wordmark at its widest step plus the bar's padding. Anything that needs to
+     clear the bar (scroll-margin on an anchor target, say) should read this
+     and accept that it is a minimum. */
+  --spacing-topnav:     4.5rem;
   --spacing-measure:    68ch;                            /* max prose width */
   --spacing-container:  1200px;
 
