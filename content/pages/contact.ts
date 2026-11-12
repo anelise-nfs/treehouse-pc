@@ -3,9 +3,11 @@ import { parkCity } from '../location';
 import { pt } from '../_portableText';
 
 /**
- * Contact page. The shell only — the form itself is the next piece of work, and
- * the richText block below is standing in its place so the page has something
- * under its header in the meantime.
+ * Contact page.
+ *
+ * The form here emails the business. The mailing-list opt-in is a different
+ * thing in a different place — it lives in the footer and posts to a different
+ * endpoint. See lib/forms.ts.
  *
  * The h1 is lowercase to match the rest of the site's voice ('hey, early
  * bird!', 'party with us'); the SEO title is sentence case because that is
@@ -47,15 +49,22 @@ export const contactPage: Page = {
     },
     {
       _key: 'contact-form',
-      _type: 'richText',
-      align: 'center',
-      // PLACEHOLDER: the form replaces this block. Kept as copy rather than an
-      // empty section so the page is not a header over blank linen while the
-      // client is reviewing the template.
-      content: pt(
-        "We'd love to hear from you — whether you have a question about memberships, want to talk about a party, or just want to know when we open.",
+      _type: 'contactForm',
+      heading: 'say hello',
+      intro: pt(
+        "We'd love to hear from you — whether you have a question about memberships, want to talk about a party, or just want to know more.",
+        // Second paragraph, and a real mailto rather than an address to
+        // retype. The same address as the footer's; it is not pulled from
+        // SiteSettings because it is part of a sentence, and splitting a
+        // sentence between the content and the settings would leave neither
+        // editable on its own.
+        [
+          'You can also contact us by email at ',
+          { text: 'holler@treehouseparkcity.com', href: 'mailto:holler@treehouseparkcity.com' },
+          '.',
+        ],
       ),
-      subcopy: pt('A contact form will land here shortly.'),
+      submitLabel: 'send it',
     },
   ],
 };

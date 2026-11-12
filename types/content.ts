@@ -197,7 +197,12 @@ export interface Link {
   variant?: ButtonVariant;
 }
 
-export type LinkKind = 'internal' | 'external' | 'anchor';
+/**
+ * 'newsletter' is a destination rather than a URL: it opens the mailing-list
+ * dialog. It still carries an href to the footer's signup, so a visitor
+ * without JavaScript gets taken somewhere real instead of nowhere.
+ */
+export type LinkKind = 'internal' | 'external' | 'anchor' | 'newsletter';
 
 /**
  * One entry in the site navigation: a reference to a page, not a URL.
@@ -507,6 +512,12 @@ export interface MembershipSectionBlock extends BlockBase, Decorated {
   tiersFootnote?: string;
   intro: PortableTextBlock[];
   cta: Link;
+  /**
+   * Optional second button beside the primary one, for the newsletter opt-in.
+   * Separate from `cta` rather than an array: the two are not peers, and the
+   * styling difference between a primary and a secondary action is the point.
+   */
+  secondaryCta?: Link;
   perksTitle: string;
   perks: MembershipPerk[];
 }
@@ -553,6 +564,27 @@ export interface PriceBadge {
   /** Fill behind the label half. The price half below it uses `priceColor`. */
   labelColor: BandColor;
   priceColor: BandColor;
+}
+
+/**
+ * The contact form. Emails the business.
+ *
+ * Distinct from the newsletter opt-in, which is site chrome rather than a
+ * block and posts to a different endpoint — see lib/forms.ts. The fields are
+ * fixed rather than author-defined: an author who can add fields can add ones
+ * nobody reads, and can collect personal data nobody agreed to hold.
+ */
+export interface ContactFormBlock extends BlockBase, Decorated {
+  _type: 'contactForm';
+  heading?: string;
+  /**
+   * Copy above the fields. Portable text rather than a plain string because it
+   * carries the alternative contact route, and that email has to be a real
+   * mailto link rather than text someone has to retype.
+   */
+  intro?: PortableTextBlock[];
+  /** Defaults to 'send it'. */
+  submitLabel?: string;
 }
 
 export interface PartyPackagesBlock extends BlockBase, Decorated {
@@ -667,6 +699,7 @@ export type Block =
   | MembershipSectionBlock
   | DropInSectionBlock
   | PartyPackagesBlock
+  | ContactFormBlock
   | LocationBlock
   | HoursAddressBlock
   | FaqAccordionBlock
@@ -750,6 +783,11 @@ export interface Location {
   name: string;
   slug: string;
   address: PostalAddress;
+  /**
+   * Unused at launch: the client does not want a phone number published, so
+   * nothing in the site renders this. Setting it has no effect until a
+   * renderer is added back.
+   */
   phone?: string;
   email?: string;
   /** Ordered for display; open-ended so 'Holidays — see socials' is expressible. */

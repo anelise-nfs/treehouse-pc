@@ -12,8 +12,10 @@ export const parkCity: Location = {
     postalCode: '84098',
     country: 'US',
   },
-  phone: '(415) 860-3698',
-  email: 'fontaine@treehouseparkcity.com',
+  // No phone at launch, by the client's explicit direction. The field exists
+  // on Location and nothing renders it — see the Location type and SiteFooter.
+  // Putting a number back means restoring the footer's renderer too.
+  email: 'holler@treehouseparkcity.com',
   hours: [{ _key: 'everyday', days: 'open every day', hours: '8am – 7pm' }],
   // PLACEHOLDER: real Google Maps place URL and embed src pending.
   mapUrl: 'https://maps.google.com/?q=1209+Center+Dr+Park+City+UT+84098',

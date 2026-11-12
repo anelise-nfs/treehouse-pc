@@ -172,6 +172,10 @@
      subsection size above would run to the curve. Still floored at 28px: this
      is the face at its minimum, not a small script. */
   --text-script-badge: clamp(1.75rem, 1.5rem + 1.1vw, 2.375rem);
+  /* Script headings in the footer. A step down from --text-script-badge, which
+     at 28–38px made three column headings the loudest thing in the chrome and
+     set the whole footer's height. Still unmistakably the script face. */
+  --text-script-footer: clamp(1.25rem, 1.1rem + 0.55vw, 1.5rem);
   --text-ui:      0.9375rem;
   --text-caption: 0.8125rem;
 

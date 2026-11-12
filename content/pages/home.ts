@@ -42,10 +42,22 @@ export const homePage: Page = {
       scriptHeadline: 'climb higher, imagine bigger, play freely',
       mobileScriptHeadline: 'climb higher, play freely',
       bandColor: 'mint',
+      // LAUNCH WORDING. Founding memberships are not on sale yet, so the hero
+      // asks for an email instead of a purchase and points at the footer's
+      // opt-in. At sales launch this flips to:
+      //
+      //   label: 'learn about memberships'
+      //   kind:  'internal'
+      //   href:  '/early-bird'
+      //
+      // and nothing else about the hero changes.
       primaryCta: {
-        label: 'reserve your membership now',
-        kind: 'internal',
-        href: '/early-bird',
+        label: 'sign up for updates',
+        // Opens the signup dialog rather than scrolling. This is the only
+        // call to action a first visitor sees, and anchoring it sent them
+        // nine screens down the page, past everything, to the footer.
+        kind: 'newsletter',
+        href: '#newsletter',
         variant: 'solid-ocean',
       },
       // Rendered by the hero, not as a block of its own: its seam continues the

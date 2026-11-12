@@ -83,6 +83,7 @@ export function MembershipSection({
   tiersFootnote,
   intro,
   cta,
+  secondaryCta,
   perksTitle,
   perks,
   decorations,
@@ -118,7 +119,14 @@ export function MembershipSection({
           />
 
           <p className="mt-[var(--spacing-gutter)]">
-            <CtaLink link={cta} />
+            {/* Wrapped so the two buttons sit side by side and wrap to two
+                rows rather than overflowing on a phone. The second is the
+                mailing-list opt-in and is optional — a page without one
+                renders exactly as it did before. */}
+            <span className="inline-flex flex-wrap items-center justify-center gap-[var(--spacing-gutter)]">
+              <CtaLink link={cta} />
+              {secondaryCta ? <CtaLink link={secondaryCta} /> : null}
+            </span>
           </p>
 
           {/* h2, not h3: on /early-bird no title bar precedes this, so an h3

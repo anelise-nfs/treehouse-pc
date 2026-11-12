@@ -26,6 +26,22 @@ export const beAnEarlyBird: Link = {
   variant: 'solid-ocean',
 };
 
+/**
+ * Second button in the membership section, beside `beAnEarlyBird`.
+ *
+ * Opens the signup dialog, like the hero's button — the mailing list has one
+ * UI and one endpoint wherever it is offered. The href is the no-JavaScript
+ * fallback, pointing at the footer's copy.
+ *
+ * Outline rather than solid so it reads as the lesser of the two actions.
+ */
+export const joinTheEmailClub: Link = {
+  label: 'join the email club',
+  kind: 'newsletter',
+  href: '#newsletter',
+  variant: 'outline-ocean',
+};
+
 export const foundingFootnote =
   'Prices listed are monthly. Founding memberships are paid annually, up front — locking in your early bird rate and your spot.';
 
@@ -80,6 +96,7 @@ export function foundingMembershipSection(
     tiersFootnote: foundingFootnote,
     intro,
     cta: beAnEarlyBird,
+    secondaryCta: joinTheEmailClub,
     perksTitle: foundingPerksTitle,
     perks: foundingPerks,
     ...(decorations ? { decorations } : {}),

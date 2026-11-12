@@ -1,11 +1,12 @@
 'use client';
 
-import { useEffect, useId, useRef, useState } from 'react';
+import { useCallback, useEffect, useId, useRef, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import NextLink from 'next/link';
 import type { HeaderVariant, Link, SanityImage } from '@/types/content';
 import { SiteHeader, type SiteHeaderProps } from '@/components/SiteHeader';
 import { SiteTopNav } from '@/components/SiteTopNav';
+import { NewsletterDialog } from '@/components/NewsletterDialog';
 import { Doodle } from '@/components/doodles/Doodle';
 
 /**
@@ -69,20 +70,35 @@ export function SiteShell({
   const [open, setOpen] = useState(false);
   const menuId = useId();
   const triggerRef = useRef<HTMLButtonElement>(null);
+  const closeRef = useRef<HTMLButtonElement>(null);
   const variant = headerVariants[pathname] ?? 'overlay';
+
+  /* Closing always returns focus to the trigger, or whoever closed the panel
+     with a keyboard is left with focus on nothing. */
+  const close = useCallback(() => {
+    setOpen(false);
+    triggerRef.current?.focus();
+  }, []);
 
   useEffect(() => {
     if (!open) return;
 
     function onKeyDown(event: KeyboardEvent) {
-      if (event.key !== 'Escape') return;
-      setOpen(false);
-      // Return focus to the trigger, or the closing keystroke strands the user.
-      triggerRef.current?.focus();
+      if (event.key === 'Escape') close();
     }
 
     document.addEventListener('keydown', onKeyDown);
     return () => document.removeEventListener('keydown', onKeyDown);
+  }, [open, close]);
+
+  /* Below sm the panel is drawn over the trigger, so leaving focus on it
+     would leave it on something nobody can see — the panel's close button is
+     the visible equivalent. offsetParent is the test for "is this rendered",
+     which is false for the sm:hidden button at wider widths, where the
+     trigger stays visible and focus is better left alone. */
+  useEffect(() => {
+    if (!open) return;
+    if (closeRef.current?.offsetParent) closeRef.current.focus();
   }, [open]);
 
   /* Both variants get the panel now. The sub-page bar shows its links inline
@@ -126,21 +142,57 @@ export function SiteShell({
         {children}
       </div>
 
+      {/* Mounted once per page, outside the squeeze wrapper: a native dialog
+          renders in the browser's top layer, so its position does not depend
+          on where it sits in the tree, and keeping it out of the transformed
+          wrapper keeps it that way. */}
+      <NewsletterDialog />
+
       {/* Always rendered so it can animate; `inert` keeps the off-screen links
           out of the tab order, which `hidden` would do at the cost of the transition. */}
       <nav
         id={menuId}
         inert={!open}
         aria-label="Main"
-        className={`fixed inset-y-0 left-0 z-40 flex h-dvh w-full flex-col bg-seafoam transition-transform duration-300 ease-out sm:w-[var(--spacing-menu)] ${
+        // z above the header, which is z-50. Below sm this panel is the full
+        // screen, and at z-40 the header's solid cream bar painted straight
+        // over the top of it. From sm the panel is a strip beside a page that
+        // has been pushed right, so nothing overlaps either way and the
+        // higher z costs nothing.
+        className={`fixed inset-y-0 left-0 z-[60] flex h-dvh w-full flex-col bg-seafoam transition-transform duration-300 ease-out sm:w-[var(--spacing-menu)] ${
           open ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
-        {/* Mobile clears the header, which overlays the full-width panel there.
+        {/* Below sm the panel covers the header, so the only way back out is
+            here. From sm the header's own trigger is still visible beside the
+            panel and already reads "Close menu", so a second control would be
+            redundant.
+
+            Positioned rather than in flow so it cannot push the first link
+            down, and matched to the header's own top inset so it sits where
+            the wordmark was. */}
+        <button
+          ref={closeRef}
+          type="button"
+          onClick={close}
+          aria-label="Close menu"
+          // --text-display, not a heading step: the glyph is the whole
+          // control, so it carries the weight a label would. The 44px minimum
+          // still sets the tap target, which the glyph now nearly fills.
+          className="absolute right-[calc(var(--spacing-gutter)-0.5rem)] top-2 flex min-h-[var(--tap-target)] min-w-[var(--tap-target)] cursor-pointer items-center justify-center text-[length:var(--text-display)] leading-none text-ink sm:hidden"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+
+        {/* Below sm the panel covers the header rather than starting beneath
+            it, so this padding is clearing the panel's own close button — the
+            header token is still the right number, because the button is
+            placed to match it.
+
             From sm the first label aligns with the hamburger's bars: the calc
             subtracts the label's centring offset inside its 44px row, which the
             link's explicit leading-[1.5] makes a known quantity. */}
-        <ul className="flex flex-col gap-3 px-[var(--spacing-gutter)] pt-[var(--spacing-header)] sm:gap-1 sm:pt-[calc(var(--spacing-menu-top)-(var(--tap-target)-var(--text-ui)*1.5)/2)]">
+        <ul className="flex flex-col gap-3 px-[var(--spacing-gutter)] pt-[var(--spacing-header-compact)] sm:gap-1 sm:pt-[calc(var(--spacing-menu-top)-(var(--tap-target)-var(--text-ui)*1.5)/2)]">
           {headerProps.navLinks.map((link, index) => {
             const accent = ITEM_ACCENTS[index % ITEM_ACCENTS.length] ?? ITEM_ACCENTS[0];
 
@@ -148,6 +200,9 @@ export function SiteShell({
               <li key={link.href}>
                 <NextLink
                   href={link.href}
+                  // Dismiss only — not `close`, which also returns focus to
+                  // the trigger. On an anchor link that would scroll back to
+                  // the header immediately after jumping to the section.
                   onClick={() => setOpen(false)}
                   // The underline picks up the dot's colour. Paired with
                   // focus-visible so it is not mouse-only.
