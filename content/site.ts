@@ -72,10 +72,13 @@ export const siteSettings: SiteSettings = {
     { label: 'Terms', kind: 'anchor', href: '#' },
   ],
   /**
-   * Instagram is live. Facebook and X are placeholders: the row reads as
-   * complete, but an entry with no `url` renders as the glyph alone rather
-   * than as a link to nowhere. Paste the urls in when the client confirms
-   * them and they become links — no other change.
+   * Instagram is live. Facebook is a placeholder: an entry with no `url`
+   * renders as the glyph alone rather than as a link to nowhere. Paste the url
+   * in when the client confirms it and it becomes a link — no other change.
+   *
+   * X was here too and has been removed. The glyph is still in SocialIcon if
+   * it is ever wanted back; this list is the only thing that decides what
+   * shows.
    */
   socialLinks: [
     {
@@ -83,9 +86,8 @@ export const siteSettings: SiteSettings = {
       platform: 'instagram',
       url: 'https://www.instagram.com/treehouse.parkcity',
     },
-    // PLACEHOLDER: awaiting the client's accounts.
+    // PLACEHOLDER: awaiting the client's account.
     { _key: 'facebook', platform: 'facebook' },
-    { _key: 'x', platform: 'x' },
   ],
   defaultSeo: {
     description:

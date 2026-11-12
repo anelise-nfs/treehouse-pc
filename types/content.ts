@@ -566,9 +566,15 @@ export interface PriceBadge {
    * least readable text on the page.
    */
   note?: string;
-  /** Fill behind the label half. The price half below it uses `priceColor`. */
+  /** The badge's colour: its ring, and its label text. */
   labelColor: BandColor;
-  priceColor: BandColor;
+  /**
+   * UNUSED. The badge was two filled halves with a colour each; it is now one
+   * outlined circle with one colour, taken from `labelColor` above. Nothing
+   * renders this. Kept only so the three badges in content do not need editing
+   * for a field that costs nothing — delete it and them together.
+   */
+  priceColor?: BandColor;
 }
 
 /**
@@ -590,6 +596,23 @@ export interface ContactFormBlock extends BlockBase, Decorated {
   intro?: PortableTextBlock[];
   /** Defaults to 'send it'. */
   submitLabel?: string;
+}
+
+/**
+ * A mailing-list signup placed in a page's flow, with its own heading and
+ * intro above it.
+ *
+ * The same NewsletterSignup the footer and the dialog render — one signup
+ * implementation, one endpoint. This block only supplies the copy around it
+ * and a place to stand.
+ *
+ * Does not take the `#newsletter` anchor: the footer's copy owns that, and two
+ * elements answering to one hash is a bug rather than a redundancy.
+ */
+export interface NewsletterSignupBlock extends BlockBase, Decorated {
+  _type: 'newsletterSignup';
+  heading?: string;
+  intro?: PortableTextBlock[];
 }
 
 export interface PartyPackagesBlock extends BlockBase, Decorated {
@@ -705,6 +728,7 @@ export type Block =
   | DropInSectionBlock
   | PartyPackagesBlock
   | ContactFormBlock
+  | NewsletterSignupBlock
   | LocationBlock
   | HoursAddressBlock
   | FaqAccordionBlock

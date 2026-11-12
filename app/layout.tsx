@@ -10,6 +10,7 @@ import {
   getSiteSettings,
   getTopNav,
 } from '@/lib/content';
+import { isProduction, siteUrl } from '@/lib/site';
 import './globals.css';
 
 /**
@@ -46,14 +47,23 @@ const sans = Quicksand({
 export async function generateMetadata(): Promise<Metadata> {
   const settings = await getSiteSettings();
 
+  /* Two independent reasons to stay out of the index, and either is enough.
+     The environment one is structural — a preview deployment must never be
+     indexed, whatever the content says. The content one is the pre-launch
+     flag, which someone flips when the site goes live. Keeping them separate
+     means flipping the content flag cannot accidentally expose a preview. */
+  const noIndex = !isProduction || Boolean(settings.defaultSeo?.noIndex);
+
   return {
+    // Resolves relative URLs in metadata — Open Graph images, canonicals —
+    // against the canonical origin rather than whatever host served the page.
+    metadataBase: new URL(siteUrl),
     title: {
       default: settings.siteName,
       template: `%s — ${settings.siteName}`,
     },
     description: settings.defaultSeo?.description,
-    // Pre-launch. Flip this in content, not here.
-    robots: settings.defaultSeo?.noIndex ? { index: false, follow: false } : undefined,
+    robots: noIndex ? { index: false, follow: false } : undefined,
   };
 }
 

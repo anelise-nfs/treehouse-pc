@@ -39,8 +39,10 @@ export const homePage: Page = {
         alt: 'The Treehouse play structure: wooden climbing towers, slides, and a vintage camper, with paper geese hanging from the ceiling',
       },
       overlayHeadline: "Park City's one and only indoor playground opening this winter!",
-      scriptHeadline: 'climb higher, imagine bigger, play freely',
-      mobileScriptHeadline: 'climb higher, play freely',
+      scriptHeadline: 'for kids and their keepers',
+      // No mobileScriptHeadline: it existed to shorten a three-line headline on
+      // a phone, and this one is five words. Setting one now would show
+      // different copy at different widths for no reason.
       bandColor: 'mint',
       // LAUNCH WORDING. Founding memberships are not on sale yet, so the hero
       // asks for an email instead of a purchase and points at the footer's
@@ -189,11 +191,14 @@ export const homePage: Page = {
         },
         {
           _key: 'wee-ones',
-          label: 'wee ones',
+          label: 'wee one',
           note: 'under 1 free with a paying sibling',
           price: 'free',
-          labelColor: 'tangerine',
-          priceColor: 'sky',
+          labelColor: 'flamingo',
+          // UNUSED since the badge became an outlined circle — the ring and
+          // label both take labelColor above. Left in place rather than
+          // deleted from one badge of three; see PriceBadge.
+          priceColor: 'mint',
         },
       ],
       body: pt(
@@ -227,12 +232,11 @@ export const homePage: Page = {
       decorations: [{ doodle: 'butterfly', slot: 'left', color: 'flamingo' }],
       _type: 'richText',
       align: 'center',
-      // PLACEHOLDER COPY — awaiting client. The first paragraph is the only
-      // line that survived from the two-package version; the price is a
-      // stand-in.
+      // PLACEHOLDER COPY — awaiting client. The surviving line from the
+      // two-package version. The stand-in price that sat under it is gone;
+      // no party pricing appears on the site now.
       content: pt(
         "The easiest birthday you'll ever throw. Your party includes a private room for two full hours plus play access for all your little guests — so the kids climb, explore, and celebrate while you actually enjoy the day.",
-        '$40 per child, with optional add-ons.',
       ),
       // subcopy, not a CTA: there is nothing to book yet, and this reads as a
       // note rather than an invitation to act.

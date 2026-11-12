@@ -1,6 +1,7 @@
 import type { Block } from '@/types/content';
 import { DropInSection } from './DropInSection';
 import { ContactForm } from './ContactForm';
+import { NewsletterBlock } from './NewsletterBlock';
 import { FeatureGrid } from './FeatureGrid';
 import { Hero } from './Hero';
 import { HoursAddress } from './HoursAddress';
@@ -57,6 +58,8 @@ function BlockSwitch({ block }: { block: Block }) {
       return <MembershipSection {...block} />;
     case 'contactForm':
       return <ContactForm {...block} />;
+    case 'newsletterSignup':
+      return <NewsletterBlock {...block} />;
     case 'partyPackages':
       return <PartyPackages {...block} />;
     case 'locationBlock':

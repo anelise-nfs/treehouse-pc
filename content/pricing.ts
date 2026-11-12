@@ -20,14 +20,22 @@ export const foundingTiers: PricingTier[] = [
     _id: 'pricingTier.founding-one-kid',
     _type: 'pricingTier',
     name: 'one kid',
-    amount: 135,
+    amount: 140,
     interval: 'month',
-    compareAtAmount: 145,
+    // NOTE: every other tier's compareAtAmount equals the matching standard
+    // rate below (250/250, 350/350). This one no longer does — standard 'one
+    // kid' is still 145. Raise it to 150 when the standard rates are
+    // confirmed, or the crossed-out price will contradict the real one.
+    compareAtAmount: 150,
     billedAmount: 1620,
     billedInterval: 'year',
     features: [],
     headerColor: 'lime',
-    priceColor: 'sky',
+    // Ocean, not sky: the brighter blue, matching the 'big kid' drop-in badge
+    // so the two blues on the page are the same blue. Both tiers named 'one
+    // kid' carry it — the standard one does not render yet, and leaving it on
+    // sky would have the pair diverge the day it does.
+    priceColor: 'ocean',
     cta: beAnEarlyBird,
   },
   {
@@ -74,7 +82,11 @@ export const standardTiers: PricingTier[] = [
     interval: 'month',
     features: [],
     headerColor: 'lime',
-    priceColor: 'sky',
+    // Ocean, not sky: the brighter blue, matching the 'big kid' drop-in badge
+    // so the two blues on the page are the same blue. Both tiers named 'one
+    // kid' carry it — the standard one does not render yet, and leaving it on
+    // sky would have the pair diverge the day it does.
+    priceColor: 'ocean',
   },
   {
     _id: 'pricingTier.standard-two-kids',
