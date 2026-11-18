@@ -129,7 +129,7 @@ export const homePage: Page = {
       _type: 'imageTextSplit',
       // Carries the headline the removed sectionBand used to. The anchor stays
       // 'cafe' — the footer links to it and the copy is still about the cafe.
-      heading: 'for kids and their keepers',
+      heading: 'not just for kids',
       headingColor: 'pine',
       imageSide: 'right',
       image: {
