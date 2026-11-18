@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Betania_Patmos, Libre_Baskerville, Quicksand } from 'next/font/google';
+import { Betania_Patmos, Libre_Baskerville, Zen_Maru_Gothic } from 'next/font/google';
 import { ScrollEffects } from '@/components/ScrollEffects';
 import { SiteFooter } from '@/components/SiteFooter';
 import { SiteShell } from '@/components/SiteShell';
@@ -37,11 +37,16 @@ const serif = Libre_Baskerville({
   variable: '--font-libre-baskerville',
 });
 
-const sans = Quicksand({
+/* Zen Maru Gothic is not a variable font, so each weight is a separate file and
+   only the listed ones exist in the bundle. It has no 600, which is why UI text
+   is `font-medium` (500) rather than `font-semibold` — 600 would resolve up to
+   700 and read as bold. 500 is the closest match to the weight Quicksand's 600
+   rendered at. */
+const sans = Zen_Maru_Gothic({
   subsets: ['latin'],
-  weight: ['400', '600'],
+  weight: ['400', '500', '700'],
   display: 'swap',
-  variable: '--font-quicksand',
+  variable: '--font-zen-maru-gothic',
 });
 
 export async function generateMetadata(): Promise<Metadata> {

@@ -144,7 +144,7 @@ export function Hero({
           <h1 className="hero-rise hero-rise-1 font-sans text-hero-title font-bold leading-[var(--leading-display)] text-mint lg:text-split-title">
             {/* A shorter string on phones. This was a hard constraint while the
                 line was set in the script face, which could not shrink below
-                28px; in Quicksand it is now a copy choice and could be dropped
+                28px; in the sans face it is now a copy choice and could be dropped
                 if the full line reads well on a phone. */}
             {mobileScriptHeadline ? (
               <>

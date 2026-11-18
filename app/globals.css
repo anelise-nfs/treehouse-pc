@@ -121,7 +121,7 @@
      -------------------------------------------------------------------- */
   --font-script: var(--font-betania-patmos), cursive;
   --font-serif:  var(--font-libre-baskerville), serif;
-  --font-sans:   var(--font-quicksand), sans-serif;
+  --font-sans:   var(--font-zen-maru-gothic), sans-serif;
 
   /* --- Type scale (fluid, 1.25 ratio, no mobile/desktop fork) ---------- */
   --text-display: clamp(2rem, 1.5rem + 2.6vw, 3.5rem);       /* pageHeader title */
@@ -166,7 +166,7 @@
      The brand guide is in points: its 21pt mobile / 32pt desktop script heading
      is 28px / 43px at 1pt = 1.333px, so it clears the 28px script floor at both
      breakpoints. 28px is a hard floor for the script face — anything smaller
-     uses Quicksand. */
+     uses the sans face. */
   --text-script-sm: clamp(1.75rem, 1.4rem + 1.5vw, 2.6875rem);
   /* Script inside a tight container — the price badge circles, where the
      subsection size above would run to the curve. Still floored at 28px: this

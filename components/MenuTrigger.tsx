@@ -81,7 +81,7 @@ export function MenuTrigger({
           word, so WCAG's Label in Name holds. */}
       {withLabel ? (
         <span
-          className={`mt-1 hidden font-sans text-[length:var(--text-caption)] font-semibold leading-none lg:block ${
+          className={`mt-1 hidden font-sans text-[length:var(--text-caption)] font-medium leading-none lg:block ${
             onPhoto ? 'text-white' : 'text-ink'
           }`}
         >

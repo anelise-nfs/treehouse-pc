@@ -55,7 +55,7 @@ function TierCard({ tier }: { tier: PricingTier }) {
         ) : null}
 
         <p className="text-center">
-          <span className="block font-sans text-[length:var(--text-h2)] font-semibold text-white">
+          <span className="block font-sans text-[length:var(--text-h2)] font-medium text-white">
             {money(tier.amount)}
           </span>
         </p>
@@ -141,7 +141,7 @@ export function MembershipSection({
                 {/* Pine, not lime: lime on linen is 3.02:1 and fails at this
                     size, and lime cannot be darkened enough to pass without
                     arriving at pine anyway. Pine is 6.42:1. */}
-                <p className="font-sans text-[length:var(--text-ui)] font-semibold text-pine">
+                <p className="font-sans text-[length:var(--text-ui)] font-medium text-pine">
                   {perk.label}
                 </p>
                 {/* 50ch, not the 68ch of `measure`: this column runs to about

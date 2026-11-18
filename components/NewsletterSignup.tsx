@@ -246,7 +246,7 @@ export function NewsletterSignup({
                 // ARCHITECTURE.md → Accessibility baseline puts the floor for
                 // a primary control there, and width is the dimension free to
                 // give.
-                className={`min-h-[var(--tap-target)] shrink-0 rounded-[var(--radius-pill)] px-5 font-sans text-[length:var(--text-caption)] font-semibold ${BUTTON_INTERACTION} ${styles.button}`}
+                className={`min-h-[var(--tap-target)] shrink-0 rounded-[var(--radius-pill)] px-5 font-sans text-[length:var(--text-caption)] font-medium ${BUTTON_INTERACTION} ${styles.button}`}
               >
                 {status === 'submitting' ? 'Signing up…' : 'Sign up'}
               </button>

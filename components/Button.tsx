@@ -58,7 +58,7 @@ export const BUTTON_INTERACTION =
 
 export const BUTTON_BASE =
   'inline-flex items-center justify-center min-h-[var(--tap-target)] px-8 py-3 ' +
-  'rounded-[var(--radius-pill)] font-sans font-semibold text-[length:var(--text-body)] ' +
+  'rounded-[var(--radius-pill)] font-sans font-medium text-[length:var(--text-body)] ' +
   `no-underline ${BUTTON_INTERACTION}`;
 
 /**

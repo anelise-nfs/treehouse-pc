@@ -152,7 +152,7 @@ export function SiteTopNav({
                     // the underline carries the state, not a colour change
                     // alone, which would be the only signal for a reader who
                     // cannot distinguish them.
-                    className={`flex min-h-[var(--tap-target)] items-center font-sans text-[length:var(--text-ui)] font-semibold leading-none text-ink decoration-2 underline-offset-[6px] hover:underline focus-visible:underline ${
+                    className={`flex min-h-[var(--tap-target)] items-center font-sans text-[length:var(--text-ui)] font-medium leading-none text-ink decoration-2 underline-offset-[6px] hover:underline focus-visible:underline ${
                       current ? 'underline decoration-tangerine' : 'no-underline'
                     }`}
                   >
