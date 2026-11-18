@@ -47,7 +47,7 @@ export const homePage: Page = {
         url: '/images/hero-play-structure.jpg',
         alt: 'The Treehouse play structure: wooden climbing towers, slides, and a vintage camper, with paper geese hanging from the ceiling',
       },
-      overlayHeadline: "Park City's one and only indoor playground opening this winter!",
+      overlayHeadline: "Park City's one and only neighborhood play cafe — opening this winter",
       scriptHeadline: 'for kids and their keepers',
       // No mobileScriptHeadline: it existed to shorten a three-line headline on
       // a phone, and this one is five words. Setting one now would show
@@ -80,8 +80,12 @@ export const homePage: Page = {
           url: '/graphics/treering.png',
           alt: '',
         },
+        // Two paragraphs, so the closing line lands on its own. The band's
+        // PortableText sets a top margin on every paragraph it renders, so the
+        // second is spaced from the first without anything else changing.
         body: pt(
           'Treehouse is a gathering space — not just somewhere to drop in, but somewhere to belong. Our calendar stays full of classes, workshops, and activities that bring families back week after week, where neighbors become friends over coffee and kids find something new to love each visit. A living, breathing part of our community.',
+          "We can't wait to see you!",
         ),
       },
     },

@@ -130,10 +130,17 @@ export function Hero({
             header's gap or trigger size and this has to follow. */}
         <div className="relative flex flex-1 flex-col justify-start px-[var(--spacing-gutter)] text-right lg:justify-center lg:text-left pb-[var(--spacing-section)] pt-[var(--spacing-block)] lg:min-h-[100dvh] lg:w-[44%] lg:py-0 xl:w-[40%] xl:max-w-[36rem] lg:pl-[calc(var(--spacing-gutter)+var(--tap-target)+0.75rem)]">
           {/* CONTRAST: mint on linen is 3.01:1. --text-hero-title floors at 30px
-              so this always counts as large text and 3:1 applies — but it clears
-              it by 0.01, with no real margin. Dropping this under 24px, or
-              lightening linen, fails it immediately. A deeper green is the fix
-              if that margin is ever wanted; pine is 6.42:1. */}
+              and --text-split-title at 36px, so this always counts as large
+              text and 3:1 applies — but it clears it by 0.01, with no real
+              margin. Dropping this under 24px, or lightening linen, fails it
+              immediately. A deeper green is the fix if that margin is ever
+              wanted; pine is 6.42:1.
+
+              The margin matters more in the script face than it did in the
+              sans: WCAG counts pixels, not ink, and Betania Patmos lays down
+              far less of it per glyph than bold Zen Maru Gothic did at the same
+              size. The ratio is unchanged and still passes; what it buys in
+              practice is thinner. */}
           {/* The scale lives on this wrapper, not on the column. A transform
               creates a stacking context, and on the column it trapped the
               button's z-index inside it — the photograph then painted over the
@@ -141,11 +148,22 @@ export function Hero({
               their own context that sits under the photograph while the button
               outside it keeps competing on the section's own stacking order. */}
           <div className="hero-text-scroll">
-          <h1 className="hero-rise hero-rise-1 font-sans text-hero-title font-bold leading-[var(--leading-display)] text-mint lg:text-split-title">
-            {/* A shorter string on phones. This was a hard constraint while the
-                line was set in the script face, which could not shrink below
-                28px; in the sans face it is now a copy choice and could be dropped
-                if the full line reads well on a phone. */}
+          {/* font-script, with no weight class and a looser leading than the rest
+              of the display scale, both of which the face requires:
+
+              - Betania Patmos ships a single weight (see app/layout.tsx), so
+                `font-bold` here would have asked the browser to synthesise one.
+                Faux-bold smears a script face's thin strokes into its own
+                counters.
+              - --leading-display is 1.05, set for a sans. This headline wraps
+                to two lines from the first breakpoint, and at 1.05 the script's
+                descenders run into the ascenders below them. --leading-heading
+                is what every other script heading on the site uses. */}
+          <h1 className="hero-rise hero-rise-1 font-script text-hero-title leading-[var(--leading-heading)] text-mint lg:text-split-title">
+            {/* A shorter string on phones. The 28px script floor makes this a
+                hard constraint again rather than the copy choice it was in the
+                sans face — though both steps of the scale clear that floor
+                outright, so it only matters if a longer headline is set. */}
             {mobileScriptHeadline ? (
               <>
                 <span className="lg:hidden">{mobileScriptHeadline}</span>
