@@ -1,4 +1,5 @@
 import type { RichTextBlock } from '@/types/content';
+import { CtaLink } from '@/components/CtaLink';
 import { PortableText } from '@/components/PortableText';
 import { DecorationLayer } from '@/components/doodles/DecorationLayer';
 
@@ -19,6 +20,7 @@ export function RichText({
   subcopy,
   width = 'measure',
   align = 'left',
+  cta,
   decorations,
   anchorId,
 }: RichTextBlock) {
@@ -53,6 +55,15 @@ export function RichText({
               className="font-sans text-[length:var(--text-ui)] text-ink-soft"
             />
           </div>
+        ) : null}
+
+        {/* Same spacing ImageTextSplit gives its button, so a copy block that
+            ends in an action reads the same wherever it appears. Absent on
+            every block that does not set one. */}
+        {cta ? (
+          <p className="mt-[var(--spacing-block)]">
+            <CtaLink link={cta} />
+          </p>
         ) : null}
       </div>
     </section>

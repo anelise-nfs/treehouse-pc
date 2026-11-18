@@ -437,6 +437,13 @@ export interface RichTextBlock extends BlockBase, Decorated {
   width?: 'measure' | 'full';
   align?: 'left' | 'center';
   backgroundColor?: SurfaceColor;
+  /**
+   * Optional button below the copy, the same field ImageTextSplit carries.
+   * A passage of copy that ends in an action is common enough to belong on
+   * the general copy block; the alternative was ctaBanner, which is parked
+   * for Phase 2 and renders nothing.
+   */
+  cta?: Link;
 }
 
 /**

@@ -172,16 +172,35 @@ export const homePage: Page = {
       anchorId: 'how-it-works',
       accent: 'rainbow',
     },
+    {
+      // Lifted out of the membership section's own intro so it sits directly
+      // under the 'how it works' band, where it now introduces everything
+      // below rather than just the prices — and so that band is no longer a
+      // bare heading running straight into a second heading.
+      //
+      // A block of its own rather than the band's `body` field: SectionBand
+      // renders body copy in white at --text-body, which on flamingo is
+      // 3.11:1 against a 4.5:1 requirement. Nothing uses that field today, so
+      // the trap is latent; on the page background this is ink on linen at
+      // 16.78:1. See ARCHITECTURE.md -> Color rule.
+      //
+      // No doodle: the band above carries two and the membership section below
+      // carries its own.
+      _key: 'membership-intro',
+      _type: 'richText',
+      align: 'center',
+      content: pt(foundingPitch),
+    },
     foundingMembershipSection('early-bird-membership', {
       title: 'memberships',
       titleBandColor: 'tangerine',
       anchorId: 'memberships',
-      // v1-a adds the sale-status line as a second paragraph; v1-b drops it,
-      // because by then the prices below carry their own purchase buttons and
-      // the status is self-evident. Kept as its own paragraph rather than
-      // appended to the pitch — it is a different kind of statement, and
-      // /early-bird sets the same line on its own line too.
-      intro: MEMBERSHIPS_ON_SALE ? pt(foundingPitch) : pt(foundingPitch, saleSoonLine),
+      // Just the sale-status line now, sitting immediately above the buttons
+      // it refers to — the standing pitch moved up to the block above. v1-b
+      // leaves this empty: by then the prices carry their own purchase
+      // buttons and the status is self-evident. An empty intro renders
+      // nothing, so the section opens on its title bar.
+      intro: MEMBERSHIPS_ON_SALE ? pt() : pt(saleSoonLine),
       // Both buttons swap between versions, and which one gets the solid
       // treatment swaps with them. v1-a has nothing to sell, so 'learn more'
       // leads and the mailing list is the fallback. v1-b has a product page,
@@ -264,6 +283,61 @@ export const homePage: Page = {
       // subcopy, not a CTA: there is nothing to book yet, and this reads as a
       // note rather than an invitation to act.
       subcopy: pt('Parties will be available to book when we open this winter.'),
+    },
+    {
+      _key: 'band-grow-with-us',
+      // Leaf for a section about growing, and the only mark in this section:
+      // 'come see us' below carries none either, and the page had started to
+      // accumulate doodles faster than copy.
+      //
+      // bleed, matching the m-squig on the 'how it works' band: a bottom slot
+      // with bleed hangs the mark 32px past the band's edge, so it crosses the
+      // fill onto the page below instead of sitting tidily inside a corner.
+      //
+      // 'sm', where that band uses 'lg', because the size step sets *width*
+      // and the leaf's artwork is 35 x 58 — half again as tall as it is wide,
+      // where a squiggle or a rainbow is flat. At 'sm' it is 96 x 159 against
+      // a band about 150px tall, so roughly four fifths sits on the fill and
+      // the rest hangs below. At 'md' it would overhang the top edge as well
+      // and stop reading as a mark on the band at all.
+      //
+      // Seafoam on ocean reads at 2.40:1. Doodles carry no information and no
+      // text sits on them, so WCAG does not apply — this is about the mark
+      // being visible at all, the way flamingo-on-flamingo was not.
+      decorations: [
+        { doodle: 'leaf', slot: 'bottom-right', color: 'seafoam', size: 'sm', bleed: true },
+      ],
+      _type: 'sectionBand',
+      heading: 'grow with us',
+      // Ocean: the bands either side of this are mint and pine, and no two
+      // adjacent bands repeat a colour. White on ocean is 3.56:1, which the
+      // script heading clears as large text. It is also the only blue band on
+      // the page, so the section reads as its own thing rather than an
+      // extension of the parties above it.
+      color: 'ocean',
+      level: 'primary',
+      anchorId: 'classes',
+    },
+    {
+      _key: 'grow-intro',
+      _type: 'richText',
+      align: 'center',
+      content: pt(
+        "There's always something happening at Treehouse. Classes and workshops in music, movement, art, STEM, sewing, and crafting give kids the chance to try something new and find their people — plus seasonal events and community gatherings all year round. Something for every kind of kid, every season.",
+      ),
+      // subcopy, matching the party block above: a note about what is not
+      // available yet, set smaller and muted rather than as body copy.
+      subcopy: pt('Our full schedule will be released closer to opening this winter.'),
+      // Unlike the party block, this one does have something to act on — the
+      // mailing list is how someone hears when the schedule lands. Opens the
+      // signup dialog like the hero's button; the href is the no-JavaScript
+      // fallback to the footer's form.
+      cta: {
+        label: 'sign up for email updates',
+        kind: 'newsletter',
+        href: '#newsletter',
+        variant: 'solid-ocean',
+      },
     },
     {
       _key: 'band-come-see-us',
