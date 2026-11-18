@@ -523,8 +523,22 @@ export interface MembershipSectionBlock extends BlockBase, Decorated {
    * styling difference between a primary and a secondary action is the point.
    */
   secondaryCta?: Link;
+  /** Heading over `perks` — the founding-exclusive list ('early birds get:'). */
   perksTitle: string;
+  /** Perks a founding member gets and a later member does not. */
   perks: MembershipPerk[];
+  /**
+   * A second, separate perk list: what every membership includes, founding or
+   * not ('all members will enjoy'). Kept distinct from `perks` rather than
+   * appended to it because the difference is the selling point — merging the
+   * two would quietly claim the standing benefits as founding exclusives.
+   *
+   * Optional, and only rendered when both the title and a non-empty list are
+   * present, so a section that offers nothing beyond the founding perks
+   * renders exactly as it did before.
+   */
+  memberPerksTitle?: string;
+  memberPerks?: MembershipPerk[];
 }
 
 export interface MembershipPerk {
@@ -850,10 +864,11 @@ export interface OpeningHours {
  *
  * Amounts are numbers, not display strings, because founding memberships show a
  * monthly figure while billing annually up front and both have to render from
- * one source. A tier showing "$135 a month, billed $1,620 annually" is:
+ * one source. The 'one kid' founding tier, "$140 a month, billed $1,680
+ * annually, down from $150", is:
  *
- *   amount 135, interval 'month', compareAtAmount 145,
- *   billedAmount 1620, billedInterval 'year'
+ *   amount 140, interval 'month', compareAtAmount 150,
+ *   billedAmount 1680, billedInterval 'year'
  *
  * Formatting (currency symbol, strikethrough) is the component's job.
  */

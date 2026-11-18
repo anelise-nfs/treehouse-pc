@@ -1,7 +1,16 @@
 import type { Page } from '@/types/content';
 import { parkCity } from '../location';
 import { pt } from '../_portableText';
-import { foundingMembershipSection } from '../shared/foundingMembership';
+import {
+  beAnEarlyBird,
+  foundingMembershipSection,
+  foundingPitch,
+  joinTheEmailClub,
+  learnMore,
+  learnMoreSecondary,
+  saleSoonLine,
+} from '../shared/foundingMembership';
+import { MEMBERSHIPS_ON_SALE } from '../launchPhase';
 
 /**
  * Launch homepage. Copy is verbatim from to_start.png except where marked
@@ -160,12 +169,22 @@ export const homePage: Page = {
       accent: 'rainbow',
     },
     foundingMembershipSection('early-bird-membership', {
-      title: 'early bird gets the worm',
+      title: 'memberships',
       titleBandColor: 'tangerine',
       anchorId: 'memberships',
-      intro: pt(
-        "Founding Members (aka early birds) are the families who believe in what we're building — and we're making it worth your while.",
-      ),
+      // v1-a adds the sale-status line as a second paragraph; v1-b drops it,
+      // because by then the prices below carry their own purchase buttons and
+      // the status is self-evident. Kept as its own paragraph rather than
+      // appended to the pitch — it is a different kind of statement, and
+      // /early-bird sets the same line on its own line too.
+      intro: MEMBERSHIPS_ON_SALE ? pt(foundingPitch) : pt(foundingPitch, saleSoonLine),
+      // Both buttons swap between versions, and which one gets the solid
+      // treatment swaps with them. v1-a has nothing to sell, so 'learn more'
+      // leads and the mailing list is the fallback. v1-b has a product page,
+      // so that takes the primary slot and 'learn more' steps back — the
+      // button that leads to a purchase should not be the quieter of the two.
+      cta: MEMBERSHIPS_ON_SALE ? beAnEarlyBird : learnMore,
+      secondaryCta: MEMBERSHIPS_ON_SALE ? learnMoreSecondary : joinTheEmailClub,
     }),
     {
       _key: 'drop-in',

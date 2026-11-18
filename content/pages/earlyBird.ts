@@ -1,10 +1,34 @@
 import type { Page } from '@/types/content';
 import { parkCity } from '../location';
 import { pt } from '../_portableText';
-import { foundingMembershipSection } from '../shared/foundingMembership';
+import {
+  foundingMembershipSection,
+  joinTheEmailClub,
+  saleSoonLine,
+} from '../shared/foundingMembership';
+import { MEMBERSHIPS_ON_SALE } from '../launchPhase';
+
+/** Opens the pitch in both versions. */
+const openingParagraph =
+  "We're selling a limited number of founding membership spots and they will go fast! Founding Members are the families who believe in what we're building — and we're making it worth your while.";
 
 /**
- * Founding membership sales page. Copy is verbatim from early_bird_page.png.
+ * The sale-status paragraph that closes the pitch. Both versions sit here
+ * rather than one being edited in place on sale day, so switching LAUNCH_PHASE
+ * is the whole change and the v1-b copy has already been read and approved.
+ *
+ * v1-a: nothing to buy, so it promises and points at the newsletter button
+ * below. v1-b: the tier cards carry purchase buttons, so it says so.
+ */
+const salePitch = MEMBERSHIPS_ON_SALE
+  ? 'Memberships are on sale now! Join before we open and lock in founding rates for three full years.'
+  : saleSoonLine;
+
+/**
+ * Founding membership sales page. Copy follows early_bird_page.png, with the
+ * mockup's standalone opening line now folded into the first paragraph of the
+ * pitch: once the membership section stacked its own copy above the prices, the
+ * two sat one under the other and said much the same thing twice.
  *
  * The founding tiers, perks and CTA come from content/shared/foundingMembership,
  * which the homepage also uses, so a price or perk change reaches both pages.
@@ -42,26 +66,23 @@ export const earlyBirdPage: Page = {
         alt: '',
       },
     },
-    {
-      _key: 'intro',
-      _type: 'richText',
-      align: 'center',
-      decorations: [{ doodle: 'rainbow', slot: 'top-left', color: 'flamingo' }],
-      content: pt(
-        "We're selling a limited number of founding membership spots and they will go fast!",
-      ),
-    },
     foundingMembershipSection('founding-membership', {
       // No title band: the pageHeader above already names this page.
+      //
+      // One mark, not two. A flamingo rainbow briefly sat opposite this, having
+      // moved off a richText block that was folded into the pitch below, but
+      // between the page header's own doodles and the intro graphics the page
+      // had more decoration than copy.
       decorations: [{ doodle: 'vertscribble', slot: 'top-right', color: 'sunshine' }],
-      intro: pt(
-        "Be a part of Treehouse from the very beginning! Founding Members are the families who believe in what we're building — and we're making it worth your while.",
-        'Early bird memberships will go on sale soon. Join before we open and lock in founding rates for three full years. Sign up for email alerts at the link below to get early access!',
-      ),
-      // TEMPORARY, until the sale opens: the copy above now points at the
-      // newsletter opt-in as the thing to do, so 'be an early bird' would be a
-      // second, competing button — and on this page it linked here anyway.
-      showPrimaryCta: false,
+      intro: pt(openingParagraph, salePitch),
+      // No primary button in either version: it would be 'be an early bird',
+      // which links to /early-bird — the page you are already on.
+      //
+      // v1-a keeps the newsletter opt-in, the only thing there is to do here
+      // while nothing is for sale. v1-b drops it: the three purchase buttons
+      // on the tier cards are the action, and a fourth button competing with
+      // them for a mailing list is the wrong ask once someone can just buy.
+      ...(MEMBERSHIPS_ON_SALE ? {} : { secondaryCta: joinTheEmailClub }),
     }),
     {
       _key: 'render',

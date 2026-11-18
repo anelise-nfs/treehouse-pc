@@ -93,10 +93,19 @@
   --color-action-hover: #1f5480;  /* 7.96:1 */
 
   /* --- Contrast-safe text pairings --------------------------------------
-     ONLY pine takes white text. Everything else takes ink.
-     Ratios: pine/white 6.66 · mint/ink 8.09 · tangerine/ink 5.44
-             flamingo/ink 7.44 · seafoam/ink 11.72 · sunshine/ink 10.79
-             lime/ink 8.72 · tomato/ink 4.52 · sky/ink 11.21 · ocean/ink 4.88
+     Pine and tangerine take white text. Everything else takes ink.
+
+     Measured against the palette that ships above, ink on each fill:
+       mint 5.57 · tangerine 3.72 · pine 2.61 · flamingo 5.59 · seafoam 11.72
+       sunshine 5.58 · lime 5.55 · tomato 4.52 · sky 5.59 · ocean 4.88
+     and white on the two that take it: pine 6.66 · tangerine 4.67.
+
+     These figures replace a set written before the palette was darkened, which
+     recorded the original lighter colours (mint 8.09, flamingo 7.44, sunshine
+     10.79, lime 8.72, sky 11.21) and so overstated ink contrast on every fill
+     that moved. The four unchanged colours — pine, seafoam, tomato, ocean —
+     read the same then and now. ARCHITECTURE.md -> Color rule carries the same
+     numbers alongside the white column and the large-text thresholds.
      -------------------------------------------------------------------- */
   --color-on-pine:      #ffffff;
   --color-on-mint:      var(--color-ink);
