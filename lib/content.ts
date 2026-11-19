@@ -220,6 +220,37 @@ export async function getNavigablePages(): Promise<{ slug: string; path: string;
 }
 
 /**
+ * Every page that belongs in the sitemap: one that exists and is not noindexed.
+ *
+ * Derived from the same `pages` array the routes render from, so a page added
+ * there is in the sitemap the moment it exists. The old sitemap kept its own
+ * hand-written list and had silently fallen three pages behind — /faq,
+ * /press, /privacy and /terms were all live and none of them were listed.
+ *
+ * The noindex rule is lib/seo.ts's, repeated deliberately rather than shared:
+ * page-level `seo.noIndex`, then the site default, then false. A page that
+ * tells crawlers not to index it must not simultaneously be advertised in the
+ * sitemap, which is the contradiction a separate list invites.
+ *
+ * Routes with no Page behind them are not here and should not be: /doodles is
+ * an internal reference that sets its own robots: noindex, and the 404 is
+ * Next's. A sitemap lists pages worth indexing, not an inventory of what
+ * resolves.
+ *
+ * The environment gate is NOT applied. Off production the whole sitemap is
+ * unreachable anyway — robots.txt is a blanket disallow there — and folding
+ * `isProduction` in here would make a preview build emit an empty file, which
+ * reads as a bug rather than as a deliberate exclusion.
+ */
+export async function getIndexablePages(): Promise<{ slug: string; path: string }[]> {
+  return pages
+    .filter(
+      (page) => !(page.seo?.noIndex ?? siteSettings.defaultSeo?.noIndex ?? false),
+    )
+    .map((page) => ({ slug: page.slug, path: routeOf(page) }));
+}
+
+/**
  * The sub-page top bar's links, resolved from page references to hrefs.
  *
  * Resolution happens here, not in the component, for the same reason the rest

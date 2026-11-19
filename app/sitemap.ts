@@ -1,91 +1,97 @@
 import type { MetadataRoute } from 'next';
+import { getIndexablePages } from '@/lib/content';
 import { absoluteUrl } from '@/lib/site';
 
 /**
- * One entry per public, indexable route.
+ * The sitemap, derived rather than listed.
  *
- * Kept as a plain array so adding or reordering a page is a one-line edit,
- * and so the whole set is visible at a glance rather than spread across the
- * route files.
+ * The URL set comes from getIndexablePages(), which reads the same `pages`
+ * array the routes themselves render from. A page added there appears here
+ * with no edit to this file — which is the point: the previous version kept a
+ * hand-written array and had fallen three pages behind without anything
+ * failing, because nothing checks a sitemap against reality.
  *
- * NOT LISTED, deliberately:
- *   /doodles   internal design reference. Unlinked, and the page already
- *              sends robots: noindex. A sitemap entry would invite the crawl
- *              its own metadata then refuses.
- *   /_not-found  Next's built-in 404. Never belongs in a sitemap.
- *
- * There are no API routes, route groups, Studio, preview or auth-gated routes
- * in this app today. When any appear, they stay out of this array — a sitemap
- * is a list of pages worth indexing, not an inventory of what exists.
+ * What stays here is the weighting. Which pages exist and whether they may be
+ * indexed is a content question and lives in the content layer; how strongly
+ * to recommend each one to a crawler is an SEO judgement and lives with the
+ * sitemap. Splitting them that way is what lets the list derive itself while
+ * the priorities stay deliberate.
  */
-interface Route {
-  /** Site-relative. '/' is the homepage. */
-  path: string;
-  /**
-   * A fixed date, not `new Date()` and not the build date.
-   *
-   * `new Date()` would tell a crawler every page changed on every request,
-   * and the build date would say the same thing on every deploy — including
-   * deploys that only touched CSS. Either teaches Google to ignore the field.
-   * Update the date on a row when that page's content actually changes.
-   */
-  lastModified: string;
-  changeFrequency: MetadataRoute.Sitemap[number]['changeFrequency'];
+
+/** Weighting by route, with a default for anything not named. */
+interface Weight {
   priority: number;
+  changeFrequency: MetadataRoute.Sitemap[number]['changeFrequency'];
 }
 
-const ROUTES: Route[] = [
-  {
-    path: '/',
-    lastModified: '2026-11-12',
-    changeFrequency: 'weekly',
-    priority: 1,
-  },
-  {
-    // Founding memberships. The money page until the sale closes.
-    path: '/early-bird',
-    lastModified: '2026-11-12',
-    changeFrequency: 'weekly',
-    priority: 0.8,
-  },
-  {
-    path: '/contact',
-    lastModified: '2026-11-12',
-    changeFrequency: 'monthly',
-    priority: 0.5,
-  },
-];
+/**
+ * Priority is relative, not absolute: it tells a crawler how pages rank
+ * against each other on this site, and nothing about how they rank against
+ * anyone else's. The spread matters, the numbers do not.
+ *
+ * The ordering reflects what the site is for while the sale is on — the
+ * homepage, then the page that sells memberships, then the pages that answer
+ * questions, then the boilerplate nobody searches for but every site needs.
+ */
+const WEIGHTS: Record<string, Weight> = {
+  '/': { priority: 1, changeFrequency: 'weekly' },
+  // The money page until the founding sale closes.
+  '/early-bird': { priority: 0.9, changeFrequency: 'weekly' },
+  '/faq': { priority: 0.7, changeFrequency: 'monthly' },
+  '/press': { priority: 0.6, changeFrequency: 'monthly' },
+  '/contact': { priority: 0.5, changeFrequency: 'monthly' },
+  // Legal boilerplate: required, rarely read, almost never searched for, and
+  // changed only when counsel says so.
+  '/privacy': { priority: 0.3, changeFrequency: 'yearly' },
+  '/terms': { priority: 0.3, changeFrequency: 'yearly' },
+};
 
 /**
- * Async even though nothing is awaited yet.
- *
- * Phase 2 moves content into Sanity, and the fetch below becomes real. Having
- * the signature already be async means adding it is an edit inside this
- * function rather than a change to its shape.
+ * Where an unlisted route lands. A new page is in the sitemap immediately at a
+ * middling weight, and tuning it is one line above rather than a prerequisite
+ * for being listed at all.
  */
+const DEFAULT_WEIGHT: Weight = { priority: 0.5, changeFrequency: 'monthly' };
+
+/**
+ * Last-modified dates, for the pages whose content has settled.
+ *
+ * A fixed date per route, not `new Date()` and not the build date. `new Date()`
+ * would tell a crawler every page changed on every request, and the build date
+ * would say the same on every deploy including ones that only touched CSS.
+ * Either teaches Google to ignore the field.
+ *
+ * Omission is deliberate and safe: `lastModified` is optional in the protocol,
+ * and no date is better than a wrong one. A page added later simply has no
+ * entry here until someone sets one, which never blocks it from being listed.
+ */
+const LAST_MODIFIED: Record<string, string> = {
+  '/': '2026-11-19',
+  '/early-bird': '2026-11-19',
+  '/faq': '2026-11-19',
+  '/press': '2026-11-19',
+  '/privacy': '2026-11-19',
+  '/terms': '2026-11-19',
+  '/contact': '2026-11-12',
+};
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const staticEntries: MetadataRoute.Sitemap = ROUTES.map((route) => ({
-    url: absoluteUrl(route.path),
-    lastModified: new Date(route.lastModified),
-    changeFrequency: route.changeFrequency,
-    priority: route.priority,
-  }));
+  const pages = await getIndexablePages();
 
-  // TODO — PHASE 2 (Sanity). Dynamic routes get appended here, e.g.:
-  //
-  //   const posts = await getAllPosts();            // from /lib/content.ts
-  //   const dynamicEntries = posts.map((post) => ({
-  //     url: absoluteUrl(`/blog/${post.slug}`),
-  //     lastModified: new Date(post._updatedAt),     // Sanity's own timestamp
-  //     changeFrequency: 'monthly' as const,
-  //     priority: 0.5,
-  //   }));
-  //   return [...staticEntries, ...dynamicEntries];
-  //
-  // Fetch through /lib/content.ts, never from Sanity directly — see
-  // ARCHITECTURE.md → Prime directive. Note that `_updatedAt` gives a real
-  // per-document date, which is what the fixed dates above are standing in
-  // for until then.
+  return pages.map((page) => {
+    const weight = WEIGHTS[page.path] ?? DEFAULT_WEIGHT;
+    const lastModified = LAST_MODIFIED[page.path];
 
-  return staticEntries;
+    return {
+      url: absoluteUrl(page.path),
+      ...(lastModified ? { lastModified: new Date(lastModified) } : {}),
+      changeFrequency: weight.changeFrequency,
+      priority: weight.priority,
+    };
+  });
+
+  // PHASE 2 (Sanity): dynamic routes append here, fetched through
+  // /lib/content.ts rather than from Sanity directly — see ARCHITECTURE.md →
+  // Prime directive. A post carries `_updatedAt`, a real per-document
+  // timestamp, which is what the fixed dates above are standing in for.
 }
