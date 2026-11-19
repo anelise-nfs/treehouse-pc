@@ -12,7 +12,7 @@ import {
   getSiteSettings,
   getTopNav,
 } from '@/lib/content';
-import { isProduction, siteUrl } from '@/lib/site';
+import { isProduction, shareImage, siteUrl } from '@/lib/site';
 import './globals.css';
 
 /**
@@ -71,6 +71,27 @@ export async function generateMetadata(): Promise<Metadata> {
     },
     description: settings.defaultSeo?.description,
     robots: noIndex ? { index: false, follow: false } : undefined,
+    /* The site-wide default. Individual pages override title and description
+       through pageMetadata, which repeats them inside its own openGraph —
+       Next replaces the whole object rather than merging it, so a page that
+       set only `title` would otherwise show this one's og:title. */
+    openGraph: {
+      type: 'website',
+      siteName: settings.siteName,
+      title: settings.siteName,
+      description: settings.defaultSeo?.description,
+      url: siteUrl,
+      images: [shareImage],
+    },
+    /* summary_large_image, not summary: the card is 1.91:1 and the small
+       variant would crop it to a square thumbnail, which is the shape that
+       put the wordmark against the edges in the first place. */
+    twitter: {
+      card: 'summary_large_image',
+      title: settings.siteName,
+      description: settings.defaultSeo?.description,
+      images: [shareImage.url],
+    },
   };
 }
 

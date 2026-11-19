@@ -30,6 +30,30 @@ export function absoluteUrl(path = '/'): string {
 }
 
 /**
+ * The default social-share card.
+ *
+ * 1200x630 is the size every platform crops from, and the composition assumes
+ * it: the wordmark sits well inside a linen panel on the left with the photo
+ * on the right, so a centre crop on a narrower card still holds both.
+ *
+ * It is a real file rather than a generated one. next/og would render it at
+ * request time, which this site has no server for, and it is the subject of an
+ * open advisory in the Next version pinned here — a flat asset has neither
+ * problem. Regenerate it by hand if the wordmark or the photograph changes.
+ *
+ * WITHOUT THIS, link previews scrape the page and pick the header wordmark: a
+ * 2176x430 transparent PNG that messaging apps composite on a colour of their
+ * own choosing and crop to the card, which put the logo hard against all four
+ * edges.
+ */
+export const shareImage = {
+  url: '/images/og-default.jpg',
+  width: 1200,
+  height: 630,
+  alt: 'The Treehouse wordmark beside a photograph of the indoor play structure',
+};
+
+/**
  * True only on the real production deployment, on any host.
  *
  * THE SINGLE DEFINITION. robots.txt, the layout's noindex metadata and the GTM
