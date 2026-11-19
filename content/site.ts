@@ -103,7 +103,9 @@ export const siteSettings: SiteSettings = {
       platform: 'instagram',
       url: 'https://www.instagram.com/treehouse.parkcity',
     },
-    // PLACEHOLDER: awaiting the client's account.
+    // Staged, not rendered. No url means the footer skips it entirely, so the
+    // entry can sit here until the account exists and go live the moment
+    // someone pastes the address — no code change, here or anywhere.
     { _key: 'facebook', platform: 'facebook' },
   ],
   defaultSeo: {

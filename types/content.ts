@@ -1129,11 +1129,15 @@ export interface SocialLink {
   _key: string;
   platform: SocialPlatform;
   /**
-   * Optional, because a row of icons is a design element that has to look
-   * complete before every account exists. An entry without a url renders as
-   * the glyph alone — no link, and hidden from assistive tech, so nobody is
-   * offered a destination that is not there. Add the url and it becomes a
-   * real link with no other change.
+   * Optional, and the switch that decides whether this entry renders at all.
+   *
+   * An account can be staged here before its address exists — pick the
+   * platform now, paste the url when it lands — and nothing appears in the
+   * footer until it does. It used to render as a bare glyph in the meantime,
+   * which looked like a link that did not work.
+   *
+   * Every platform in SocialPlatform already has a glyph and an accessible
+   * name, so adding one is a content edit and nothing else.
    */
   url?: string;
   /** Accessible name; defaults to the platform name when absent. */

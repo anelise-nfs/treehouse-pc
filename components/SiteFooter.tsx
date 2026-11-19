@@ -136,6 +136,12 @@ export function SiteFooter({
      touched no content. */
   const rowLinks = footerNav ?? [];
 
+  /* Only the accounts that actually have an address. Narrowed here rather than
+     inline so the JSX below can treat `url` as present. */
+  const linkedSocials = (socialLinks ?? []).filter(
+    (social): social is SocialLink & { url: string } => Boolean(social.url),
+  );
+
   return (
     <footer className="bg-pine text-white">
       {/* The bottom padding is the space under the copyright line, and is set
@@ -246,38 +252,37 @@ export function SiteFooter({
                 allowed down to 24px (ARCHITECTURE.md → Accessibility
                 baseline) because each is a full-width row; an icon has no
                 label to widen it, so it gets the primary-control size. */}
-            {socialLinks && socialLinks.length > 0 ? (
-              <ul className="mt-[calc(var(--spacing-gutter)*0.75)] flex justify-center gap-1 lg:-ml-3 lg:justify-start">
-                {socialLinks.map((social) => {
-                  const name = social.label ?? PLATFORM_NAMES[social.platform];
-                  const box =
-                    'flex min-h-[var(--tap-target)] min-w-[var(--tap-target)] items-center justify-center';
+            {/* THE URL IS THE SWITCH. An entry renders only once it has one,
+                and the row sizes itself to however many that is — one today,
+                more as accounts land.
 
-                  return (
-                    <li key={social._key}>
-                      {social.url ? (
-                        <a
-                          href={social.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          aria-label={name}
-                          className={`${box} text-white transition-opacity duration-200 ease-out hover:opacity-70 focus-visible:opacity-70`}
-                        >
-                          <SocialIcon platform={social.platform} className="size-5" />
-                        </a>
-                      ) : (
-                        /* No url yet. A span, not an <a href="#">: a link that
-                           goes nowhere is a dead end for a keyboard or screen
-                           reader user, and aria-hidden keeps the placeholder
-                           out of their way entirely. Visually the row still
-                           reads as three. */
-                        <span aria-hidden="true" className={`${box} text-white`}>
-                          <SocialIcon platform={social.platform} className="size-5" />
-                        </span>
-                      )}
-                    </li>
-                  );
-                })}
+                A url-less entry used to render as a bare glyph so the row
+                looked complete before every account existed. That was the
+                right call when the row would otherwise have held a single
+                icon; it is the wrong one now, because the placeholder reads
+                as a link that does not work. Filtering rather than deleting
+                the entry means the account can be staged in content and goes
+                live the moment someone pastes the address.
+
+                Phase 2: an author adds an item, picks a platform and pastes a
+                url. Every platform in SocialPlatform already has a glyph and
+                an accessible name, so a new one is a content edit and nothing
+                more. */}
+            {linkedSocials.length > 0 ? (
+              <ul className="mt-[calc(var(--spacing-gutter)*0.75)] flex justify-center gap-1 lg:-ml-3 lg:justify-start">
+                {linkedSocials.map((social) => (
+                  <li key={social._key}>
+                    <a
+                      href={social.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={social.label ?? PLATFORM_NAMES[social.platform]}
+                      className="flex min-h-[var(--tap-target)] min-w-[var(--tap-target)] items-center justify-center text-white transition-opacity duration-200 ease-out hover:opacity-70 focus-visible:opacity-70"
+                    >
+                      <SocialIcon platform={social.platform} className="size-5" />
+                    </a>
+                  </li>
+                ))}
               </ul>
             ) : null}
           </div>
