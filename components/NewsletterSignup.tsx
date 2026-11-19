@@ -2,13 +2,8 @@
 
 import { useEffect, useId, useRef, useState } from 'react';
 import { BUTTON_INTERACTION } from '@/components/Button';
-import {
-  HONEYPOT_FIELD,
-  MAILCHIMP_ENDPOINT,
-  isValidEmail,
-  submitForm,
-  type FormStatus,
-} from '@/lib/forms';
+import { HONEYPOT_FIELD, isValidEmail, type FormStatus } from '@/lib/forms';
+import { subscribe } from '@/lib/mailchimp';
 
 /**
  * The anchor every "sign up for updates" button points at.
@@ -17,6 +12,15 @@ import {
  * rather than a hand-typed '#newsletter' that can drift out of step with it.
  */
 export const NEWSLETTER_ANCHOR = 'newsletter';
+
+/**
+ * Shown when the honeypot catches a submission — the same line a real signup
+ * gets, so a bot cannot tell the two apart by the response.
+ *
+ * The list is single opt-in: Mailchimp sends no confirmation email, so this
+ * must not tell anyone to go and look for one.
+ */
+const SUBSCRIBED_NOTICE = 'You’re on the list! Thanks!';
 
 /**
  * Surface the signup is sitting on. Two, because two exist: the footer's pine
@@ -99,6 +103,11 @@ export function NewsletterSignup({
   const [email, setEmail] = useState('');
   const [status, setStatus] = useState<FormStatus>('idle');
   const [error, setError] = useState('');
+  /* The success line is not fixed copy: subscribing and already being
+     subscribed are both successes and say different things. Held in state
+     rather than derived, because the distinction comes back from Mailchimp and
+     nothing in this component can work it out for itself. */
+  const [notice, setNotice] = useState('');
 
   // Arriving from one of the CTAs that links here. Both the initial hash (a
   // cold load of /#newsletter) and later hashchanges (clicking the hero button
@@ -128,24 +137,31 @@ export function NewsletterSignup({
 
     const form = event.currentTarget;
     // Silently accept and do nothing: a bot gets no signal that it was caught.
+    // The second of two honeypots, and the only one checked on this side of
+    // the wire: Mailchimp's own is sent empty by lib/mailchimp and enforced by
+    // Mailchimp. Nothing leaves the browser when this one is filled.
     if ((new FormData(form).get(HONEYPOT_FIELD) as string)?.trim()) {
       setStatus('success');
+      setNotice(SUBSCRIBED_NOTICE);
       return;
     }
 
     setStatus('submitting');
     setError('');
 
-    const result = await submitForm(MAILCHIMP_ENDPOINT, { email: email.trim() });
+    const result = await subscribe(email);
 
-    if (result.ok) {
+    // 'already' is a success, not a failure: the address is on the list, which
+    // is what they came to do. Only the wording differs.
+    if (result.status === 'success' || result.status === 'already') {
       setStatus('success');
+      setNotice(result.message);
       setEmail('');
       return;
     }
 
     setStatus('error');
-    setError(result.message ?? '');
+    setError(result.message);
   }
 
   return (
@@ -167,10 +183,8 @@ export function NewsletterSignup({
           reliably announced. Polite rather than assertive — nothing here is
           urgent enough to interrupt. */}
       <div aria-live="polite" id={statusId}>
-        {status === 'success' ? (
-          <p className={`mt-3 font-sans text-[length:var(--text-ui)] ${styles.body}`}>
-            You&rsquo;re on the list — thanks! Watch your inbox.
-          </p>
+        {status === 'success' && notice ? (
+          <p className={`mt-3 font-sans text-[length:var(--text-ui)] ${styles.body}`}>{notice}</p>
         ) : null}
         {status === 'error' && error ? (
           <p className={`mt-3 font-sans text-[length:var(--text-ui)] ${styles.body}`}>{error}</p>
@@ -216,6 +230,10 @@ export function NewsletterSignup({
                 autoComplete="email"
                 required
                 value={email}
+                // Disabled alongside the button while the request is in
+                // flight, so the address cannot be edited out from under a
+                // submission that is already carrying the old one.
+                disabled={status === 'submitting'}
                 onChange={(event) => {
                   setEmail(event.target.value);
                   if (status === 'error') setStatus('idle');
@@ -223,7 +241,7 @@ export function NewsletterSignup({
                 aria-invalid={status === 'error' ? true : undefined}
                 aria-describedby={`${statusId} ${blurbId}`}
                 placeholder="you@example.com"
-                className={`min-h-[var(--tap-target)] w-full min-w-0 rounded-[var(--radius-pill)] border bg-white px-4 font-sans text-[length:var(--text-caption)] text-ink placeholder:text-ink-soft @[20rem]:flex-1 ${styles.input}`}
+                className={`min-h-[var(--tap-target)] w-full min-w-0 rounded-[var(--radius-pill)] border bg-white px-4 font-sans text-[length:var(--text-caption)] text-ink placeholder:text-ink-soft disabled:opacity-70 @[20rem]:flex-1 ${styles.input}`}
               />
 
               <HoneypotField />
@@ -264,8 +282,10 @@ export function NewsletterSignup({
  * are still reachable by screen readers and by tabbing, and a person filling
  * one in would have their message dropped. tabIndex and aria-hidden are belt
  * and braces for the same reason.
+ *
+ * No longer exported: the contact form was the other caller, and it is gone.
  */
-export function HoneypotField() {
+function HoneypotField() {
   return (
     <input
       type="text"

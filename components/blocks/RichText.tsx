@@ -61,7 +61,7 @@ export function RichText({
             looks. Underlined, because colour alone cannot mark a link — and
             with Tailwind's preflight a bare <a> inherits both colour and
             decoration, so without this a link here is invisible as one. Same
-            treatment ContactForm and NewsletterBlock give their prose. */}
+            treatment NewsletterBlock gives its prose. */}
         <div className="space-y-[var(--spacing-block)] [&_a]:underline [&_a]:underline-offset-2">
           <PortableText
             blocks={content}
