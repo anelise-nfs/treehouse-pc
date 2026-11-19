@@ -613,13 +613,22 @@
        trim the padding without trimming the lift and the colour climbs into
        the button.
 
-       14rem is as far as it goes on narrow phones: the hero's tagline wraps to
+       12rem is as far as it goes on narrow phones: the hero's tagline wraps to
        an extra line there, which pushes the button down and leaves the fill
        only a few pixels of slack beneath it. From 24rem up the tagline fits
-       and 16rem gives the ring a clear margin on every part of the wave while
-       the crest still stops short of the button. */
+       and 14rem gives the ring a clear margin on every part of the wave while
+       the crest still stops short of the button.
+
+       BOTH VALUES CAME DOWN BY 2rem when the hero's h1 moved to the script
+       face: Betania Patmos is set at --leading-heading where the sans ran at
+       --leading-display, and the taller line boxes pushed the button down into
+       the slack these numbers were tuned against. The crest then crossed it on
+       a phone. Any future change to the hero's type — face, leading, or a
+       tagline that gains a line — lands here again, because this distance is
+       measured from the panel's laid-out top and knows nothing about what sits
+       above it. */
     .hero-band-rise {
-      --hero-band-lift: 14rem;
+      --hero-band-lift: 12rem;
       animation: hero-band-settle linear both;
       animation-timeline: scroll(root block);
       animation-range: 45vh 85vh;
@@ -627,7 +636,7 @@
 
     @media (min-width: 24rem) {
       .hero-band-rise {
-        --hero-band-lift: 16rem;
+        --hero-band-lift: 14rem;
       }
     }
 

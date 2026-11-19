@@ -76,6 +76,33 @@ function phoneZoom(zoom: number): number {
 }
 
 /**
+ * The phone crop's requested viewport, and why it is smaller than the
+ * desktop's rather than the same.
+ *
+ * `size` is a viewport in CSS pixels that `scale: 2` then renders at double
+ * the pixels, so it sets two things at once: how much map is in frame, and how
+ * many pixels come back. The block shows this image in a box about 246px wide
+ * on a 390px phone — the content column after the page gutter and CONTENT_INSET
+ * — which is ~738 device pixels on a 3x screen.
+ *
+ * At 640x480 the response was 1280x960: 1.7x more pixels than that box can
+ * show, squeezed down to fit. Everything drawn on the map shrank with it, and
+ * Google's marker — 74px tall at scale 2 — landed at about 14px on screen.
+ * That is why the pin read as a speck.
+ *
+ * 384x288 comes back at 768x576, which is 1.04x the box's device pixels: still
+ * sharp on a 3x phone, with nothing wasted. The marker now lands at about 24px,
+ * and the smaller viewport also crops tighter at the same zoom level — one
+ * change covering both halves of the problem.
+ *
+ * Zoom is deliberately NOT raised to compensate. At zoom+2 the crop loses I-80
+ * and Lincoln Hwy, which is the exact failure phoneZoom's note describes: a map
+ * of one unlabelled block is no more use than a small one.
+ */
+const PHONE_MAP_WIDTH = 384;
+const PHONE_MAP_HEIGHT = 288;
+
+/**
  * The real map: one image, two crops.
  *
  * Two sources rather than one stretched image because Google caps a static
@@ -95,7 +122,13 @@ function phoneZoom(zoom: number): number {
  */
 function StaticMap({ address, zoom }: { address: string; zoom: number }) {
   const wide = staticMapUrl({ address, zoom, width: 640, height: 320 });
-  const tall = staticMapUrl({ address, zoom: phoneZoom(zoom), width: 640, height: 480 });
+  // 384x288, not 640x480 — see PHONE_MAP_WIDTH.
+  const tall = staticMapUrl({
+    address,
+    zoom: phoneZoom(zoom),
+    width: PHONE_MAP_WIDTH,
+    height: PHONE_MAP_HEIGHT,
+  });
 
   return (
     <div>
@@ -106,8 +139,8 @@ function StaticMap({ address, zoom }: { address: string; zoom: number }) {
         <img
           src={tall}
           alt=""
-          width={640}
-          height={480}
+          width={PHONE_MAP_WIDTH}
+          height={PHONE_MAP_HEIGHT}
           className="block aspect-[4/3] w-full rounded-[var(--radius-card)] object-cover md:aspect-[2/1]"
         />
       </picture>

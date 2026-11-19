@@ -38,20 +38,98 @@ export function hasMapKey(): boolean {
 /**
  * Pin colour, as Google wants it: `0x` and six hex digits.
  *
- * Mint, matching --color-mint. Pine was tried first and disappeared — a Google
- * basemap is mostly pale greens and beiges, and a dark desaturated green read
- * as part of the terrain rather than as something placed on it. Mint is a
- * green too, but a far more saturated one than anything in the landscape, so
- * it separates where pine did not.
+ * Tangerine. The basemap below is now a muted cream, sage and sand palette
+ * with nothing saturated anywhere in it, so a warm orange is the only thing on
+ * the image that is a strong colour — it reads as placed rather than as
+ * terrain. This replaced mint, which was chosen against Google's stock
+ * basemap: mint separated from that one's greens, but against our own pale
+ * sage parks it is the same family again.
  *
- * The brand mint rather than the brighter doodle mint: the doodle palette is
- * for decoration over our own surfaces, and this marker sits on someone
- * else's imagery.
+ * NOTE: this is #ed671d, the doodle-palette tangerine, not the darkened brand
+ * --color-tangerine (#cc4800). The doodle palette is otherwise reserved for
+ * decoration over our own surfaces; a marker on someone else's imagery is a
+ * deliberate exception, since the brighter value is what survives against map
+ * tiles.
  *
  * This is a marker, not text, so no contrast ratio applies. What matters is
  * only that it is not lost against the map.
  */
-const PIN_COLOR = '0x4da17e';
+const PIN_COLOR = '0xED671D';
+
+/**
+ * The muted brand basemap.
+ *
+ * Held as the same object shape Google's Styling Wizard exports, rather than
+ * as pre-built query strings, for two reasons: a restyle is then a paste over
+ * this array instead of nineteen hand-encoded strings, and the translation to
+ * Static Maps syntax lives in one tested place rather than in every rule.
+ *
+ * ORDER IS LOAD-BEARING. The API applies these in sequence and a later rule
+ * overrides an earlier one on the same feature and element — the first entry
+ * paints every geometry cream, and everything after it carves exceptions out
+ * of that. Re-ordering the array changes the map.
+ */
+interface MapStyler {
+  color?: string;
+  visibility?: string;
+}
+
+interface MapStyleRule {
+  /** Omitted means every feature type. */
+  featureType?: string;
+  /** Omitted means every element of the feature. */
+  elementType?: string;
+  stylers: MapStyler[];
+}
+
+const MAP_STYLE: MapStyleRule[] = [
+  { elementType: 'geometry', stylers: [{ color: '#fbf6ee' }] },
+  { elementType: 'labels.icon', stylers: [{ visibility: 'off' }] },
+  { elementType: 'labels.text.fill', stylers: [{ color: '#6b6a63' }] },
+  { elementType: 'labels.text.stroke', stylers: [{ color: '#fbf6ee' }] },
+  { featureType: 'administrative', elementType: 'geometry', stylers: [{ visibility: 'off' }] },
+  { featureType: 'administrative.land_parcel', stylers: [{ visibility: 'off' }] },
+  { featureType: 'administrative.neighborhood', stylers: [{ visibility: 'off' }] },
+  { featureType: 'poi', stylers: [{ visibility: 'off' }] },
+  {
+    featureType: 'poi.park',
+    elementType: 'geometry',
+    stylers: [{ visibility: 'on' }, { color: '#d9e5cf' }],
+  },
+  { featureType: 'landscape.natural', elementType: 'geometry', stylers: [{ color: '#e7eede' }] },
+  { featureType: 'road', elementType: 'geometry', stylers: [{ color: '#efe7da' }] },
+  { featureType: 'road', elementType: 'labels.icon', stylers: [{ visibility: 'off' }] },
+  { featureType: 'road.arterial', elementType: 'geometry', stylers: [{ color: '#e8dfd0' }] },
+  { featureType: 'road.highway', elementType: 'geometry', stylers: [{ color: '#e2d6c2' }] },
+  { featureType: 'road.highway', elementType: 'labels', stylers: [{ visibility: 'simplified' }] },
+  { featureType: 'road.local', elementType: 'labels', stylers: [{ visibility: 'off' }] },
+  { featureType: 'transit', stylers: [{ visibility: 'off' }] },
+  { featureType: 'water', elementType: 'geometry', stylers: [{ color: '#c7ddd4' }] },
+  { featureType: 'water', elementType: 'labels.text.fill', stylers: [{ color: '#8fab9f' }] },
+];
+
+/**
+ * One rule as a `style` parameter value: `feature:…|element:…|color:0x…`.
+ *
+ * The pipes are written raw and left to URLSearchParams, which percent-encodes
+ * them to %7C on the way out. Encoding them here would double-encode.
+ *
+ * Colours convert from CSS `#rrggbb` to Google's `0xrrggbb`; the wizard emits
+ * the first form and the API only accepts the second.
+ */
+function toStyleParam({ featureType, elementType, stylers }: MapStyleRule): string {
+  const parts: string[] = [];
+
+  if (featureType) parts.push(`feature:${featureType}`);
+  if (elementType) parts.push(`element:${elementType}`);
+
+  for (const styler of stylers) {
+    if (styler.color) parts.push(`color:0x${styler.color.replace('#', '')}`);
+    if (styler.visibility) parts.push(`visibility:${styler.visibility}`);
+  }
+
+  return parts.join('|');
+}
 
 export interface StaticMapOptions {
   /**
@@ -78,13 +156,18 @@ export function staticMapUrl({ address, zoom, width, height }: StaticMapOptions)
     zoom: String(zoom),
     size: `${width}x${height}`,
     scale: '2',
+    // The default, stated rather than assumed: the style array below is built
+    // for the roadmap basemap and would be ignored on satellite or terrain.
+    maptype: 'roadmap',
+    // No `label:` — a lettered pin would put a glyph on the one mark that is
+    // meant to read as a shape. The caption below the image names the place.
     markers: `color:${PIN_COLOR}|${address}`,
     key: KEY,
-    // To mute the stale business labels around the pin, add:
-    //   style: 'feature:poi.business|visibility:off'
-    // It is left off deliberately — the client is correcting the listing at
-    // the source, which fixes it in Google Maps proper as well as here.
   });
+
+  // One `style` per rule. append, not the constructor: a URLSearchParams built
+  // from an object holds one value per key, and this parameter repeats.
+  for (const rule of MAP_STYLE) params.append('style', toStyleParam(rule));
 
   return `https://maps.googleapis.com/maps/api/staticmap?${params.toString()}`;
 }
