@@ -29,6 +29,11 @@ export const siteSettings: SiteSettings = {
   primaryNav: [
     { label: 'Home', kind: 'internal', href: '/' },
     { label: 'Early Bird', kind: 'internal', href: '/early-bird' },
+    { label: 'FAQ', kind: 'internal', href: '/faq' },
+    { label: 'In the News', kind: 'internal', href: '/press' },
+    // Contact stays last, where a nav conventionally puts it. The footer lists
+    // these in a different order because it is a directory grouped by kind,
+    // not a path through the site.
     { label: 'Contact', kind: 'internal', href: '/contact' },
   ],
   /**
@@ -46,6 +51,10 @@ export const siteSettings: SiteSettings = {
     // needs to point at. It retires when the founding-membership sale closes,
     // and retiring it is deleting this line.
     { page: 'early-bird', label: 'Early Bird' },
+    // Labels are set rather than inherited: /faq's own title is 'good
+    // questions', which is right on the page and useless in a nav bar.
+    { page: 'faq', label: 'FAQ' },
+    { page: 'press', label: 'In the News' },
     { page: 'contact', label: 'Contact' },
   ],
   /**
