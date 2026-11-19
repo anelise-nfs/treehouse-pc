@@ -26,8 +26,6 @@ export const pressPage: Page = {
     title: 'In the News — Treehouse Park City',
     description:
       'Press coverage of Treehouse Park City, the indoor play cafe coming to Kimball Junction.',
-    // Matches every other page on the site until launch.
-    noIndex: true,
   },
   location: parkCity,
   blocks: [

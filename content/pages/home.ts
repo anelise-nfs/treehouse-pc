@@ -32,7 +32,6 @@ export const homePage: Page = {
     title: 'Treehouse — neighborhood play cafe in Park City, Utah',
     description:
       "A playground for the kids. A cafe for you. Park City's one and only premium indoor play space for ages 0–12.",
-    noIndex: true,
   },
   location: parkCity,
   blocks: [

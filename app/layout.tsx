@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { Betania_Patmos, Libre_Baskerville, Zen_Maru_Gothic } from 'next/font/google';
+import { GoogleTagManager } from '@next/third-parties/google';
 import { CookieNotice } from '@/components/CookieNotice';
 import { ScrollEffects } from '@/components/ScrollEffects';
 import { SiteFooter } from '@/components/SiteFooter';
@@ -73,6 +74,28 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
+/**
+ * Whether to load Google Tag Manager, and which container.
+ *
+ * GA4 lives inside the GTM container and must load from there alone. Nothing
+ * in this codebase may add gtag.js or <GoogleAnalytics /> alongside it — two
+ * sources for the same property counts every pageview twice.
+ *
+ * Production only. `isProduction` is the same host-agnostic check robots.txt
+ * uses to keep previews out of the index, read from lib/site so there is one
+ * definition of "this is the real site": every preview branch and every laptop
+ * is excluded, which keeps test traffic out of the client's reporting.
+ *
+ * NEXT_PUBLIC_GTM_FORCE_ENABLE is the escape hatch for GTM Preview mode, which
+ * cannot otherwise reach a branch deploy or localhost. It belongs in .env.local
+ * and never in Vercel.
+ *
+ * Unset NEXT_PUBLIC_GTM_ID simply means no GTM, not a broken build.
+ */
+const gtmId = process.env.NEXT_PUBLIC_GTM_ID;
+const gtmForceEnabled = process.env.NEXT_PUBLIC_GTM_FORCE_ENABLE === 'true';
+const loadGtm = Boolean(gtmId) && (isProduction || gtmForceEnabled);
+
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const [settings, logoSizes, headerSurfaces, headerVariants, topNav] = await Promise.all([
     getSiteSettings(),
@@ -84,6 +107,10 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 
   return (
     <html lang="en" className={`${script.variable} ${serif.variable} ${sans.variable}`}>
+      {/* Direct child of <html> and before <body>, per @next/third-parties.
+          The component injects the container script itself; there is no
+          hand-written snippet to keep in step with it. */}
+      {loadGtm && gtmId ? <GoogleTagManager gtmId={gtmId} /> : null}
       <body>
         <ScrollEffects />
         {/* The header overlays the hero, so keyboard users need a way past it. */}

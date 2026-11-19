@@ -44,7 +44,6 @@ export const earlyBirdPage: Page = {
     title: 'Founding memberships — Treehouse Park City',
     description:
       "We're selling a limited number of founding membership spots and they will go fast!",
-    noIndex: true,
   },
   location: parkCity,
   blocks: [
