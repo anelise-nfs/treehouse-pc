@@ -206,7 +206,7 @@ export function SiteShell({
                   onClick={() => setOpen(false)}
                   // The underline picks up the dot's colour. Paired with
                   // focus-visible so it is not mouse-only.
-                  className={`flex min-h-[var(--tap-target)] items-center gap-3 font-sans text-[length:var(--text-lead)] font-semibold leading-[1.7] text-ink no-underline decoration-2 underline-offset-4 hover:underline focus-visible:underline sm:text-[length:var(--text-ui)] sm:leading-[1.5] ${accent.underline}`}
+                  className={`flex min-h-[var(--tap-target)] items-center gap-3 font-sans text-[length:var(--text-lead)] font-medium leading-[1.7] text-ink no-underline decoration-2 underline-offset-4 hover:underline focus-visible:underline sm:text-[length:var(--text-ui)] sm:leading-[1.5] ${accent.underline}`}
                 >
                   <span
                     aria-hidden="true"

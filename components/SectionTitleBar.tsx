@@ -59,7 +59,7 @@ export function SectionTitleBar({ title, color, align }: SectionTitleBarProps) {
             lime fill at 3.14:1 against a 4.5:1 requirement. 24px clears the bar
             as large text instead, at the cost of that title wrapping to two
             lines on a phone. Unchanged at desktop width. */}
-        <h2 className="font-sans text-[length:var(--text-aa-large)] font-semibold leading-[var(--leading-heading)] text-white">
+        <h2 className="font-sans text-[length:var(--text-aa-large)] font-medium leading-[var(--leading-heading)] text-white">
           {title}
         </h2>
       </div>

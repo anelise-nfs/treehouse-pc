@@ -108,7 +108,11 @@ reads on phones, often outdoors.
 - **Script (Betania Patmos):** display headlines and section band headings only. Never below ~28px,
   never body copy, never UI.
 - **Serif (Libre Baskerville):** body copy and editorial headings.
-- **Sans (Quicksand):** buttons, nav, labels, captions, prices.
+- **Sans (Zen Maru Gothic):** buttons, nav, labels, captions, prices. Loaded at 400/500/700.
+  It is a static family with no 600, so emphasized UI text uses `font-medium` (500) and
+  `font-semibold` is not used anywhere — 600 resolves up to 700 and reads as bold. 700 is
+  reserved for the display h1s and the wordmark. Weight is not a contrast lever either way:
+  WCAG's large-text threshold needs 700, so 600 never qualified.
 
 Body copy never renders below 16px on any viewport.
 
@@ -125,7 +129,7 @@ script is correct for subsection headings: "built for play that matters", "the c
 room", "drop us a line" and similar.
 
 These use `--text-script-sm`, which is clamped so it cannot fall below 28px. **28px is a hard floor
-for the script face.** Anything that needs to render smaller uses Quicksand instead — there is no
+for the script face.** Anything that needs to render smaller uses Zen Maru Gothic instead — there is no
 small script, at any breakpoint.
 
 Section band headings are larger still and sit at display scale. Some band colors only clear

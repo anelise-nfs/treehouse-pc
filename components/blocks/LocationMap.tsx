@@ -149,7 +149,7 @@ function MapVisual({ label }: { label: string }) {
         <circle cx="12" cy="10" r="2.75" />
       </svg>
 
-      <p className="font-sans text-[length:var(--text-lead)] font-semibold text-ink">{label}</p>
+      <p className="font-sans text-[length:var(--text-lead)] font-medium text-ink">{label}</p>
 
       <p className="font-sans text-[length:var(--text-ui)] text-ink-soft underline">
         View on Google Maps

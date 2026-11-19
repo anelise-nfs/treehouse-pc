@@ -1,7 +1,16 @@
 import type { Page } from '@/types/content';
 import { parkCity } from '../location';
 import { pt } from '../_portableText';
-import { foundingMembershipSection } from '../shared/foundingMembership';
+import {
+  beAnEarlyBird,
+  foundingMembershipSection,
+  foundingPitch,
+  joinTheEmailClub,
+  learnMore,
+  learnMoreSecondary,
+  saleSoonLine,
+} from '../shared/foundingMembership';
+import { MEMBERSHIPS_ON_SALE } from '../launchPhase';
 
 /**
  * Launch homepage. Copy is verbatim from to_start.png except where marked
@@ -23,7 +32,6 @@ export const homePage: Page = {
     title: 'Treehouse — neighborhood play cafe in Park City, Utah',
     description:
       "A playground for the kids. A cafe for you. Park City's one and only premium indoor play space for ages 0–12.",
-    noIndex: true,
   },
   location: parkCity,
   blocks: [
@@ -38,7 +46,7 @@ export const homePage: Page = {
         url: '/images/hero-play-structure.jpg',
         alt: 'The Treehouse play structure: wooden climbing towers, slides, and a vintage camper, with paper geese hanging from the ceiling',
       },
-      overlayHeadline: "Park City's one and only indoor playground opening this winter!",
+      overlayHeadline: "Park City's one and only neighborhood play cafe — opening this winter",
       scriptHeadline: 'for kids and their keepers',
       // No mobileScriptHeadline: it existed to shorten a three-line headline on
       // a phone, and this one is five words. Setting one now would show
@@ -71,8 +79,12 @@ export const homePage: Page = {
           url: '/graphics/treering.png',
           alt: '',
         },
+        // Two paragraphs, so the closing line lands on its own. The band's
+        // PortableText sets a top margin on every paragraph it renders, so the
+        // second is spaced from the first without anything else changing.
         body: pt(
           'Treehouse is a gathering space — not just somewhere to drop in, but somewhere to belong. Our calendar stays full of classes, workshops, and activities that bring families back week after week, where neighbors become friends over coffee and kids find something new to love each visit. A living, breathing part of our community.',
+          "We can't wait to see you!",
         ),
       },
     },
@@ -133,10 +145,24 @@ export const homePage: Page = {
       headingColor: 'pine',
       imageSide: 'right',
       image: {
-        // PLACEHOLDER: the client has supplied no cafe image. Both the url and
-        // the alt below change together when the real photograph arrives.
-        url: '/images/placeholder-cafe.svg',
-        alt: 'Placeholder graphic: cafe photography pending',
+        // Client-supplied stock, not final Treehouse photography — the filename
+        // says so and ARCHITECTURE.md -> Placeholders still counts the cafe as
+        // unshot. A real photograph replaces the three fields below together.
+        url: '/images/TPC_cafe-stock-image.jpg',
+        alt: 'Two hands holding dark ceramic cups over a cafe table — a latte with a leaf poured into the foam, and a black coffee',
+        // Sanity's hotspot shape: x/y are the focal point and width/height the
+        // region around it, all as fractions of the source. The region below
+        // spans x 0.21-0.76 and y 0.21-0.96, which is both cups and the hands
+        // holding them.
+        //
+        // The source is 3:2 and the block crops to 4:3 at every breakpoint, so
+        // the crop only ever takes slivers off the left and right — about 5.5%
+        // per side. x sits just left of centre to hold the latte cup, which is
+        // the subject. y is inert in this container, authored honestly in case
+        // another block ever crops this image vertically.
+        hotspot: { x: 0.48, y: 0.58, width: 0.55, height: 0.75 },
+        width: 1600,
+        height: 1067,
       },
       body: pt(
         "A cafe you'll actually love with good coffee, healthy snacks, comfortable seats – and a calm, beautiful space to gather, connect, and be present while the kids play.",
@@ -159,13 +185,42 @@ export const homePage: Page = {
       anchorId: 'how-it-works',
       accent: 'rainbow',
     },
+    {
+      // Lifted out of the membership section's own intro so it sits directly
+      // under the 'how it works' band, where it now introduces everything
+      // below rather than just the prices — and so that band is no longer a
+      // bare heading running straight into a second heading.
+      //
+      // A block of its own rather than the band's `body` field: SectionBand
+      // renders body copy in white at --text-body, which on flamingo is
+      // 3.11:1 against a 4.5:1 requirement. Nothing uses that field today, so
+      // the trap is latent; on the page background this is ink on linen at
+      // 16.78:1. See ARCHITECTURE.md -> Color rule.
+      //
+      // No doodle: the band above carries two and the membership section below
+      // carries its own.
+      _key: 'membership-intro',
+      _type: 'richText',
+      align: 'center',
+      content: pt(foundingPitch),
+    },
     foundingMembershipSection('early-bird-membership', {
-      title: 'early bird gets the worm',
+      title: 'memberships',
       titleBandColor: 'tangerine',
       anchorId: 'memberships',
-      intro: pt(
-        "Founding Members (aka early birds) are the families who believe in what we're building — and we're making it worth your while.",
-      ),
+      // Just the sale-status line now, sitting immediately above the buttons
+      // it refers to — the standing pitch moved up to the block above. v1-b
+      // leaves this empty: by then the prices carry their own purchase
+      // buttons and the status is self-evident. An empty intro renders
+      // nothing, so the section opens on its title bar.
+      intro: MEMBERSHIPS_ON_SALE ? pt() : pt(saleSoonLine),
+      // Both buttons swap between versions, and which one gets the solid
+      // treatment swaps with them. v1-a has nothing to sell, so 'learn more'
+      // leads and the mailing list is the fallback. v1-b has a product page,
+      // so that takes the primary slot and 'learn more' steps back — the
+      // button that leads to a purchase should not be the quieter of the two.
+      cta: MEMBERSHIPS_ON_SALE ? beAnEarlyBird : learnMore,
+      secondaryCta: MEMBERSHIPS_ON_SALE ? learnMoreSecondary : joinTheEmailClub,
     }),
     {
       _key: 'drop-in',
@@ -241,6 +296,61 @@ export const homePage: Page = {
       // subcopy, not a CTA: there is nothing to book yet, and this reads as a
       // note rather than an invitation to act.
       subcopy: pt('Parties will be available to book when we open this winter.'),
+    },
+    {
+      _key: 'band-grow-with-us',
+      // Leaf for a section about growing, and the only mark in this section:
+      // 'come see us' below carries none either, and the page had started to
+      // accumulate doodles faster than copy.
+      //
+      // bleed, matching the m-squig on the 'how it works' band: a bottom slot
+      // with bleed hangs the mark 32px past the band's edge, so it crosses the
+      // fill onto the page below instead of sitting tidily inside a corner.
+      //
+      // 'sm', where that band uses 'lg', because the size step sets *width*
+      // and the leaf's artwork is 35 x 58 — half again as tall as it is wide,
+      // where a squiggle or a rainbow is flat. At 'sm' it is 96 x 159 against
+      // a band about 150px tall, so roughly four fifths sits on the fill and
+      // the rest hangs below. At 'md' it would overhang the top edge as well
+      // and stop reading as a mark on the band at all.
+      //
+      // Seafoam on ocean reads at 2.40:1. Doodles carry no information and no
+      // text sits on them, so WCAG does not apply — this is about the mark
+      // being visible at all, the way flamingo-on-flamingo was not.
+      decorations: [
+        { doodle: 'leaf', slot: 'bottom-right', color: 'seafoam', size: 'sm', bleed: true },
+      ],
+      _type: 'sectionBand',
+      heading: 'grow with us',
+      // Ocean: the bands either side of this are mint and pine, and no two
+      // adjacent bands repeat a colour. White on ocean is 3.56:1, which the
+      // script heading clears as large text. It is also the only blue band on
+      // the page, so the section reads as its own thing rather than an
+      // extension of the parties above it.
+      color: 'ocean',
+      level: 'primary',
+      anchorId: 'classes',
+    },
+    {
+      _key: 'grow-intro',
+      _type: 'richText',
+      align: 'center',
+      content: pt(
+        "There's always something happening at Treehouse. Classes and workshops in music, movement, art, STEM, sewing, and crafting give kids the chance to try something new and find their people — plus seasonal events and community gatherings all year round. Something for every kind of kid, every season.",
+      ),
+      // subcopy, matching the party block above: a note about what is not
+      // available yet, set smaller and muted rather than as body copy.
+      subcopy: pt('Our full schedule will be released closer to opening this winter.'),
+      // Unlike the party block, this one does have something to act on — the
+      // mailing list is how someone hears when the schedule lands. Opens the
+      // signup dialog like the hero's button; the href is the no-JavaScript
+      // fallback to the footer's form.
+      cta: {
+        label: 'sign up for email updates',
+        kind: 'newsletter',
+        href: '#newsletter',
+        variant: 'solid-ocean',
+      },
     },
     {
       _key: 'band-come-see-us',

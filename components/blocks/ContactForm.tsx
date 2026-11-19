@@ -252,7 +252,7 @@ function Field({ id, label, error, control }: FieldProps) {
     <div>
       <label
         htmlFor={id}
-        className="mb-1 block font-sans text-[length:var(--text-ui)] font-semibold text-ink"
+        className="mb-1 block font-sans text-[length:var(--text-ui)] font-medium text-ink"
       >
         {label}
       </label>

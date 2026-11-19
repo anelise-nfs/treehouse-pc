@@ -437,6 +437,15 @@ export interface RichTextBlock extends BlockBase, Decorated {
   width?: 'measure' | 'full';
   align?: 'left' | 'center';
   backgroundColor?: SurfaceColor;
+  /** Omitted leaves the script heading in ink, which is its default on linen. */
+  headingColor?: ScriptHeadingColor;
+  /**
+   * Optional button below the copy, the same field ImageTextSplit carries.
+   * A passage of copy that ends in an action is common enough to belong on
+   * the general copy block; the alternative was ctaBanner, which is parked
+   * for Phase 2 and renders nothing.
+   */
+  cta?: Link;
 }
 
 /**
@@ -444,12 +453,20 @@ export interface RichTextBlock extends BlockBase, Decorated {
  * not all of BandColor: these render as text on linen, where most of the brand
  * colors are too light to read.
  */
-export type SplitHeadingColor = 'pine' | 'ocean' | 'tomato' | 'tangerine';
+/**
+ * The colours approved for a script heading sitting on linen, shared by every
+ * block that renders one. Named for the treatment rather than for the first
+ * block that used it, which is now one of two.
+ *
+ * Mint is deliberately absent: at 3.01:1 it clears the large-text bar by 0.01
+ * and nothing else. See ARCHITECTURE.md -> Color rule.
+ */
+export type ScriptHeadingColor = 'pine' | 'ocean' | 'tomato' | 'tangerine';
 
 export interface ImageTextSplitBlock extends BlockBase, Decorated {
   _type: 'imageTextSplit';
   heading?: string;
-  headingColor: SplitHeadingColor;
+  headingColor: ScriptHeadingColor;
   body: PortableTextBlock[];
   image: SanityImage;
   /** Desktop only. Mobile always stacks image-above-text for reading order. */
@@ -502,6 +519,23 @@ export interface FeatureItem {
  * author reordering or separating them would produce something the design does
  * not account for.
  */
+/**
+ * The list on /press.
+ *
+ * `items` is declared but not authored on the page — lib/content.ts fills it,
+ * the same way it fills `hoursAddress.location`, which is what GROQ's join
+ * will do in Phase 2. Authoring the items into the page fixture would mean the
+ * Sanity swap changed the page's shape and not just its source.
+ *
+ * Renders nothing but its heading when the list is empty, so a press page with
+ * no coverage yet is not a broken page.
+ */
+export interface PressListBlock extends BlockBase, Decorated {
+  _type: 'pressList';
+  heading?: string;
+  items: PressItem[];
+}
+
 export interface MembershipSectionBlock extends BlockBase, Decorated {
   _type: 'membershipSection';
   /** Omitted where a pageHeader already names the section; the bar is then skipped. */
@@ -523,8 +557,22 @@ export interface MembershipSectionBlock extends BlockBase, Decorated {
    * styling difference between a primary and a secondary action is the point.
    */
   secondaryCta?: Link;
+  /** Heading over `perks` — the founding-exclusive list ('early birds get:'). */
   perksTitle: string;
+  /** Perks a founding member gets and a later member does not. */
   perks: MembershipPerk[];
+  /**
+   * A second, separate perk list: what every membership includes, founding or
+   * not ('all members will enjoy'). Kept distinct from `perks` rather than
+   * appended to it because the difference is the selling point — merging the
+   * two would quietly claim the standing benefits as founding exclusives.
+   *
+   * Optional, and only rendered when both the title and a non-empty list are
+   * present, so a section that offers nothing beyond the founding perks
+   * renders exactly as it did before.
+   */
+  memberPerksTitle?: string;
+  memberPerks?: MembershipPerk[];
 }
 
 export interface MembershipPerk {
@@ -725,6 +773,7 @@ export type Block =
   | PhotoGalleryBlock
   | FeatureGridBlock
   | MembershipSectionBlock
+  | PressListBlock
   | DropInSectionBlock
   | PartyPackagesBlock
   | ContactFormBlock
@@ -846,14 +895,73 @@ export interface OpeningHours {
 }
 
 /**
+ * One piece of press coverage, linking out to the article on the outlet's own
+ * site. A document type rather than a field on a page: in Phase 2 these are
+ * their own Sanity documents, queried and sorted, which is why the /press page
+ * declares a `pressList` block and does not carry the items itself.
+ */
+export interface PressItem {
+  _id: string;
+  _type: 'pressItem';
+  /** The publication, as it would want to be credited — 'KPCW — Mountain Money'. */
+  outlet: string;
+  headline: string;
+  /**
+   * ISO 8601: 'YYYY-MM-DD', or 'YYYY-MM' when the outlet dates a piece only to
+   * the month. Both are valid and render differently — see PressList. Stored
+   * as a string, never a Date: a Date would be parsed as UTC midnight and
+   * render as the previous day in every timezone west of Greenwich, which is
+   * all of them here.
+   */
+  date: string;
+  /** Absolute URL on the outlet's own site. Always opens in a new tab. */
+  url: string;
+  excerpt?: string;
+  /** The outlet's mark, where one is licensed for use. */
+  logo?: SanityImage;
+}
+
+/**
+ * RESERVED FOR THE PHASE 2 BLOG. Nothing renders this and no fixtures exist.
+ *
+ * Defined now so the shape is settled before the Sanity schema is written, and
+ * so the footer's editorial group has a second member to plan for rather than
+ * being built twice. When the blog is built this gains a route, a list page and
+ * a `post` entry in the Block renderer's sibling switch; until then it is a
+ * type and nothing else.
+ *
+ * `body` is Portable Text, like every other rich field on the site, so a post
+ * renders through the same PortableText component the blocks use.
+ */
+export interface Post {
+  _id: string;
+  _type: 'post';
+  title: string;
+  /** URL segment, unique across posts. The route will be `/blog/<slug>`. */
+  slug: string;
+  /** ISO 8601 datetime. Full precision, unlike PressItem.date. */
+  publishedAt: string;
+  author: string;
+  mainImage: SanityImage;
+  body: PortableTextBlock[];
+  /**
+   * Free text for now. If the blog ships with a fixed set of categories this
+   * becomes a string-literal union, the way every other authored choice on the
+   * site is constrained.
+   */
+  category: string;
+}
+
+/**
  * Membership pricing.
  *
  * Amounts are numbers, not display strings, because founding memberships show a
  * monthly figure while billing annually up front and both have to render from
- * one source. A tier showing "$135 a month, billed $1,620 annually" is:
+ * one source. The 'one kid' founding tier, "$140 a month, billed $1,680
+ * annually, down from $150", is:
  *
- *   amount 135, interval 'month', compareAtAmount 145,
- *   billedAmount 1620, billedInterval 'year'
+ *   amount 140, interval 'month', compareAtAmount 150,
+ *   billedAmount 1680, billedInterval 'year'
  *
  * Formatting (currency symbol, strikethrough) is the component's job.
  */

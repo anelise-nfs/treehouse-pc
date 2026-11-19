@@ -11,6 +11,7 @@ import { LocationMap } from './LocationMap';
 import { PageHeader } from './PageHeader';
 import { PartyPackages } from './PartyPackages';
 import { PhotoGallery } from './PhotoGallery';
+import { PressList } from './PressList';
 import { RichText } from './RichText';
 import { SectionBand } from './SectionBand';
 
@@ -56,6 +57,8 @@ function BlockSwitch({ block }: { block: Block }) {
       return <DropInSection {...block} />;
     case 'membershipSection':
       return <MembershipSection {...block} />;
+    case 'pressList':
+      return <PressList {...block} />;
     case 'contactForm':
       return <ContactForm {...block} />;
     case 'newsletterSignup':

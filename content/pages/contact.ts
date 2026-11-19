@@ -27,7 +27,6 @@ export const contactPage: Page = {
     title: 'Contact — Treehouse Park City',
     description:
       "Questions about memberships, parties, or visiting? Get in touch with Treehouse Park City.",
-    noIndex: true,
   },
   location: parkCity,
   blocks: [

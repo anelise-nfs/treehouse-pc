@@ -30,12 +30,30 @@ export function absoluteUrl(path = '/'): string {
 }
 
 /**
- * True only on the real production deployment.
+ * True only on the real production deployment, on any host.
  *
- * Vercel sets VERCEL_ENV to 'production', 'preview' or 'development'. It is
- * unset locally, so everything that is not the production deployment — every
- * preview branch, every laptop — is treated as not-production and kept out of
- * the index. Erring that way is the right direction: an unindexed preview
- * costs nothing, an indexed one costs duplicate content against the real site.
+ * THE SINGLE DEFINITION. robots.txt, the layout's noindex metadata and the GTM
+ * gate all read this one value, so a preview deployment cannot end up indexed
+ * but untracked, or tracked but unindexed.
+ *
+ * Two signals, either sufficient:
+ *
+ *   NEXT_PUBLIC_SITE_ENV  set by hand in the host's production environment.
+ *                         Host-agnostic, which is what makes this work on
+ *                         Netlify today and Vercel later without a code change.
+ *   VERCEL_ENV            set by Vercel itself to 'production', 'preview' or
+ *                         'development'. Kept so a Vercel production deploy is
+ *                         correct even if nobody remembers to add the variable
+ *                         above.
+ *
+ * Both are unset locally and on every preview, so anything that is not the
+ * production deployment is treated as not-production. Erring that way is the
+ * right direction: an unindexed preview costs nothing, an indexed one costs
+ * duplicate content against the real site.
+ *
+ * Neither is a secret and neither is trusted for anything but this — they
+ * decide what gets crawled and measured, not what gets served.
  */
-export const isProduction = process.env.VERCEL_ENV === 'production';
+export const isProduction =
+  process.env.NEXT_PUBLIC_SITE_ENV === 'production' ||
+  process.env.VERCEL_ENV === 'production';

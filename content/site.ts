@@ -65,6 +65,13 @@ export const siteSettings: SiteSettings = {
     { label: 'Early Bird', kind: 'internal', href: '/early-bird' },
     { label: 'Contact', kind: 'internal', href: '/contact' },
     { label: 'Parties', kind: 'internal', href: '/#parties' },
+    // EDITORIAL GROUP. Kept last and together, after the pages about visiting
+    // and buying, because these two are about reading. 'Blog' belongs directly
+    // beneath this line when the Phase 2 blog ships — its `post` type is
+    // already defined in types/content.ts. Adding it is one entry here and a
+    // route; nothing about this row has to be restructured to take it, which
+    // is why the group exists now with one member in it.
+    { label: 'In the News', kind: 'internal', href: '/press' },
   ],
   // PLACEHOLDER: real pages pending; the pre-sale terms page lands before launch.
   legalNav: [
@@ -92,8 +99,13 @@ export const siteSettings: SiteSettings = {
   defaultSeo: {
     description:
       "A playground for the kids. A cafe for you. Park City's one and only premium indoor play space for ages 0–12.",
-    // Pre-launch: nothing is indexable until the site goes public.
-    noIndex: true,
+    // LAUNCHED. This was `noIndex: true` while the site was pre-launch;
+    // clearing it is what opened the site to crawlers. Setting it back to true
+    // takes the whole site out of the index in one line, and a single page can
+    // still override it either way with its own `seo.noIndex`.
+    //
+    // The environment gate is separate and still applies: lib/site.ts keeps
+    // every preview and every laptop noindex regardless of what is set here.
   },
   location: parkCity,
 };

@@ -75,7 +75,7 @@ export function SectionBand({
       <DecorationLayer decorations={decorations} />
       <div className="relative z-10 container-page text-center">
         {eyebrow ? (
-          <p className="font-sans text-[length:var(--text-ui)] font-semibold text-white">
+          <p className="font-sans text-[length:var(--text-ui)] font-medium text-white">
             {eyebrow}
           </p>
         ) : null}

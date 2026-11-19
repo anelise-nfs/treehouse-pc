@@ -22,7 +22,7 @@ const GROUPS = ['Marks', 'Squiggles', 'Objects'] as const;
 export default function DoodleReferencePage() {
   return (
     <main id="main" className="container-page pb-[var(--spacing-section)] pt-[var(--spacing-header)]">
-      <h1 className="font-sans text-[length:var(--text-h2)] font-semibold text-ink">
+      <h1 className="font-sans text-[length:var(--text-h2)] font-medium text-ink">
         Doodle reference
       </h1>
       <p className="mt-[var(--spacing-gutter)] font-serif text-[length:var(--text-body)] text-ink">
@@ -41,7 +41,7 @@ export default function DoodleReferencePage() {
 
       {GROUPS.map((group) => (
         <section key={group}>
-          <h2 className="mt-[var(--spacing-section)] font-sans text-[length:var(--text-h3)] font-semibold text-ink">
+          <h2 className="mt-[var(--spacing-section)] font-sans text-[length:var(--text-h3)] font-medium text-ink">
             {group}
           </h2>
           <ul className="mt-[var(--spacing-block)] grid grid-cols-2 gap-[var(--spacing-block)] sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
@@ -50,7 +50,7 @@ export default function DoodleReferencePage() {
             key={name}
             className="flex flex-col items-center gap-[var(--spacing-gutter)] rounded-[var(--radius-card)] bg-surface-alt p-[var(--spacing-gutter)]"
           >
-            <span className="text-center font-sans text-[length:var(--text-ui)] font-semibold text-ink">
+            <span className="text-center font-sans text-[length:var(--text-ui)] font-medium text-ink">
               {DOODLE_SHAPES[name].label}
             </span>
             {/* Fixed box so every doodle is compared at the same scale, whatever
