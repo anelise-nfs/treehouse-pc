@@ -509,6 +509,23 @@ export interface FeatureItem {
  * author reordering or separating them would produce something the design does
  * not account for.
  */
+/**
+ * The list on /press.
+ *
+ * `items` is declared but not authored on the page — lib/content.ts fills it,
+ * the same way it fills `hoursAddress.location`, which is what GROQ's join
+ * will do in Phase 2. Authoring the items into the page fixture would mean the
+ * Sanity swap changed the page's shape and not just its source.
+ *
+ * Renders nothing but its heading when the list is empty, so a press page with
+ * no coverage yet is not a broken page.
+ */
+export interface PressListBlock extends BlockBase, Decorated {
+  _type: 'pressList';
+  heading?: string;
+  items: PressItem[];
+}
+
 export interface MembershipSectionBlock extends BlockBase, Decorated {
   _type: 'membershipSection';
   /** Omitted where a pageHeader already names the section; the bar is then skipped. */
@@ -746,6 +763,7 @@ export type Block =
   | PhotoGalleryBlock
   | FeatureGridBlock
   | MembershipSectionBlock
+  | PressListBlock
   | DropInSectionBlock
   | PartyPackagesBlock
   | ContactFormBlock
@@ -864,6 +882,64 @@ export interface OpeningHours {
   days: string;
   /** Display string, not times: covers 'Closed' and '8am – 7pm' alike. */
   hours: string;
+}
+
+/**
+ * One piece of press coverage, linking out to the article on the outlet's own
+ * site. A document type rather than a field on a page: in Phase 2 these are
+ * their own Sanity documents, queried and sorted, which is why the /press page
+ * declares a `pressList` block and does not carry the items itself.
+ */
+export interface PressItem {
+  _id: string;
+  _type: 'pressItem';
+  /** The publication, as it would want to be credited — 'KPCW — Mountain Money'. */
+  outlet: string;
+  headline: string;
+  /**
+   * ISO 8601: 'YYYY-MM-DD', or 'YYYY-MM' when the outlet dates a piece only to
+   * the month. Both are valid and render differently — see PressList. Stored
+   * as a string, never a Date: a Date would be parsed as UTC midnight and
+   * render as the previous day in every timezone west of Greenwich, which is
+   * all of them here.
+   */
+  date: string;
+  /** Absolute URL on the outlet's own site. Always opens in a new tab. */
+  url: string;
+  excerpt?: string;
+  /** The outlet's mark, where one is licensed for use. */
+  logo?: SanityImage;
+}
+
+/**
+ * RESERVED FOR THE PHASE 2 BLOG. Nothing renders this and no fixtures exist.
+ *
+ * Defined now so the shape is settled before the Sanity schema is written, and
+ * so the footer's editorial group has a second member to plan for rather than
+ * being built twice. When the blog is built this gains a route, a list page and
+ * a `post` entry in the Block renderer's sibling switch; until then it is a
+ * type and nothing else.
+ *
+ * `body` is Portable Text, like every other rich field on the site, so a post
+ * renders through the same PortableText component the blocks use.
+ */
+export interface Post {
+  _id: string;
+  _type: 'post';
+  title: string;
+  /** URL segment, unique across posts. The route will be `/blog/<slug>`. */
+  slug: string;
+  /** ISO 8601 datetime. Full precision, unlike PressItem.date. */
+  publishedAt: string;
+  author: string;
+  mainImage: SanityImage;
+  body: PortableTextBlock[];
+  /**
+   * Free text for now. If the blog ships with a fixed set of categories this
+   * becomes a string-literal union, the way every other authored choice on the
+   * site is constrained.
+   */
+  category: string;
 }
 
 /**

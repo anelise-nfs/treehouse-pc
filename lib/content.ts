@@ -13,19 +13,36 @@ import type {
   HeaderVariant,
   Link,
   Page,
+  PressItem,
   PricingTier,
   SiteSettings,
 } from '@/types/content';
 
 import { faqs } from '@/content/faqs';
+import { pressItems } from '@/content/press';
 import { pricingTiers } from '@/content/pricing';
 import { siteSettings } from '@/content/site';
 import { contactPage } from '@/content/pages/contact';
 import { earlyBirdPage } from '@/content/pages/earlyBird';
 import { homePage } from '@/content/pages/home';
+import { pressPage } from '@/content/pages/press';
 
 /** Keyed by slug. The homepage's slug is the empty string. */
-const pages: Page[] = [homePage, earlyBirdPage, contactPage];
+const pages: Page[] = [homePage, earlyBirdPage, contactPage, pressPage];
+
+/**
+ * Press coverage, newest first.
+ *
+ * Sorted on a padded key so the two date precisions compare correctly: a
+ * 'YYYY-MM' item becomes 'YYYY-MM-00', which places it before anything dated
+ * to a day within the same month. Plain string comparison then works, because
+ * ISO dates sort lexicographically — no Date parsing, and so no timezone to
+ * get wrong. Becomes `| order(date desc)` in Phase 2.
+ */
+function sortedPressItems(): PressItem[] {
+  const key = (item: PressItem) => (item.date.length === 7 ? `${item.date}-00` : item.date);
+  return [...pressItems].sort((a, b) => key(b).localeCompare(key(a)));
+}
 
 /** '' for the homepage, '/early-bird' for the rest. */
 function routeOf(page: Page): string {
@@ -54,11 +71,18 @@ export async function getPage(slug: string): Promise<Page | null> {
 function resolveSiteReferences(page: Page): Page {
   return {
     ...page,
-    blocks: page.blocks.map((block) =>
-      block._type === 'hoursAddress' && !block.location
-        ? { ...block, location: siteSettings.location }
-        : block,
-    ),
+    blocks: page.blocks.map((block) => {
+      if (block._type === 'hoursAddress' && !block.location) {
+        return { ...block, location: siteSettings.location };
+      }
+      // Press items are their own documents, not page content. The page
+      // declares the block and this fills it, which is what the GROQ query
+      // will do directly in Phase 2.
+      if (block._type === 'pressList') {
+        return { ...block, items: sortedPressItems() };
+      }
+      return block;
+    }),
   };
 }
 
@@ -193,4 +217,13 @@ export async function getPricing(): Promise<PricingTier[]> {
 
 export async function getFaqs(): Promise<FaqItem[]> {
   return [...faqs].sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+}
+
+/**
+ * Press coverage, newest first. The /press page gets these through its
+ * pressList block; this is for anything else that wants them — a homepage
+ * teaser, a feed — without reaching into /content/.
+ */
+export async function getPressItems(): Promise<PressItem[]> {
+  return sortedPressItems();
 }

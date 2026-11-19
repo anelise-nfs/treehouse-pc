@@ -65,6 +65,13 @@ export const siteSettings: SiteSettings = {
     { label: 'Early Bird', kind: 'internal', href: '/early-bird' },
     { label: 'Contact', kind: 'internal', href: '/contact' },
     { label: 'Parties', kind: 'internal', href: '/#parties' },
+    // EDITORIAL GROUP. Kept last and together, after the pages about visiting
+    // and buying, because these two are about reading. 'Blog' belongs directly
+    // beneath this line when the Phase 2 blog ships — its `post` type is
+    // already defined in types/content.ts. Adding it is one entry here and a
+    // route; nothing about this row has to be restructured to take it, which
+    // is why the group exists now with one member in it.
+    { label: 'In the News', kind: 'internal', href: '/press' },
   ],
   // PLACEHOLDER: real pages pending; the pre-sale terms page lands before launch.
   legalNav: [
