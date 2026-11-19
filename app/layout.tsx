@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { Betania_Patmos, Libre_Baskerville, Zen_Maru_Gothic } from 'next/font/google';
+import { CookieNotice } from '@/components/CookieNotice';
 import { ScrollEffects } from '@/components/ScrollEffects';
 import { SiteFooter } from '@/components/SiteFooter';
 import { SiteShell } from '@/components/SiteShell';
@@ -112,6 +113,11 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             socialLinks={settings.socialLinks}
           />
         </SiteShell>
+
+        {/* Outside SiteShell, unlike the footer: this is fixed to the viewport
+            and must not squeeze or slide with the page when the menu panel
+            opens. */}
+        <CookieNotice />
       </body>
     </html>
   );
