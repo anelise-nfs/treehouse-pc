@@ -240,6 +240,14 @@ export function SiteShell({
             aria-hidden="true"
             width={logoWhite.width}
             height={logoWhite.height}
+            // Lazy: this sits inside the slide-out panel, off-screen until the
+            // menu is opened and not rendered at all from sm up — so it was
+            // being preloaded on all nine routes for something most visitors
+            // never see. Only 4KB, but a preload for a hidden decoration is
+            // the clearest case there is. Distinct from the header wordmark,
+            // which is above the fold and stays eager.
+            loading="lazy"
+            decoding="async"
             // Phone only: from sm the panel is a narrow strip beside the page, where a
             // wordmark has no room and nothing to sit against. It belongs to the
             // full-screen takeover, not the strip.

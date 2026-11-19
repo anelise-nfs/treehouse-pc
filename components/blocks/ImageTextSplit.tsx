@@ -81,6 +81,13 @@ export function ImageTextSplit({
           alt={image.alt}
           width={image.width}
           height={image.height}
+          // Every instance of this block sits below the fold — the homepage
+          // opens on the hero and these follow it — so lazy, which also drops
+          // the preload React emits for every <img> it server-renders. These
+          // are the heaviest files on the site (2.4MB and 1.5MB), and fetching
+          // them at high priority delayed the one image that is the LCP.
+          loading="lazy"
+          decoding="async"
           style={{ objectPosition: objectPosition(image) }}
           className="size-full object-cover"
         />

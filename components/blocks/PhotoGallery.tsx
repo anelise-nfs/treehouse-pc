@@ -55,6 +55,19 @@ export function PhotoGallery({
             alt={image.alt}
             width={image.width}
             height={image.height}
+            // Lazy, and that is what stops the preload as much as the fetch.
+            // React emits a <link rel="preload" as="image"> for every <img> it
+            // server-renders, so a gallery sitting at the foot of the page was
+            // telling the browser to fetch a 1.5MB render at high priority
+            // before anything below the fold was wanted. The console says so:
+            // "preloaded but not used within a few seconds". React skips the
+            // preload for a lazy image, so this one attribute removes both the
+            // warning and the early fetch.
+            //
+            // A gallery is never the LCP element here: every page that has one
+            // opens with a pageHeader photograph, which keeps its own preload.
+            loading="lazy"
+            decoding="async"
             style={{ objectPosition: objectPosition(image) }}
             className={
               single

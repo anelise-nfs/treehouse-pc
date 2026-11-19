@@ -310,6 +310,11 @@ function AfterBand({ heading, body, cta, image, color = 'mint' }: HeroAfterBand)
             src={image.url}
             alt=""
             aria-hidden="true"
+            // Decorative and below the fold, so lazy — which also drops the
+            // preload React emits for every <img> it server-renders. The hero
+            // photograph above keeps its own: that one is the LCP.
+            loading="lazy"
+            decoding="async"
             className="hero-float block w-40 lg:w-full lg:max-w-[17rem]"
             style={{ '--hero-float-duration': '13s', '--hero-float-tilt': '0deg' } as CSSProperties}
           />

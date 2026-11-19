@@ -159,6 +159,13 @@ export function SiteFooter({
                 alt={logoWhite.alt}
                 width={logoWhite.width}
                 height={logoWhite.height}
+                // The footer is below the fold on every page, so lazy — which
+                // also drops the preload React emits for every <img> it
+                // server-renders. Only 4KB, but it was being preloaded on all
+                // nine routes. The header wordmark is a different element and
+                // stays eager.
+                loading="lazy"
+                decoding="async"
                 className="mx-auto w-44 lg:mx-0"
               />
             ) : (
