@@ -58,13 +58,15 @@ export const siteSettings: SiteSettings = {
    * Visit, Memberships and Cafe were here too and are held back for now. The
    * homepage sections they pointed at are all still there.
    *
-   * legalNav renders on the end of this same row — see SiteFooter.
+   * legalNav is separate and renders in the bar under the divider, not in
+   * this row — see SiteFooter.
    */
   footerNav: [
     { label: 'Home', kind: 'internal', href: '/' },
     { label: 'Early Bird', kind: 'internal', href: '/early-bird' },
     { label: 'Contact', kind: 'internal', href: '/contact' },
     { label: 'Parties', kind: 'internal', href: '/#parties' },
+    { label: 'FAQ', kind: 'internal', href: '/faq' },
     // EDITORIAL GROUP. Kept last and together, after the pages about visiting
     // and buying, because these two are about reading. 'Blog' belongs directly
     // beneath this line when the Phase 2 blog ships — its `post` type is

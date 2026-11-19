@@ -461,7 +461,7 @@ export interface RichTextBlock extends BlockBase, Decorated {
  * Mint is deliberately absent: at 3.01:1 it clears the large-text bar by 0.01
  * and nothing else. See ARCHITECTURE.md -> Color rule.
  */
-export type ScriptHeadingColor = 'pine' | 'ocean' | 'tomato' | 'tangerine';
+export type ScriptHeadingColor = 'pine' | 'ocean' | 'tomato' | 'tangerine' | 'lime';
 
 export interface ImageTextSplitBlock extends BlockBase, Decorated {
   _type: 'imageTextSplit';
@@ -698,7 +698,13 @@ export interface FaqAccordionBlock extends BlockBase, Decorated {
   _type: 'faqAccordion';
   heading?: string;
   intro?: PortableTextBlock[];
-  items: FaqItem[];
+  /**
+   * Declared but not authored on the page — lib/content.ts fills it from the
+   * FAQ documents, the same way it fills pressList.items. The questions are
+   * their own documents in Phase 2 and a page fixture holding copies of them
+   * would make that swap a shape change rather than a source change.
+   */
+  sections: FaqSection[];
   backgroundColor?: SurfaceColor;
 }
 
@@ -1019,7 +1025,28 @@ export interface FaqItem {
   location?: Location;
 }
 
-export type FaqCategory = 'visiting' | 'membership' | 'parties' | 'cafe' | 'accessibility';
+/**
+ * Which section of the FAQ a question belongs to.
+ *
+ * 'safety' replaced 'accessibility', which nothing ever used: the questions
+ * the client supplied are about grip socks, cleaning and illness, and filing
+ * those under accessibility would have been wrong in a way that matters —
+ * accessibility is a real commitment this site has not yet documented, and a
+ * category named for it should hold questions about it.
+ *
+ * The section titles are authored in content/faqs.ts, not here: a category is
+ * the key, its heading is copy.
+ */
+export type FaqCategory = 'visiting' | 'membership' | 'cafe' | 'parties' | 'safety';
+
+/** One collapsible group of questions, assembled by lib/content.ts. */
+export interface FaqSection {
+  _key: string;
+  title: string;
+  /** Omitted leaves the heading in ink. Authored per section in content/faqs.ts. */
+  titleColor?: ScriptHeadingColor;
+  items: FaqItem[];
+}
 
 export interface SiteSettings {
   _id: string;

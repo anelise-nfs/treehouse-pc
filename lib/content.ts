@@ -8,6 +8,7 @@
  */
 import type {
   FaqItem,
+  FaqSection,
   HeaderLogoSize,
   HeaderSurface,
   HeaderVariant,
@@ -18,17 +19,18 @@ import type {
   SiteSettings,
 } from '@/types/content';
 
-import { faqs } from '@/content/faqs';
+import { faqSections, faqs } from '@/content/faqs';
 import { pressItems } from '@/content/press';
 import { pricingTiers } from '@/content/pricing';
 import { siteSettings } from '@/content/site';
 import { contactPage } from '@/content/pages/contact';
 import { earlyBirdPage } from '@/content/pages/earlyBird';
 import { homePage } from '@/content/pages/home';
+import { faqPage } from '@/content/pages/faq';
 import { pressPage } from '@/content/pages/press';
 
 /** Keyed by slug. The homepage's slug is the empty string. */
-const pages: Page[] = [homePage, earlyBirdPage, contactPage, pressPage];
+const pages: Page[] = [homePage, earlyBirdPage, contactPage, pressPage, faqPage];
 
 /**
  * Press coverage, newest first.
@@ -42,6 +44,29 @@ const pages: Page[] = [homePage, earlyBirdPage, contactPage, pressPage];
 function sortedPressItems(): PressItem[] {
   const key = (item: PressItem) => (item.date.length === 7 ? `${item.date}-00` : item.date);
   return [...pressItems].sort((a, b) => key(b).localeCompare(key(a)));
+}
+
+/**
+ * The FAQ, grouped into its sections in the order content/faqs.ts declares.
+ *
+ * Questions sort by `order` within a section, ties falling back to source
+ * order — the same rule getFaqs() applies to the flat list. A section with no
+ * questions is dropped rather than rendered as an empty heading, so deleting
+ * the last question in a category is a one-line edit and not a visual bug.
+ *
+ * Becomes a grouped GROQ query in Phase 2.
+ */
+function sortedFaqSections(): FaqSection[] {
+  return faqSections
+    .map(({ category, title, titleColor }) => ({
+      _key: category,
+      title,
+      titleColor,
+      items: faqs
+        .filter((item) => item.category === category)
+        .sort((a, b) => (a.order ?? 0) - (b.order ?? 0)),
+    }))
+    .filter((section) => section.items.length > 0);
 }
 
 /** '' for the homepage, '/early-bird' for the rest. */
@@ -80,6 +105,11 @@ function resolveSiteReferences(page: Page): Page {
       // will do directly in Phase 2.
       if (block._type === 'pressList') {
         return { ...block, items: sortedPressItems() };
+      }
+      // Same arrangement as pressList: the questions are their own documents,
+      // the page declares the block, and this fills it.
+      if (block._type === 'faqAccordion') {
+        return { ...block, sections: sortedFaqSections() };
       }
       return block;
     }),
@@ -213,6 +243,11 @@ export async function getTopNav(): Promise<Link[]> {
 /** Founding tiers first, then the standard rates that apply after opening. */
 export async function getPricing(): Promise<PricingTier[]> {
   return pricingTiers;
+}
+
+/** The FAQ grouped for display. The /faq page gets these through its block. */
+export async function getFaqSections(): Promise<FaqSection[]> {
+  return sortedFaqSections();
 }
 
 export async function getFaqs(): Promise<FaqItem[]> {

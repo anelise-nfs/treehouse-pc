@@ -21,6 +21,11 @@ export const SCRIPT_HEADING_COLOR: Record<ScriptHeadingColor, string> = {
   ocean: 'text-ocean',
   // On linen: tomato 3.72:1 — large text only.
   tomato: 'text-tomato',
+  // On linen: lime 3.02:1. Over the large-text bar by 0.02 and nothing more,
+  // which is only legal because every caller sets it at --text-script-sm or
+  // --text-script-badge, and both floor at the script face's 28px. Never
+  // reuse this pairing at a smaller size: at --text-ui it is a straight fail.
+  lime: 'text-lime',
   // On linen: tangerine 4.50:1 — clears AA at any size. (An earlier note here
   // said 3.09:1, measured before tangerine was darkened to #cc4800.)
   tangerine: 'text-tangerine',

@@ -1,5 +1,6 @@
 import NextLink from 'next/link';
 import type { PortableTextBlock, PortableTextSpan } from '@/types/content';
+import { NewsletterTrigger } from '@/components/NewsletterTrigger';
 
 /**
  * Minimal portable text renderer, hand-written rather than pulled from a
@@ -55,6 +56,13 @@ function Span({ span, block }: { span: PortableTextSpan; block: PortableTextBloc
   // Remaining marks are _keys pointing into markDefs — currently only links.
   const linkDef = block.markDefs.find((def) => span.marks.includes(def._key));
   if (!linkDef) return <>{content}</>;
+
+  // Opens the signup dialog, the same as every mailing-list button on the
+  // site, so a link in prose and a CTA behave identically. NewsletterTrigger
+  // renders an anchor to the footer's form, which is the no-JavaScript path.
+  if (linkDef.kind === 'newsletter') {
+    return <NewsletterTrigger>{content}</NewsletterTrigger>;
+  }
 
   if (linkDef.kind === 'internal') {
     return <NextLink href={linkDef.href}>{content}</NextLink>;

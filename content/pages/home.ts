@@ -11,6 +11,7 @@ import {
   saleSoonLine,
 } from '../shared/foundingMembership';
 import { MEMBERSHIPS_ON_SALE } from '../launchPhase';
+import { dropInBadges } from '../dropIn';
 
 /**
  * Launch homepage. Copy is verbatim from to_start.png except where marked
@@ -227,35 +228,7 @@ export const homePage: Page = {
       _type: 'dropInSection',
       title: 'drop-in play',
       titleBandColor: 'lime',
-      badges: [
-        {
-          _key: 'little-kid',
-          label: 'little kid',
-          note: 'up to age 3',
-          price: '$28',
-          labelColor: 'pine',
-          priceColor: 'flamingo',
-        },
-        {
-          _key: 'big-kid',
-          label: 'big kid',
-          note: 'ages 4–12',
-          price: '$35',
-          labelColor: 'ocean',
-          priceColor: 'lime',
-        },
-        {
-          _key: 'wee-ones',
-          label: 'wee one',
-          note: 'under 1 free with a paying sibling',
-          price: 'free',
-          labelColor: 'flamingo',
-          // UNUSED since the badge became an outlined circle — the ring and
-          // label both take labelColor above. Left in place rather than
-          // deleted from one badge of three; see PriceBadge.
-          priceColor: 'mint',
-        },
-      ],
+      badges: dropInBadges,
       body: pt(
         "Most days, you can just walk right in — no planning required. On our busiest days (think holidays, powder days, and peak tourist weeks), we use timed entry to keep things comfortable and never overcrowded, so you'll reserve an entry time in advance. We'll always make it easy to know before you go.",
       ),

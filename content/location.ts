@@ -18,8 +18,11 @@ export const parkCity: Location = {
   email: 'holler@treehouseparkcity.com',
   // TEMPORARY, until opening. Real trading hours go back here as one entry per
   // line, and the two lines return to meaning what they are named — `days` a
-  // day range, `hours` a time range. Both renderers read this single entry, so
-  // restoring them is an edit here and nowhere else.
+  // day range, `hours` a time range.
+  //
+  // One renderer reads this now, not two: the homepage's hoursAddress block.
+  // SiteFooter used to show it as well and no longer does, so restoring real
+  // hours to the footer means putting that renderer back, not editing this.
   hours: [{ _key: 'status', days: 'opening winter 2027', hours: 'check back soon' }],
   // PLACEHOLDER: real Google Maps place URL and embed src pending.
   mapUrl: 'https://maps.google.com/?q=1209+Center+Dr+Park+City+UT+84098',

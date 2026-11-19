@@ -45,6 +45,23 @@ const LINK =
   'transition-[text-decoration-color] duration-200 ease-out ' +
   'hover:decoration-white focus-visible:decoration-white';
 
+/**
+ * The legal pair under the divider.
+ *
+ * Caption-sized to match the copyright beside it, and underlined at rest
+ * rather than on hover like LINK above: this is the one place in the footer
+ * where the surrounding text is not links, so nothing else marks these as
+ * clickable. The hover only deepens the underline it already has.
+ *
+ * min-h-6 keeps the 24px target ARCHITECTURE.md allows for dense secondary
+ * navigation — the text itself is 13px, which is under it.
+ */
+const LEGAL_LINK =
+  'inline-flex min-h-6 items-center text-[length:var(--text-caption)] leading-6 ' +
+  'text-white underline decoration-white/70 decoration-1 underline-offset-4 ' +
+  'transition-[text-decoration-color] duration-200 ease-out ' +
+  'hover:decoration-white focus-visible:decoration-white';
+
 /** One type size for all three column headings. */
 const COLUMN_HEADING =
   'font-script text-[length:var(--text-script-footer)] leading-[var(--leading-heading)]';
@@ -111,13 +128,13 @@ export function SiteFooter({
   // the site is built and a rebuild ships the new one.
   const year = new Date().getFullYear();
   const address = location?.address;
-  const hours = location?.hours;
 
-  /* One visual row, two content lists. They stay separate in SiteSettings
-     because they are different things — a directory of pages and the legal
-     boilerplate — and Phase 2 will edit them separately. Joining them here is
-     a presentation decision, and reversing it does not touch content. */
-  const rowLinks = [...(footerNav ?? []), ...(legalNav ?? [])];
+  /* The directory only. legalNav used to be appended here and now renders in
+     the bar under the divider — boilerplate nobody is looking for should not
+     sit at the same weight as the pages people are. The two lists were always
+     separate in SiteSettings, so moving one was a presentation change and
+     touched no content. */
+  const rowLinks = footerNav ?? [];
 
   return (
     <footer className="bg-pine text-white">
@@ -154,44 +171,49 @@ export function SiteFooter({
               </p>
             ) : null}
 
+            {/* One line, comma after the street. It was two lines on the
+                assumption the column was narrow; it is not, at any width the
+                footer renders — the full string is about 245px against a 358px
+                column on the narrowest phone. Folding it back saves a line of
+                the column height the signup opposite is pinned to. */}
             {address ? (
               <p className="mt-2 font-sans text-[length:var(--text-caption)] leading-[1.45]">
-                {address.street}
-                <span className="block">
-                  {address.city}, {address.region} {address.postalCode}
-                </span>
+                {address.street}, {address.city}, {address.region} {address.postalCode}
               </p>
             ) : null}
 
-            {/* Gutter rather than block: the address above and this heading
-                are both part of the same left-hand column, so the step between
-                them is a gap inside one group rather than the gap between two.
-                It also sets the footer's height — the signup opposite is
-                pinned to the bottom of this column. */}
-            <h2 className={`${COLUMN_HEADING} mt-[calc(var(--spacing-block)*1.5)] lg:mt-[var(--spacing-gutter)]`}>
+            {/* The address above and this heading are both part of the same
+                left-hand column, so the step between them is a gap inside one
+                group rather than the gap between two. It also sets the
+                footer's height — the signup opposite is pinned to the bottom
+                of this column, so every rem taken out here pulls that block up
+                with it.
+
+                Both steps came down: the stacked gap from block*1.5 to block,
+                and the desktop one from a full gutter to three quarters. The
+                column was reading as three separated blocks rather than one
+                run of contact details. */}
+            <h2 className={`${COLUMN_HEADING} mt-[var(--spacing-block)] lg:mt-[calc(var(--spacing-gutter)*0.75)]`}>
               say hello
             </h2>
 
             {/* Email only. No phone number is published at launch, by the
                 client's explicit direction — the renderer is gone rather than
                 the value blanked, so a number appearing in the content cannot
-                put one back on the page by accident. */}
+                put one back on the page by accident.
+
+                The opening-status line that sat under this is gone the same
+                way. location.hours still holds it and the homepage's
+                hoursAddress block still renders it; it was dropped here
+                because the footer repeats on every page and did not need to
+                say it twice on the homepage. Restoring it is a renderer, not
+                a content edit. */}
             {location?.email ? (
               <p className="mt-1">
                 <a href={`mailto:${location.email}`} className={LINK}>
                   <EmailText address={location.email} />
                 </a>
               </p>
-            ) : null}
-
-            {hours && hours.length > 0 ? (
-              <div className="mt-1 font-sans text-[length:var(--text-caption)] leading-[1.45]">
-                {hours.map((entry) => (
-                  <p key={entry._key}>
-                    {entry.days} · {entry.hours}
-                  </p>
-                ))}
-              </div>
             ) : null}
 
             {location?.email ? (
@@ -218,7 +240,7 @@ export function SiteFooter({
                 baseline) because each is a full-width row; an icon has no
                 label to widen it, so it gets the primary-control size. */}
             {socialLinks && socialLinks.length > 0 ? (
-              <ul className="mt-[var(--spacing-gutter)] flex justify-center gap-1 lg:-ml-3 lg:justify-start">
+              <ul className="mt-[calc(var(--spacing-gutter)*0.75)] flex justify-center gap-1 lg:-ml-3 lg:justify-start">
                 {socialLinks.map((social) => {
                   const name = social.label ?? PLATFORM_NAMES[social.platform];
                   const box =
@@ -312,21 +334,45 @@ export function SiteFooter({
           </div>
         </div>
 
-        {/* Just the line. Privacy and Terms moved up into the link row, which
-            left this bar holding one item against an empty right half. */}
-        <p className="mt-[var(--spacing-block)] border-t border-white/25 pt-[calc(var(--spacing-block)*0.7)] text-center font-sans text-[length:var(--text-caption)]">
-          © {year} {siteName} Park City
-        </p>
+        {/* Copyright left, legal right, both under the divider.
+            justify-between rather than two columns: there are exactly two
+            items and they only need to reach opposite edges.
+
+            flex-wrap with a row gap for the narrowest phones — if the two
+            ever stop fitting on one line the legal pair drops below the
+            copyright rather than squeezing it into a second line of its own. */}
+        <div className="mt-[var(--spacing-block)] flex flex-wrap items-center justify-between gap-x-[var(--spacing-block)] gap-y-2 border-t border-white/25 pt-[calc(var(--spacing-block)*0.7)] font-sans text-[length:var(--text-caption)]">
+          <p>
+            © {year} {siteName} Park City
+          </p>
+
+          {legalNav && legalNav.length > 0 ? (
+            <nav aria-label="Legal">
+              <ul className="flex flex-wrap items-center gap-x-[var(--spacing-gutter)] gap-y-2">
+                {legalNav.map((item) => (
+                  <li key={`${item.label}-${item.href}`}>
+                    <FooterLink link={item} className={LEGAL_LINK} />
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          ) : null}
+        </div>
       </div>
     </footer>
   );
 }
 
-/** Internal links route through next/link; '#' stubs and externals do not. */
-function FooterLink({ link }: { link: Link }) {
+/**
+ * Internal links route through next/link; '#' stubs and externals do not.
+ *
+ * The treatment is a prop because the footer now has two: LINK for the
+ * directory row and LEGAL_LINK for the pair under the divider.
+ */
+function FooterLink({ link, className = LINK }: { link: Link; className?: string }) {
   if (link.kind === 'internal') {
     return (
-      <NextLink href={link.href} className={LINK}>
+      <NextLink href={link.href} className={className}>
         {link.label}
       </NextLink>
     );
@@ -335,7 +381,7 @@ function FooterLink({ link }: { link: Link }) {
   return (
     <a
       href={link.href}
-      className={LINK}
+      className={className}
       {...(link.newTab ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
     >
       {link.label}

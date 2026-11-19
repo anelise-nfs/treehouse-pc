@@ -1,6 +1,7 @@
 import type { Block } from '@/types/content';
 import { DropInSection } from './DropInSection';
 import { NewsletterBlock } from './NewsletterBlock';
+import { FaqAccordion } from './FaqAccordion';
 import { FeatureGrid } from './FeatureGrid';
 import { Hero } from './Hero';
 import { HoursAddress } from './HoursAddress';
@@ -67,7 +68,7 @@ function BlockSwitch({ block }: { block: Block }) {
     case 'hoursAddress':
       return <HoursAddress {...block} />;
     case 'faqAccordion':
-      return null;
+      return <FaqAccordion {...block} />;
     // Parked for Phase 2 (Memberships, Parties): kept deliberately, not dead code.
     case 'ctaBanner':
       return null;
