@@ -60,8 +60,24 @@ function Section({ section }: { section: FaqSection }) {
       <ul className="mt-[var(--spacing-block)] flex flex-col gap-[var(--spacing-block)]">
         {section.items.map((item) => (
           <li key={item._id}>
-            {/* h3 under the section's h2, under the page's h1. */}
-            <h3 className="font-sans text-[length:var(--text-ui)] font-medium text-pine">
+            {/* h3 under the section's h2, under the page's h1.
+                Ink, like the answer beneath it. Tinting these to their section
+                was tried and abandoned: the section colours are chosen for
+                script headings, which only need 3:1, and at this size three of
+                the five missed the 4.5:1 that small text requires. Darkened
+                variants fixed the contrast but put five shades on a page that
+                already has five headings in five colours.
+
+                So the question separates from its answer by face, weight and
+                size rather than by hue — sans against serif, 700 against 400,
+                --text-lead against --text-body — and ink on linen is 16.78:1,
+                which removes the constraint rather than working around it.
+
+                font-bold is a deliberate exception to ARCHITECTURE.md ->
+                Typography roles, which reserves Zen Maru Gothic's 700 for the
+                display h1s and the wordmark. The weight is loaded either way,
+                and it is doing the job colour was doing before. */}
+            <h3 className="font-sans text-[length:var(--text-lead)] font-bold text-ink">
               {item.question}
             </h3>
 
