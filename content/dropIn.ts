@@ -32,7 +32,7 @@ export const dropInBadges: PriceBadge[] = [
   {
     _key: "wee-ones",
     label: "wee one",
-    note: "under 1 free with a paying sibling",
+    note: "under 1 free with a playing sibling",
     price: "free",
     labelColor: "flamingo",
     // UNUSED since the badge became an outlined circle — the ring and

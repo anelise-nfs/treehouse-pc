@@ -158,7 +158,7 @@ export const faqs: FaqItem[] = [
     answer: pt(
       `Drop-in play is ${dropIn('little-kid')} per child up to 3 years old and ${dropIn(
         'big-kid',
-      )} per child ages 4 and up. Under 1 is free with a paying sibling.`,
+      )} per child ages 4 and up. Under 1 is free with a playing sibling.`,
       `Memberships include unlimited play plus perks: ${monthly('one kid')}/month for one child, ${monthly(
         'two kids',
       )}/month for two, and ${monthly(
