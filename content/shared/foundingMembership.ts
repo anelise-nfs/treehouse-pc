@@ -82,6 +82,15 @@ export const saleSoonLine =
   'Memberships will go on sale soon. Sign up for email updates to be the first to know!';
 
 /**
+ * The homepage's wording, which needs the qualifier the /early-bird page does
+ * not: that page is entirely about founding memberships and says so in its
+ * title, while the homepage carries every kind of pricing and a bare
+ * "Memberships" there could be read as the standard rates.
+ */
+export const earlyBirdSaleSoonLine =
+  'Early bird memberships will go on sale soon. Sign up for email updates to be the first to know!';
+
+/**
  * The homepage's standing description of a founding member. It is the whole
  * intro in v1-b and the first paragraph of it in v1-a.
  */
@@ -158,6 +167,8 @@ export interface FoundingMembershipOptions {
   titleBandColor?: BandColor;
   /** Page-specific: the copy differs between the two pages. */
   intro: PortableTextBlock[];
+  /** The sale-status announcement, rendered as a callout. See the block type. */
+  notice?: PortableTextBlock[];
   /** Page-specific decoration; the homepage carries doodles, /early-bird does not. */
   decorations?: Decoration[];
   /** In-page anchor target, so the footer can link to this section. */
@@ -180,6 +191,7 @@ export function foundingMembershipSection(
     title,
     titleBandColor,
     intro,
+    notice,
     decorations,
     anchorId,
     cta,
@@ -193,6 +205,7 @@ export function foundingMembershipSection(
     tiers: foundingTiers,
     tiersFootnote: foundingFootnote,
     intro,
+    ...(notice ? { notice } : {}),
     ...(cta ? { cta } : {}),
     ...(secondaryCta ? { secondaryCta } : {}),
     perksTitle: foundingPerksTitle,

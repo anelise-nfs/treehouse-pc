@@ -52,10 +52,10 @@ export const faqSections: {
   // script face floors at 28px. If these headings ever shrink below that, lime
   // is the first thing that breaks.
   { category: 'visiting', title: 'visiting', titleColor: 'pine' },
-  { category: 'membership', title: 'pricing & membership', titleColor: 'tangerine' },
-  { category: 'cafe', title: 'food & drink', titleColor: 'ocean' },
-  { category: 'parties', title: 'parties & classes', titleColor: 'tomato' },
-  { category: 'safety', title: 'health & safety', titleColor: 'lime' },
+  { category: 'membership', title: 'pricing + membership', titleColor: 'tangerine' },
+  { category: 'cafe', title: 'food + drink', titleColor: 'ocean' },
+  { category: 'parties', title: 'parties + classes', titleColor: 'tomato' },
+  { category: 'safety', title: 'health + safety', titleColor: 'lime' },
 ];
 
 export const faqs: FaqItem[] = [

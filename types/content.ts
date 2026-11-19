@@ -546,6 +546,25 @@ export interface MembershipSectionBlock extends BlockBase, Decorated {
   tiersFootnote?: string;
   intro: PortableTextBlock[];
   /**
+   * The sale-status announcement, set apart from the prose above it.
+   *
+   * ITS OWN FIELD, not a styled paragraph inside `intro`. The two are
+   * different kinds of writing — one is the standing pitch, the other is a
+   * status that changes the day the sale opens — and only one of them should
+   * look like an announcement. This is the same split RichTextBlock makes
+   * between `content` and `subcopy`, for the same reason: an author should not
+   * have to know that a particular paragraph gets picked up and treated
+   * differently from the rest.
+   *
+   * It matters more in Phase 2 than now. `intro` becomes a rich-text field an
+   * author edits freely; if the emphasis lived in an inline mark inside it,
+   * rewriting the sentence would silently drop the styling, and nothing would
+   * stop the same treatment being applied to an unrelated paragraph. With a
+   * field, the author owns the words and the component owns the appearance —
+   * which is the whole arrangement ARCHITECTURE.md's block contract describes.
+   */
+  notice?: PortableTextBlock[];
+  /**
    * Optional: /early-bird drops it while the sale is not open, leaving the
    * newsletter opt-in below as the only action. A section with neither is
    * valid too — it just reads as information.

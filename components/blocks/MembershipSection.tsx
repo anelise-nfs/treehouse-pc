@@ -216,6 +216,7 @@ export function MembershipSection({
   tiers,
   tiersFootnote,
   intro,
+  notice,
   cta,
   secondaryCta,
   perksTitle,
@@ -245,6 +246,42 @@ export function MembershipSection({
             blocks={intro}
             className="font-serif text-[length:var(--text-lead)] text-ink"
           />
+
+          {/* The sale-status announcement, deliberately not styled like the
+              prose above it.
+
+              Prominence comes from the type alone: ocean where the prose is
+              ink, the sans face where everything around it is serif, and a
+              size above both.
+
+              THE SIZE IS LOAD-BEARING, NOT DECORATIVE. Ocean on linen is
+              3.44:1 — over WCAG's 3:1 large-text bar and nowhere near the
+              4.5:1 that normal text needs. --text-h2 is the only step on the
+              scale that is larger than the body copy and still floors at
+              24px, so the text stays 'large' at every viewport and the colour
+              stays legal. Drop this to --text-h3 and it fails on a phone,
+              where that token resolves to 20px. If a smaller ocean notice is
+              ever wanted, --color-action is the darkened blue at 6.38:1 and
+              passes at any size.
+
+              A tinted ground was tried under this and removed — between the
+              coloured tier cards below and the doodles either side, a filled
+              panel was one more thing competing in a section that already has
+              plenty. A 44ch cap went with it: this shares the column with the
+              paragraph above rather than sitting in a narrower one of its own,
+              so the two line up on both edges.
+
+              font-medium, not bold: Zen Maru Gothic's 700 is reserved for the
+              display h1s and the wordmark (ARCHITECTURE.md -> Typography
+              roles), and 500 is the site's emphasis weight everywhere else. */}
+          {notice ? (
+            <div className="[&_a]:underline [&_a]:underline-offset-2">
+              <PortableText
+                blocks={notice}
+                className="font-sans text-[length:var(--text-h2)] font-medium leading-[1.35] text-ocean"
+              />
+            </div>
+          ) : null}
 
           {/* Wrapped so the two buttons sit side by side and wrap to two
               rows rather than overflowing on a phone. The second is the

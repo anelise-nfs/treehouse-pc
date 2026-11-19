@@ -8,7 +8,7 @@ import {
   joinTheEmailClub,
   learnMore,
   learnMoreSecondary,
-  saleSoonLine,
+  earlyBirdSaleSoonLine,
 } from '../shared/foundingMembership';
 import { MEMBERSHIPS_ON_SALE } from '../launchPhase';
 import { dropInBadges } from '../dropIn';
@@ -206,7 +206,7 @@ export const homePage: Page = {
       content: pt(foundingPitch),
     },
     foundingMembershipSection('early-bird-membership', {
-      title: 'memberships',
+      title: 'early bird memberships',
       titleBandColor: 'tangerine',
       anchorId: 'memberships',
       // Just the sale-status line now, sitting immediately above the buttons
@@ -214,7 +214,10 @@ export const homePage: Page = {
       // leaves this empty: by then the prices carry their own purchase
       // buttons and the status is self-evident. An empty intro renders
       // nothing, so the section opens on its title bar.
-      intro: MEMBERSHIPS_ON_SALE ? pt() : pt(saleSoonLine),
+      // A plain paragraph, not the `notice` callout /early-bird uses. The
+      // wording is the only thing that changed here; the treatment is what it
+      // always was.
+      intro: MEMBERSHIPS_ON_SALE ? pt() : pt(earlyBirdSaleSoonLine),
       // Both buttons swap between versions, and which one gets the solid
       // treatment swaps with them. v1-a has nothing to sell, so 'learn more'
       // leads and the mailing list is the fallback. v1-b has a product page,

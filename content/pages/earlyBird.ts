@@ -73,7 +73,10 @@ export const earlyBirdPage: Page = {
       // between the page header's own doodles and the intro graphics the page
       // had more decoration than copy.
       decorations: [{ doodle: 'vertscribble', slot: 'top-right', color: 'sunshine' }],
-      intro: pt(openingParagraph, salePitch),
+      intro: pt(openingParagraph),
+      // The status line moved out of `intro` into its own field so it renders
+      // as a callout rather than as a second paragraph of the pitch.
+      notice: pt(salePitch),
       // No primary button in either version: it would be 'be an early bird',
       // which links to /early-bird — the page you are already on.
       //

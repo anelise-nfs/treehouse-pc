@@ -145,14 +145,18 @@ function StaticMap({ address, zoom }: { address: string; zoom: number }) {
         />
       </picture>
 
-      {/* The visible text is the link's accessible name, with nothing added
-          by aria-label. An aria-label naming the place — "View Treehouse Park
-          City on Google Maps" — would not contain this string contiguously,
+      {/* 'get directions', not 'view on Google Maps': the href is
+          /maps/dir/?api=1&destination=..., which opens routing rather than a
+          place page, so the old label described the wrong destination.
+
+          The visible text is the link's accessible name, with nothing added
+          by aria-label. An aria-label naming the place — "Get directions to
+          Treehouse Park City" — would not contain this string contiguously,
           which is exactly what WCAG's Label in Name forbids. The section
           heading above and the address below already give the context that
           2.4.4 asks for. */}
       <p className="mt-[var(--spacing-gutter)] text-center font-sans text-[length:var(--text-ui)] text-ink-soft">
-        <span className="underline group-hover:no-underline">view on Google Maps</span>
+        <span className="underline group-hover:no-underline">get directions</span>
       </p>
     </div>
   );
@@ -185,7 +189,7 @@ function MapVisual({ label }: { label: string }) {
       <p className="font-sans text-[length:var(--text-lead)] font-medium text-ink">{label}</p>
 
       <p className="font-sans text-[length:var(--text-ui)] text-ink-soft underline">
-        View on Google Maps
+        Get directions
       </p>
 
       {/* aria-hidden: the whole card is one link, so this would otherwise be read
