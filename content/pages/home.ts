@@ -146,10 +146,24 @@ export const homePage: Page = {
       headingColor: 'pine',
       imageSide: 'right',
       image: {
-        // PLACEHOLDER: the client has supplied no cafe image. Both the url and
-        // the alt below change together when the real photograph arrives.
-        url: '/images/placeholder-cafe.svg',
-        alt: 'Placeholder graphic: cafe photography pending',
+        // Client-supplied stock, not final Treehouse photography — the filename
+        // says so and ARCHITECTURE.md -> Placeholders still counts the cafe as
+        // unshot. A real photograph replaces the three fields below together.
+        url: '/images/TPC_cafe-stock-image.jpg',
+        alt: 'Two hands holding dark ceramic cups over a cafe table — a latte with a leaf poured into the foam, and a black coffee',
+        // Sanity's hotspot shape: x/y are the focal point and width/height the
+        // region around it, all as fractions of the source. The region below
+        // spans x 0.21-0.76 and y 0.21-0.96, which is both cups and the hands
+        // holding them.
+        //
+        // The source is 3:2 and the block crops to 4:3 at every breakpoint, so
+        // the crop only ever takes slivers off the left and right — about 5.5%
+        // per side. x sits just left of centre to hold the latte cup, which is
+        // the subject. y is inert in this container, authored honestly in case
+        // another block ever crops this image vertically.
+        hotspot: { x: 0.48, y: 0.58, width: 0.55, height: 0.75 },
+        width: 1600,
+        height: 1067,
       },
       body: pt(
         "A cafe you'll actually love with good coffee, healthy snacks, comfortable seats – and a calm, beautiful space to gather, connect, and be present while the kids play.",

@@ -71,6 +71,10 @@ export const pressPage: Page = {
       _type: 'richText',
       align: 'center',
       heading: 'press inquiries',
+      // Ocean, the blue already approved for script headings on linen at
+      // 3.44:1. Mint was the other candidate and is 3.01:1 — over the
+      // large-text bar by 0.01, which is not a margin.
+      headingColor: 'ocean',
       content: pt([
         'Working on a story about Treehouse Park City? For more information or to request an interview, email ',
         { text: 'holler@treehouseparkcity.com', href: 'mailto:holler@treehouseparkcity.com' },

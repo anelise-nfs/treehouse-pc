@@ -1,4 +1,4 @@
-import type { ImageTextSplitBlock, SplitHeadingColor } from '@/types/content';
+import type { ImageTextSplitBlock, ScriptHeadingColor } from '@/types/content';
 import { CtaLink } from '@/components/CtaLink';
 import { PortableText } from '@/components/PortableText';
 import { objectPosition } from '@/components/imageFraming';
@@ -10,8 +10,12 @@ import { DecorationLayer } from '@/components/doodles/DecorationLayer';
  * Only pine clears AA outright as text on linen. The other three are the
  * client's as-drawn colors and are flagged below for the pre-launch pass — see
  * the block comment on the component.
+ *
+ * Exported because RichText renders the same script heading and must not grow
+ * a second copy of these pairings, the way SectionTitleBar exports BAND_BG for
+ * the blocks that reuse its bar.
  */
-const HEADING_COLOR: Record<SplitHeadingColor, string> = {
+export const SCRIPT_HEADING_COLOR: Record<ScriptHeadingColor, string> = {
   pine: 'text-pine',
   // On linen: ocean 3.44:1 — large text only.
   ocean: 'text-ocean',
@@ -80,7 +84,7 @@ export function ImageTextSplit({
       <div className="text-center">
         {heading ? (
           <h2
-            className={`font-script text-[length:var(--text-script-sm)] leading-[var(--leading-heading)] ${HEADING_COLOR[headingColor]}`}
+            className={`font-script text-[length:var(--text-script-sm)] leading-[var(--leading-heading)] ${SCRIPT_HEADING_COLOR[headingColor]}`}
           >
             {heading}
           </h2>

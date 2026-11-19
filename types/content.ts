@@ -437,6 +437,8 @@ export interface RichTextBlock extends BlockBase, Decorated {
   width?: 'measure' | 'full';
   align?: 'left' | 'center';
   backgroundColor?: SurfaceColor;
+  /** Omitted leaves the script heading in ink, which is its default on linen. */
+  headingColor?: ScriptHeadingColor;
   /**
    * Optional button below the copy, the same field ImageTextSplit carries.
    * A passage of copy that ends in an action is common enough to belong on
@@ -451,12 +453,20 @@ export interface RichTextBlock extends BlockBase, Decorated {
  * not all of BandColor: these render as text on linen, where most of the brand
  * colors are too light to read.
  */
-export type SplitHeadingColor = 'pine' | 'ocean' | 'tomato' | 'tangerine';
+/**
+ * The colours approved for a script heading sitting on linen, shared by every
+ * block that renders one. Named for the treatment rather than for the first
+ * block that used it, which is now one of two.
+ *
+ * Mint is deliberately absent: at 3.01:1 it clears the large-text bar by 0.01
+ * and nothing else. See ARCHITECTURE.md -> Color rule.
+ */
+export type ScriptHeadingColor = 'pine' | 'ocean' | 'tomato' | 'tangerine';
 
 export interface ImageTextSplitBlock extends BlockBase, Decorated {
   _type: 'imageTextSplit';
   heading?: string;
-  headingColor: SplitHeadingColor;
+  headingColor: ScriptHeadingColor;
   body: PortableTextBlock[];
   image: SanityImage;
   /** Desktop only. Mobile always stacks image-above-text for reading order. */

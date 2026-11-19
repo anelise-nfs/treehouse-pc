@@ -1,5 +1,6 @@
 import type { RichTextBlock } from '@/types/content';
 import { CtaLink } from '@/components/CtaLink';
+import { SCRIPT_HEADING_COLOR } from '@/components/blocks/ImageTextSplit';
 import { PortableText } from '@/components/PortableText';
 import { DecorationLayer } from '@/components/doodles/DecorationLayer';
 
@@ -20,6 +21,7 @@ export function RichText({
   subcopy,
   width = 'measure',
   align = 'left',
+  headingColor,
   cta,
   decorations,
   anchorId,
@@ -40,11 +42,16 @@ export function RichText({
             --text-script-sm is clamped so it cannot fall below the face's 28px
             floor at any width.
 
-            Ink rather than a per-block colour: RichText has no headingColor
-            field, and ink on linen is 16.78:1, which is what the other script
-            headings on a linen surface already use. */}
+            Colour comes from the same map the image/text splits use, so the
+            two cannot drift. Unset falls back to ink (16.78:1 on linen). Of
+            the authored options, pine and tangerine clear AA outright; ocean
+            and tomato pass as large text, which a script heading always is. */}
         {heading ? (
-          <h2 className="mb-[var(--spacing-block)] font-script text-[length:var(--text-script-sm)] leading-[var(--leading-heading)] text-ink">
+          <h2
+            className={`mb-[var(--spacing-block)] font-script text-[length:var(--text-script-sm)] leading-[var(--leading-heading)] ${
+              headingColor ? SCRIPT_HEADING_COLOR[headingColor] : 'text-ink'
+            }`}
+          >
             {heading}
           </h2>
         ) : null}
