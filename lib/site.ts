@@ -7,8 +7,19 @@
  *
  * NEXT_PUBLIC_ because `metadataBase` is evaluated where the page is rendered
  * and the value is public anyway: it is the address of the site.
+ *
+ * THE APEX IS CANONICAL, and the fallback has to say so. Netlify sets
+ * NEXT_PUBLIC_SITE_URL to the apex and 301s www to it, so in production this
+ * default is never read — which is exactly why it was wrong for a while
+ * without anything breaking. A build that loses the variable (a new deploy
+ * context, a fresh site, someone clearing it) would otherwise go back to
+ * advertising www as canonical in og:url, the sitemap and robots.txt while
+ * the server redirected the other way. www and the apex are different origins
+ * to a crawler, and that disagreement is the whole thing this file exists to
+ * prevent. Change this if the canonical host ever changes, in the same commit
+ * as the host config.
  */
-const FALLBACK_URL = 'https://www.treehouseparkcity.com';
+const FALLBACK_URL = 'https://treehouseparkcity.com';
 
 /**
  * No trailing slash, ever. Every caller joins paths onto this, and a stray
@@ -41,13 +52,24 @@ export function absoluteUrl(path = '/'): string {
  * open advisory in the Next version pinned here — a flat asset has neither
  * problem. Regenerate it by hand if the wordmark or the photograph changes.
  *
+ * THE FILENAME IS VERSIONED, AND THE VERSION MUST BE BUMPED WHENEVER THE
+ * IMAGE CHANGES. Facebook and LinkedIn cache the image against its URL, not
+ * just the tags around it: re-scraping a page refreshes og:title and
+ * og:description and still serves the old picture, because the URL it hangs
+ * on did not move. That is not a cache that reliably clears on request — a
+ * new path is the only thing it cannot ignore.
+ *
+ * So: edit the artwork, save it as -v3, change the one line below, redeploy.
+ * Leaving the old file in place costs 180KB and means any preview already
+ * cached against it keeps working rather than breaking to a 404.
+ *
  * WITHOUT THIS, link previews scrape the page and pick the header wordmark: a
  * 2176x430 transparent PNG that messaging apps composite on a colour of their
  * own choosing and crop to the card, which put the logo hard against all four
  * edges.
  */
 export const shareImage = {
-  url: '/images/og-default.jpg',
+  url: '/images/og-default-v2.jpg',
   width: 1200,
   height: 630,
   alt: 'The Treehouse wordmark beside a photograph of the indoor play structure',
