@@ -27,10 +27,20 @@ import { contactPage } from '@/content/pages/contact';
 import { earlyBirdPage } from '@/content/pages/earlyBird';
 import { homePage } from '@/content/pages/home';
 import { faqPage } from '@/content/pages/faq';
+import { privacyPage } from '@/content/pages/privacy';
+import { termsPage } from '@/content/pages/terms';
 import { pressPage } from '@/content/pages/press';
 
 /** Keyed by slug. The homepage's slug is the empty string. */
-const pages: Page[] = [homePage, earlyBirdPage, contactPage, pressPage, faqPage];
+const pages: Page[] = [
+  homePage,
+  earlyBirdPage,
+  contactPage,
+  pressPage,
+  faqPage,
+  privacyPage,
+  termsPage,
+];
 
 /**
  * Press coverage, newest first.

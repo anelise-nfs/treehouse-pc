@@ -7,6 +7,7 @@ import { Hero } from './Hero';
 import { HoursAddress } from './HoursAddress';
 import { ImageTextSplit } from './ImageTextSplit';
 import { MembershipSection } from './MembershipSection';
+import { LegalDocument } from './LegalDocument';
 import { LocationMap } from './LocationMap';
 import { PageHeader } from './PageHeader';
 import { PartyPackages } from './PartyPackages';
@@ -59,6 +60,8 @@ function BlockSwitch({ block }: { block: Block }) {
       return <MembershipSection {...block} />;
     case 'pressList':
       return <PressList {...block} />;
+    case 'legalDocument':
+      return <LegalDocument {...block} />;
     case 'newsletterSignup':
       return <NewsletterBlock {...block} />;
     case 'partyPackages':

@@ -88,10 +88,9 @@ export function CookieNotice() {
       <div className="pointer-events-auto mx-auto flex max-w-[var(--spacing-container)] flex-col gap-[var(--spacing-gutter)] rounded-[var(--radius-card)] border border-ink/10 bg-linen p-[var(--spacing-gutter)] sm:flex-row sm:items-center">
         <p className="flex-1 font-sans text-[length:var(--text-ui)] text-ink">
           We use cookies to keep things running smoothly and see how our site is used.{' '}
-          {/* PLACEHOLDER: the privacy policy page does not exist yet. '#' matches
-              the footer's legalNav entry, which is the same placeholder; both
-              become '/privacy' together when that page lands. */}
-          <a href="#" className="underline underline-offset-2">
+          {/* The real page. This and the footer's legalNav entry point at the
+              same route — they were both '#' placeholders until it existed. */}
+          <a href="/privacy" className="underline underline-offset-2">
             Privacy Policy
           </a>
         </p>

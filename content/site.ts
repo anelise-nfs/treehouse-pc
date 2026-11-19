@@ -75,10 +75,9 @@ export const siteSettings: SiteSettings = {
     // is why the group exists now with one member in it.
     { label: 'In the News', kind: 'internal', href: '/press' },
   ],
-  // PLACEHOLDER: real pages pending; the pre-sale terms page lands before launch.
   legalNav: [
-    { label: 'Privacy', kind: 'anchor', href: '#' },
-    { label: 'Terms', kind: 'anchor', href: '#' },
+    { label: 'Privacy', kind: 'internal', href: '/privacy' },
+    { label: 'Terms', kind: 'internal', href: '/terms' },
   ],
   /**
    * Instagram is live. Facebook is a placeholder: an entry with no `url`

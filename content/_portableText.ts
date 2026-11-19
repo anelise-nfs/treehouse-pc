@@ -24,7 +24,12 @@ type SpanInput = string | { text: string; href: string; kind?: LinkKind; newTab?
  * A paragraph: a bare string for the common case, an object to set its style,
  * or an array of runs when part of it is a link.
  */
-type Paragraph = string | { style: PortableTextStyle; text: string } | SpanInput[];
+type Paragraph =
+  | string
+  | { style: PortableTextStyle; text: string }
+  | SpanInput[]
+  /** One bulleted item. Consecutive ones are grouped into a list by the renderer. */
+  | { bullet: SpanInput[] | string };
 
 /**
  * Keys are derived from the text rather than hand-written so they stay stable
@@ -41,6 +46,14 @@ function digest(input: string): string {
 export function pt(...paragraphs: Paragraph[]): PortableTextBlock[] {
   return paragraphs.map((paragraph, index) => {
     if (Array.isArray(paragraph)) return mixed(paragraph, index);
+
+    // A bullet is any paragraph with the marker set; the runs of them are
+    // assembled into <ul>s by the renderer, not here, because portable text
+    // has no list container to build.
+    if (typeof paragraph === 'object' && 'bullet' in paragraph) {
+      const runs = Array.isArray(paragraph.bullet) ? paragraph.bullet : [paragraph.bullet];
+      return { ...mixed(runs, index), listItem: 'bullet' as const, level: 1 };
+    }
 
     const style: PortableTextStyle = typeof paragraph === 'string' ? 'normal' : paragraph.style;
     const text = typeof paragraph === 'string' ? paragraph : paragraph.text;

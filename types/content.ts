@@ -694,6 +694,29 @@ export interface HoursAddressBlock extends BlockBase, Decorated {
   location?: Location;
 }
 
+/**
+ * A long-form legal document: privacy policy, terms of use.
+ *
+ * Its own block rather than a richText with different classes, because the
+ * typography is a different system and not a variant of one. These run to
+ * thousands of words of numbered clauses that someone reads to find one
+ * sentence, so they want a tighter measure, smaller headings and closer
+ * leading than any marketing block on the site — and they must never pick up
+ * a change made to richText for a two-line intro paragraph.
+ *
+ * `body` carries the whole document in order, headings and lists included, so
+ * the attorney's structure survives as one authored sequence rather than being
+ * split across fields that a future edit could reorder.
+ */
+export interface LegalDocumentBlock extends BlockBase, Decorated {
+  _type: 'legalDocument';
+  /** The entity line above the title — 'Treehouse LLC | Park City, Utah'. */
+  eyebrow?: string;
+  /** Rendered verbatim and marked up as a <time> where it parses. */
+  effectiveDate?: string;
+  body: PortableTextBlock[];
+}
+
 export interface FaqAccordionBlock extends BlockBase, Decorated {
   _type: 'faqAccordion';
   heading?: string;
@@ -760,6 +783,7 @@ export type Block =
   | FeatureGridBlock
   | MembershipSectionBlock
   | PressListBlock
+  | LegalDocumentBlock
   | DropInSectionBlock
   | PartyPackagesBlock
   | NewsletterSignupBlock
