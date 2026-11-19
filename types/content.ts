@@ -625,26 +625,6 @@ export interface PriceBadge {
   priceColor?: BandColor;
 }
 
-/**
- * The contact form. Emails the business.
- *
- * Distinct from the newsletter opt-in, which is site chrome rather than a
- * block and posts to a different endpoint — see lib/forms.ts. The fields are
- * fixed rather than author-defined: an author who can add fields can add ones
- * nobody reads, and can collect personal data nobody agreed to hold.
- */
-export interface ContactFormBlock extends BlockBase, Decorated {
-  _type: 'contactForm';
-  heading?: string;
-  /**
-   * Copy above the fields. Portable text rather than a plain string because it
-   * carries the alternative contact route, and that email has to be a real
-   * mailto link rather than text someone has to retype.
-   */
-  intro?: PortableTextBlock[];
-  /** Defaults to 'send it'. */
-  submitLabel?: string;
-}
 
 /**
  * A mailing-list signup placed in a page's flow, with its own heading and
@@ -776,7 +756,6 @@ export type Block =
   | PressListBlock
   | DropInSectionBlock
   | PartyPackagesBlock
-  | ContactFormBlock
   | NewsletterSignupBlock
   | LocationBlock
   | HoursAddressBlock

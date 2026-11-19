@@ -1,6 +1,5 @@
 import type { Block } from '@/types/content';
 import { DropInSection } from './DropInSection';
-import { ContactForm } from './ContactForm';
 import { NewsletterBlock } from './NewsletterBlock';
 import { FeatureGrid } from './FeatureGrid';
 import { Hero } from './Hero';
@@ -59,8 +58,6 @@ function BlockSwitch({ block }: { block: Block }) {
       return <MembershipSection {...block} />;
     case 'pressList':
       return <PressList {...block} />;
-    case 'contactForm':
-      return <ContactForm {...block} />;
     case 'newsletterSignup':
       return <NewsletterBlock {...block} />;
     case 'partyPackages':
