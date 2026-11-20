@@ -84,7 +84,7 @@ export const homePage: Page = {
         // PortableText sets a top margin on every paragraph it renders, so the
         // second is spaced from the first without anything else changing.
         body: pt(
-          'Treehouse is a gathering space — not just somewhere to drop in, but somewhere to belong. Our calendar stays full of classes, workshops, and activities that bring families back week after week, where neighbors become friends over coffee and kids find something new to love each visit. A living, breathing part of our community.',
+          'Treehouse is a gathering space — not just somewhere to drop in, but somewhere to belong. It looks and feels like a playground, but every climb, balance, and leap is quietly building strength, coordination, and confidence — the real work of childhood, hidden inside the fun. Our calendar stays full of classes, workshops, and activities that bring families back week after week, where neighbors become friends over coffee and kids find something new to love each visit. A living, breathing part of our community.',
           "We can't wait to see you!",
         ),
       },

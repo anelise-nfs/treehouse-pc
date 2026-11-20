@@ -613,22 +613,44 @@
        trim the padding without trimming the lift and the colour climbs into
        the button.
 
-       12rem is as far as it goes on narrow phones: the hero's tagline wraps to
+       14rem is as far as it goes on narrow phones: the hero's tagline wraps to
        an extra line there, which pushes the button down and leaves the fill
        only a few pixels of slack beneath it. From 24rem up the tagline fits
-       and 14rem gives the ring a clear margin on every part of the wave while
+       and 16rem gives the ring a clear margin on every part of the wave while
        the crest still stops short of the button.
 
-       BOTH VALUES CAME DOWN BY 2rem when the hero's h1 moved to the script
-       face: Betania Patmos is set at --leading-heading where the sans ran at
-       --leading-display, and the taller line boxes pushed the button down into
-       the slack these numbers were tuned against. The crest then crossed it on
-       a phone. Any future change to the hero's type — face, leading, or a
-       tagline that gains a line — lands here again, because this distance is
-       measured from the panel's laid-out top and knows nothing about what sits
-       above it. */
+       THIS IS ALSO WHAT CENTRES THE RING IN THE FILL. The ring's own padding
+       cannot: it sits above the panel in the flow, so padding there moves the
+       ring and the band's top edge down together and the gap between them
+       never changes. Only this distance opens that gap.
+
+       THESE HAVE MOVED TWICE AND SIT BETWEEN THE TWO FAILURES. They were
+       14/16rem until the hero's h1 moved to the script face: Betania Patmos
+       sets at --leading-heading where the sans ran at --leading-display, and
+       the taller line boxes pushed the button down into the slack the numbers
+       were tuned against, so the crest crossed it on a phone. Dropping 2rem
+       fixed that and overshot — the fill then stopped short of the ring's top
+       edge, which is the opposite failure this comment describes. Adding 1rem
+       back lands between them: more cover for the ring than 12/14 gave, more
+       clearance under the button than 14/16 did.
+
+       Any future change to the hero's type — face, leading, or a tagline that
+       gains a line — lands here again, because this distance is measured from
+       the panel's laid-out top and knows nothing about what sits above it.
+
+       THIS NUMBER HAS EXACTLY ONE JOB: where the ring sits inside the fill.
+
+         ring centering   = lift - ringImageHeight
+         button clearance = heroPaddingBottom + ringBoxHeight - lift
+
+       It is in both, so tuning it to fix the button always moves the ring and
+       vice versa — which is how this oscillated through four rounds. The ring
+       box's top padding in Hero.tsx is in the second only, because the ring
+       moves down with the box and the centring is unaffected. Reach for that
+       when the crest crowds the button, and for this when the ring sits wrong
+       in the green. */
     .hero-band-rise {
-      --hero-band-lift: 12rem;
+      --hero-band-lift: 14rem;
       animation: hero-band-settle linear both;
       animation-timeline: scroll(root block);
       animation-range: 45vh 85vh;
@@ -636,7 +658,7 @@
 
     @media (min-width: 24rem) {
       .hero-band-rise {
-        --hero-band-lift: 14rem;
+        --hero-band-lift: 16rem;
       }
     }
 

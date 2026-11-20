@@ -127,8 +127,25 @@ export function Hero({
             indent (the trigger's 2.75rem, plus the header's 1.25rem gap, less
             its -0.5rem margin), so the h1, h2 and button share a left edge with
             the logo above them and the four read as one stack. Change the
-            header's gap or trigger size and this has to follow. */}
-        <div className="relative flex flex-1 flex-col justify-start px-[var(--spacing-gutter)] text-right lg:justify-center lg:text-left pb-[var(--spacing-section)] pt-[var(--spacing-block)] lg:min-h-[100dvh] lg:w-[44%] lg:py-0 xl:w-[40%] xl:max-w-[36rem] lg:pl-[calc(var(--spacing-gutter)+var(--tap-target)+0.75rem)]">
+            header's gap or trigger size and this has to follow.
+
+            THE BOTTOM PADDING IS 1.5x THE SECTION TOKEN, AND IT IS LOAD-BEARING
+            ON PHONES. Stacked, the colour band below starts out lifted above
+            its laid-out position so the tree ring sits on the fill rather than
+            stranded on linen above it — see --hero-band-lift in globals.css.
+            That lift is measured from this column's bottom edge, so this
+            padding is the entire gap between the button and the wave's crest.
+            At the plain token the crest came up against the button; the extra
+            half pushes the whole band down, crest and ring together, which
+            buys that clearance without costing the ring any of its cover.
+
+            Tuning the lift alone could not do both: raising it covers the ring
+            and crowds the button, lowering it frees the button and strands the
+            ring. This is the lever that moves them in the same direction.
+
+            lg:py-0 still zeroes it from 1024 up, where the two sit side by
+            side and there is no band underneath to collide with. */}
+        <div className="relative flex flex-1 flex-col justify-start px-[var(--spacing-gutter)] text-right lg:justify-center lg:text-left pb-[calc(var(--spacing-section)*1.5)] pt-[var(--spacing-block)] lg:min-h-[100dvh] lg:w-[44%] lg:py-0 xl:w-[40%] xl:max-w-[36rem] lg:pl-[calc(var(--spacing-gutter)+var(--tap-target)+0.75rem)]">
           {/* CONTRAST: mint on linen is 3.01:1. --text-hero-title floors at 30px
               and --text-split-title at 36px, so this always counts as large
               text and 3:1 applies — but it clears it by 0.01, with no real
@@ -225,7 +242,17 @@ function AfterBand({ heading, body, cta, image, color = 'mint' }: HeroAfterBand)
     // sides only still contains the full-bleed width it grows to on desktop,
     // which is what the hidden overflow was there for.
     <section className="relative isolate bg-surface [clip-path:inset(-100vh_0_0_0)]">
-      <div className="relative flex flex-col lg:block lg:min-h-[62vh]">
+      {/* THIS IS WHAT SETS THE SPACE ABOVE AND BELOW THE COPY. The text block
+          inside is justify-center and much shorter than the panel, so the
+          visible gap is the centring — (panelHeight - contentHeight) / 2 — and
+          its own padding does nothing until content plus padding outgrows the
+          panel, which it does not. Tune the gap here, not there.
+
+          62vh OR 33rem, whichever is larger. 62vh alone meant the band shrank
+          with the window, so on a laptop the copy had nowhere to breathe; the
+          floor keeps a usable height at any viewport without making the band
+          taller on a big screen, where 62vh already wins. */}
+      <div className="relative flex flex-col lg:block lg:min-h-[max(62vh,33rem)]">
         {/* COLOUR PANEL — the same width variables and scroll class as the
             hero's photograph, so the two edges stay aligned at every scroll
             position rather than only at rest.
@@ -257,7 +284,16 @@ function AfterBand({ heading, body, cta, image, color = 'mint' }: HeroAfterBand)
 
               Stacked, there is no seam to clear horizontally, so it runs full
               width with top padding for the wave instead. */}
-          <div className="hero-band-text flex h-full flex-col justify-center px-[var(--spacing-gutter)] pb-[var(--spacing-block)] pt-[calc(var(--spacing-block)+8vw)] lg:ml-auto lg:w-[56.5vw] lg:px-0 lg:pr-[5vw] lg:py-0">
+          {/* lg:py is a floor, not the knob. While the panel is taller than
+              the copy the centring sets the visible gap and this is inert;
+              it only bites if the copy ever grows enough to fill the panel,
+              where it stops the text touching the fill's edges. To change the
+              spacing you see, change the panel's min-h above.
+
+              The stacked padding above is untouched — it clears the wave,
+              whose clip path is in objectBoundingBox units and so scales with
+              the panel's height. */}
+          <div className="hero-band-text flex h-full flex-col justify-center px-[var(--spacing-gutter)] pb-[var(--spacing-block)] pt-[calc(var(--spacing-block)+8vw)] lg:ml-auto lg:w-[56.5vw] lg:px-0 lg:pr-[5vw] lg:py-[calc(var(--spacing-section)*0.65)]">
             <h2 className="font-script text-[length:var(--text-script-sm)] leading-[var(--leading-heading)] text-white">
               {heading}
             </h2>
@@ -282,7 +318,11 @@ function AfterBand({ heading, body, cta, image, color = 'mint' }: HeroAfterBand)
                 2.13:1, worse than the white it was meant to replace. */}
             <PortableText
               blocks={body}
-              className="measure mt-[var(--spacing-gutter)] font-serif text-[length:var(--text-body)] text-ink"
+              // 1rem flat, not --text-body: that token runs 16px to 17px, so this is a
+              // step down on a wide screen and unchanged on a phone. 16px is the
+              // floor ARCHITECTURE.md sets for body copy and this sits on it —
+              // the rest of the breathing room comes from the padding above.
+              className="measure mt-[var(--spacing-gutter)] font-serif text-[1rem] text-ink"
             />
 
             {cta ? (
@@ -304,8 +344,29 @@ function AfterBand({ heading, body, cta, image, color = 'mint' }: HeroAfterBand)
 
             relative z-10 is load-bearing: the panel is absolutely positioned
             and would otherwise paint over this once it goes full bleed. The
-            ring has to sit in front of the colour, not under it. */}
-        <div className="relative z-10 order-1 flex items-center justify-center px-[var(--spacing-gutter)] pb-2 pt-6 lg:order-none lg:py-0 lg:min-h-[62vh] lg:w-[38%] lg:justify-start lg:py-0 lg:pl-[5.75vw]">
+            ring has to sit in front of the colour, not under it.
+
+            THE TOP PADDING IS THE BUTTON-CLEARANCE LEVER. Stacked, two gaps
+            have to be right at once, and they look like one problem but are
+            not:
+
+              button clearance = heroPaddingBottom + thisBoxHeight - lift
+              ring centering   = lift - ringImageHeight
+
+            `lift` is in both, which is why tuning it alone trades one for the
+            other — cover the ring and the crest hits the button, free the
+            button and the ring strands on linen. This padding is in the first
+            only: it grows this box, pushing the panel's laid-out top down, and
+            cancels out of the second because the ring moves with it. So it
+            buys clearance at no cost to the centring.
+
+            Use `lift` (globals.css) for where the ring sits in the fill, and
+            this for how far the fill sits from the button. One job each.
+
+            pt-24 puts the panel's box top about 73px below the button at
+            390px. The wave can rise ~2% of the panel's height above that box
+            top, so the visible crest lands nearer 60px. */}
+        <div className="relative z-10 order-1 flex items-center justify-center px-[var(--spacing-gutter)] pb-0 pt-24 lg:order-none lg:py-0 lg:min-h-[max(62vh,33rem)] lg:w-[38%] lg:justify-start lg:py-0 lg:pl-[5.75vw]">
           <img
             src={image.url}
             alt=""
