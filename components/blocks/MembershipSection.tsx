@@ -215,6 +215,7 @@ export function MembershipSection({
   titleBandColor,
   tiers,
   tiersFootnote,
+  tiersFootnoteLink,
   intro,
   notice,
   cta,
@@ -331,10 +332,30 @@ export function MembershipSection({
           ))}
         </div>
 
-        {tiersFootnote ? (
-          <p className="measure mx-auto mt-[var(--spacing-gutter)] text-center font-sans text-[length:var(--text-ui)] text-ink-soft">
-            {tiersFootnote}
-          </p>
+        {/* The fine print under the prices, and the agreement that states it
+            in full.
+
+            Both sit in one quiet column at --text-ui, below the cards and
+            above the perk lists — the last thing read before the pitch turns
+            back to what you get. The link is on its own line rather than
+            trailing the footnote sentence, so it reads as a document to open
+            and not as part of the billing terms.
+
+            CONTRAST: --color-action (6.38:1 on linen), not ocean. --text-ui is
+            15px, well under the 24px where the 3:1 large-text bar applies, so
+            this needs the full 4.5:1 and ocean's 3.44:1 would fail. See the
+            note on the sale notice above for the same trade in the other
+            direction. */}
+        {tiersFootnote || tiersFootnoteLink ? (
+          <div className="measure mx-auto mt-[var(--spacing-gutter)] text-center font-sans text-[length:var(--text-ui)] text-ink-soft">
+            {tiersFootnote ? <p>{tiersFootnote}</p> : null}
+
+            {tiersFootnoteLink ? (
+              <p className={tiersFootnote ? 'mt-2' : ''}>
+                <CtaLink link={tiersFootnoteLink} className="text-action underline-offset-2" />
+              </p>
+            ) : null}
+          </div>
         ) : null}
 
         {/* --spacing-section above the first list, which is the structural break

@@ -1,5 +1,10 @@
 import NextLink from 'next/link';
-import type { PortableTextBlock, PortableTextSpan } from '@/types/content';
+import type {
+  PortableTextBlock,
+  PortableTextContent,
+  PortableTextSpan,
+  PortableTextTable,
+} from '@/types/content';
 import { NewsletterTrigger } from '@/components/NewsletterTrigger';
 
 /**
@@ -11,7 +16,7 @@ import { NewsletterTrigger } from '@/components/NewsletterTrigger';
  * leave an empty element behind.
  */
 export interface PortableTextProps {
-  blocks?: PortableTextBlock[];
+  blocks?: PortableTextContent[];
   className?: string;
   /**
    * Applied to the `<ul>`/`<ol>` a run of list items is wrapped in. Markers
@@ -40,12 +45,20 @@ export interface PortableTextProps {
  */
 type Run =
   | { kind: 'block'; block: PortableTextBlock }
+  | { kind: 'table'; table: PortableTextTable }
   | { kind: 'list'; marker: 'bullet' | 'number'; blocks: PortableTextBlock[] };
 
-function toRuns(blocks: PortableTextBlock[]): Run[] {
+function toRuns(blocks: PortableTextContent[]): Run[] {
   const runs: Run[] = [];
 
   for (const block of blocks) {
+    // A table is a sibling object in the array, not a block — it has no style,
+    // no spans and no marker, and it also closes any open list run.
+    if (block._type === 'table') {
+      runs.push({ kind: 'table', table: block });
+      continue;
+    }
+
     const marker = block.listItem;
 
     if (!marker) {
@@ -76,6 +89,10 @@ export function PortableText({
           return <Block key={run.block._key} block={run.block} className={className} />;
         }
 
+        if (run.kind === 'table') {
+          return <Table key={run.table._key} table={run.table} />;
+        }
+
         const List = run.marker === 'number' ? 'ol' : 'ul';
         return (
           // Index-keyed: a run has no identity of its own, and this list is
@@ -90,6 +107,57 @@ export function PortableText({
         );
       })}
     </>
+  );
+}
+
+/**
+ * A table.
+ *
+ * Carries no classes of its own, the same way the lists above leave markers
+ * and indent to the caller — a rate grid in a legal document and a table in a
+ * marketing block want different rules, and the caller already has the
+ * `[&_th]`/`[&_td]` selectors to set them.
+ *
+ * The scroll wrapper IS structural and so belongs here: a table has an
+ * intrinsic minimum width, and without somewhere to overflow a narrow one
+ * scrolls the whole page sideways on a phone. It is keyboard-focusable because
+ * a region that scrolls must be reachable without a pointer.
+ *
+ * `scope` on both axes: the head row labels the columns and the first cell of
+ * each body row labels the row, which is what lets a screen reader announce
+ * '2 Children, Annual Term Total, $2,820' instead of a bare figure.
+ */
+function Table({ table }: { table: PortableTextTable }) {
+  return (
+    <div className="overflow-x-auto" tabIndex={0}>
+      <table>
+        <thead>
+          <tr>
+            {table.head.map((cell, index) => (
+              // Index-keyed: a header cell has no identity beyond its position.
+              <th key={index} scope="col">
+                {cell}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {table.rows.map((row) => (
+            <tr key={row._key}>
+              {row.cells.map((cell, index) =>
+                index === 0 ? (
+                  <th key={index} scope="row">
+                    {cell}
+                  </th>
+                ) : (
+                  <td key={index}>{cell}</td>
+                ),
+              )}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 }
 

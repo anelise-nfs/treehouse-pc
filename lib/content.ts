@@ -26,6 +26,7 @@ import { siteSettings } from '@/content/site';
 import { contactPage } from '@/content/pages/contact';
 import { earlyBirdPage } from '@/content/pages/earlyBird';
 import { homePage } from '@/content/pages/home';
+import { membershipAgreementPage } from '@/content/pages/membershipAgreement';
 import { faqPage } from '@/content/pages/faq';
 import { privacyPage } from '@/content/pages/privacy';
 import { termsPage } from '@/content/pages/terms';
@@ -40,6 +41,7 @@ const pages: Page[] = [
   faqPage,
   privacyPage,
   termsPage,
+  membershipAgreementPage,
 ];
 
 /**

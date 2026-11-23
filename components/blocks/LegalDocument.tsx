@@ -91,7 +91,27 @@ export function LegalDocument({
 
             Lists get a real marker and a hanging indent, so a clause that
             wraps stays aligned under its own text rather than under the
-            bullet. */}
+            bullet.
+
+            h3 is the second level, used where a document has subsections
+            under a numbered section — Schedule A's rule groups. One step down
+            from h2 in size and sharing its face and weight, because the
+            hierarchy here is shallow and a third distinct treatment would
+            read as a third level that does not exist. Documents without
+            subsections emit no h3 and are unaffected.
+
+            Tables are the rate grids. Flush left with the text column and
+            separated by right padding rather than boxed: a bordered grid in
+            the middle of a page of prose reads as a different document. The
+            column heads are sans at caption size, the one place in this block
+            where the quieter face marks a label rather than a heading, and
+            the row labels are reset to normal weight because `th` arrives
+            bold and Libre Baskerville's bold is heavy enough to fight the
+            figures beside it.
+
+            Run-in bold leads ('3.1 Required Initial Annual Term.') need no
+            rule of their own: Libre Baskerville 700 is loaded (app/layout.tsx)
+            so `strong` in this serif column is real bold, not synthesised. */}
         <div
           className={[
             'mt-[var(--spacing-block)]',
@@ -99,6 +119,17 @@ export function LegalDocument({
             '[&_h2]:mt-[2em] [&_h2]:mb-[0.4em] [&_h2]:scroll-mt-[var(--spacing-header-compact)]',
             '[&_h2]:font-sans [&_h2]:text-[length:var(--text-lead)] [&_h2]:font-medium',
             '[&_h2]:leading-[var(--leading-heading)] [&_h2]:text-ink',
+            '[&_h3]:mt-[1.6em] [&_h3]:mb-[0.3em] [&_h3]:scroll-mt-[var(--spacing-header-compact)]',
+            '[&_h3]:font-sans [&_h3]:text-[length:var(--text-body)] [&_h3]:font-medium',
+            '[&_h3]:leading-[var(--leading-heading)] [&_h3]:text-ink',
+            '[&_table]:mt-[1.5em] [&_table]:w-full [&_table]:border-collapse [&_table]:text-left',
+            '[&_th]:border-b [&_th]:border-ink/15 [&_th]:py-2 [&_th]:align-top',
+            '[&_td]:border-b [&_td]:border-ink/15 [&_td]:py-2 [&_td]:align-top',
+            '[&_th]:pr-[var(--spacing-gutter)] [&_td]:pr-[var(--spacing-gutter)]',
+            '[&_tr>*:last-child]:pr-0',
+            '[&_thead_th]:border-ink/30 [&_thead_th]:font-sans [&_thead_th]:font-medium',
+            '[&_thead_th]:text-[length:var(--text-caption)]',
+            '[&_tbody_th]:font-normal',
             '[&_blockquote]:mt-[1.5em] [&_blockquote]:rounded-[var(--radius-card)]',
             '[&_blockquote]:bg-tangerine/5 [&_blockquote]:px-4 [&_blockquote]:py-3',
             '[&_blockquote]:text-[length:var(--text-caption)] [&_blockquote]:leading-[1.6]',

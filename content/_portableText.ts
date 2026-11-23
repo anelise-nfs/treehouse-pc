@@ -8,6 +8,7 @@
 import type {
   LinkKind,
   PortableTextBlock,
+  PortableTextTable,
   PortableTextMarkDef,
   PortableTextSpan,
   PortableTextStyle,
@@ -18,7 +19,20 @@ import type {
  * the only inline mark the fixtures need so far — the renderer resolves it
  * through the paragraph's markDefs, the same way Sanity will.
  */
-type SpanInput = string | { text: string; href: string; kind?: LinkKind; newTab?: boolean };
+type SpanInput =
+  | string
+  | { text: string; href: string; kind?: LinkKind; newTab?: boolean; bold?: boolean }
+  /**
+   * A bold run. `strong` is a decoration rather than an annotation, so unlike a
+   * link it needs no markDef — the span just carries the mark name, which the
+   * renderer has always understood.
+   *
+   * Needed for a legal document written with run-in heads ('**3.1 Required
+   * Initial Annual Term.** You agree to...'): the bold lead and the sentence
+   * after it are one paragraph in the source, and splitting them into a heading
+   * and a paragraph would restructure the agreement rather than render it.
+   */
+  | { text: string; bold: true };
 
 /**
  * A paragraph: a bare string for the common case, an object to set its style,
@@ -86,6 +100,13 @@ function mixed(runs: SpanInput[], index: number): PortableTextBlock {
       return { _type: 'span', _key: spanKey, text: run, marks: [] };
     }
 
+    const decorations = run.bold ? ['strong'] : [];
+
+    // A run with no href is emphasis only and needs no markDef.
+    if (!('href' in run)) {
+      return { _type: 'span', _key: spanKey, text: run.text, marks: decorations };
+    }
+
     const markKey = `m${key}-${i}`;
     markDefs.push({
       _type: 'link',
@@ -95,8 +116,31 @@ function mixed(runs: SpanInput[], index: number): PortableTextBlock {
       ...(run.newTab ? { newTab: true } : {}),
     });
 
-    return { _type: 'span', _key: spanKey, text: run.text, marks: [markKey] };
+    return { _type: 'span', _key: spanKey, text: run.text, marks: [...decorations, markKey] };
   });
 
   return { _type: 'block', _key: `b${key}`, style: 'normal', children, markDefs };
+}
+
+/**
+ * A table, built separately from the prose around it and spliced in.
+ *
+ * A standalone builder rather than another `pt()` paragraph form, because a
+ * table is not a portable-text block and `pt()` returns blocks. Compose a body
+ * that mixes the two by spreading:
+ *
+ *     body: [...pt(before), table(head, rows), ...pt(after)]
+ *
+ * Keys are derived from the contents, like `pt()`'s, so they survive edits
+ * elsewhere in the same body.
+ */
+export function table(head: string[], rows: string[][]): PortableTextTable {
+  const key = digest([head.join('|'), ...rows.map((row) => row.join('|'))].join('//'));
+
+  return {
+    _type: 'table',
+    _key: `t${key}`,
+    head,
+    rows: rows.map((cells, index) => ({ _key: `t${key}r${index}`, cells })),
+  };
 }

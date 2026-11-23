@@ -271,6 +271,43 @@ export interface PortableTextBlock {
   level?: number;
 }
 
+/**
+ * A table sitting among the blocks of a document body.
+ *
+ * NOT a portable-text block, and deliberately not expressed as one: portable
+ * text has no table primitive. In Sanity a table in a rich-text field is a
+ * separate object type in the same array — which is what `@sanity/table`
+ * produces — so a body is a union and the renderer discriminates on `_type`.
+ * Modelling it that way now means Phase 2 changes where the array comes from
+ * and not what shape it has.
+ *
+ * Cells are plain strings. The tables that need this are rate grids with no
+ * links and no emphasis, and giving a cell portable text of its own would
+ * invite a document inside a table cell.
+ */
+export interface PortableTextTable {
+  _type: 'table';
+  _key: string;
+  /** The header row, rendered as `<th scope="col">`. */
+  head: string[];
+  /**
+   * The body rows. The FIRST CELL OF EACH IS A ROW HEADER and renders as
+   * `<th scope="row">`, which is what lets a screen reader announce '2
+   * Children' before reading out a figure in that row. A rate table whose
+   * first column is not a label does not belong in this type.
+   */
+  rows: { _key: string; cells: string[] }[];
+}
+
+/**
+ * A document body: portable-text blocks plus the objects that sit among them.
+ *
+ * `PortableTextBlock[]` is assignable to this, so a field that only ever holds
+ * prose can stay typed as the narrower array and every existing caller is
+ * unaffected.
+ */
+export type PortableTextContent = PortableTextBlock | PortableTextTable;
+
 /* ============================================================================
    Blocks
    ========================================================================== */
@@ -544,6 +581,20 @@ export interface MembershipSectionBlock extends BlockBase, Decorated {
   tiers: PricingTier[];
   /** Fine print under the last card — annual billing terms. */
   tiersFootnote?: string;
+  /**
+   * One small link under that fine print, for a document a buyer may want
+   * before committing — the membership agreement.
+   *
+   * ITS OWN FIELD RATHER THAN A LINK INSIDE `tiersFootnote`, which is a plain
+   * string and has nowhere to put one. Separate from `cta` and `secondaryCta`
+   * for the opposite reason to theirs: those are buttons and this must not
+   * look like one. It renders as quiet underlined text at the footnote's size,
+   * below the prices, where someone reading the terms is already looking.
+   *
+   * Optional, and only /early-bird sets it. The homepage renders the same
+   * section without it.
+   */
+  tiersFootnoteLink?: Link;
   intro: PortableTextBlock[];
   /**
    * The sale-status announcement, set apart from the prose above it.
@@ -731,9 +782,17 @@ export interface LegalDocumentBlock extends BlockBase, Decorated {
   _type: 'legalDocument';
   /** The entity line above the title — 'Treehouse LLC | Park City, Utah'. */
   eyebrow?: string;
-  /** Rendered verbatim and marked up as a <time> where it parses. */
+  /**
+   * Rendered verbatim and marked up as a <time> where it parses.
+   *
+   * OMITTED ON A DOCUMENT WHOSE DATE IS FILLED IN PER SIGNER. The membership
+   * agreement is executed at checkout and its effective date is whatever day
+   * that happens, so printing one here would state a fact the page cannot
+   * know. Put a version marker in `eyebrow` instead.
+   */
   effectiveDate?: string;
-  body: PortableTextBlock[];
+  /** Prose and tables in one authored sequence; see PortableTextContent. */
+  body: PortableTextContent[];
 }
 
 export interface FaqAccordionBlock extends BlockBase, Decorated {

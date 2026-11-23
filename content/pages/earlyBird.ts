@@ -4,6 +4,7 @@ import { pt } from '../_portableText';
 import {
   foundingMembershipSection,
   joinTheEmailClub,
+  membershipAgreement,
   saleSoonLine,
 } from '../shared/foundingMembership';
 import { MEMBERSHIPS_ON_SALE } from '../launchPhase';
@@ -74,6 +75,11 @@ export const earlyBirdPage: Page = {
       // had more decoration than copy.
       decorations: [{ doodle: 'vertscribble', slot: 'top-right', color: 'sunshine' }],
       intro: pt(openingParagraph),
+      // The terms someone is agreeing to, under the prices they are agreeing
+      // to them for. Only here: the homepage shows the same tiers as a teaser
+      // and sends people to this page to buy, so the agreement belongs at the
+      // point of sale rather than beside every mention of a price.
+      tiersFootnoteLink: membershipAgreement,
       // The status line moved out of `intro` into its own field so it renders
       // as a callout rather than as a second paragraph of the pitch.
       notice: pt(salePitch),

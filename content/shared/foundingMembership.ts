@@ -62,6 +62,24 @@ export const beAnEarlyBird: Link = {
 };
 
 /**
+ * The membership agreement, linked from under the prices.
+ *
+ * NO `variant`, which is what makes CtaLink render it as inline text rather
+ * than a button (see the Link type). That is the point: it sits beneath the
+ * billing footnote as the fine print it is, and a fourth button in this
+ * section would compete with the three that actually sell something.
+ *
+ * Only /early-bird passes it. The page is noIndex and in no nav, so this is
+ * the single route to it anywhere on the site — which is deliberate, and worth
+ * knowing before anyone removes it.
+ */
+export const membershipAgreement: Link = {
+  label: 'Early Bird Membership Agreement',
+  kind: 'internal',
+  href: '/early-bird-membership-agreement',
+};
+
+/**
  * Opens the signup dialog, like the hero's button — the mailing list has one
  * UI and one endpoint wherever it is offered. The href is the no-JavaScript
  * fallback, pointing at the footer's copy.
@@ -183,6 +201,8 @@ export interface FoundingMembershipOptions {
    */
   cta?: Link;
   secondaryCta?: Link;
+  /** The agreement link under the billing footnote; /early-bird only. */
+  tiersFootnoteLink?: Link;
 }
 
 export function foundingMembershipSection(
@@ -196,6 +216,7 @@ export function foundingMembershipSection(
     anchorId,
     cta,
     secondaryCta,
+    tiersFootnoteLink,
   }: FoundingMembershipOptions,
 ): MembershipSectionBlock {
   return {
@@ -204,6 +225,7 @@ export function foundingMembershipSection(
     ...(title ? { title, titleBandColor } : {}),
     tiers: foundingTiers,
     tiersFootnote: foundingFootnote,
+    ...(tiersFootnoteLink ? { tiersFootnoteLink } : {}),
     intro,
     ...(notice ? { notice } : {}),
     ...(cta ? { cta } : {}),
