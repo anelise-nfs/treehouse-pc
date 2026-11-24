@@ -24,10 +24,9 @@ function directionsUrl(address: string): string {
  * are things this block already did as a placeholder and should not lose by
  * gaining a map.
  *
- * `location.coordinates` is unread. The static map geocodes `address`, the
- * same string the directions link uses, so there is no second value to keep
- * correct — which matters, because the authored coordinates are marked
- * approximate.
+ * `location.coordinates` is unread, and nothing authors it. The static map
+ * geocodes `address`, the same string the directions link uses, so there is no
+ * second value to keep correct.
  */
 export function LocationMap({ location, zoom = 15, decorations, anchorId }: LocationBlock) {
   const mapped = hasMapKey();

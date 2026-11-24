@@ -2,28 +2,22 @@ import type { Page } from '@/types/content';
 import { parkCity } from '../location';
 import { pt } from '../_portableText';
 import {
+  becomeAFoundingMember,
   foundingMembershipSection,
-  joinTheEmailClub,
   membershipAgreement,
-  saleSoonLine,
 } from '../shared/foundingMembership';
-import { MEMBERSHIPS_ON_SALE } from '../launchPhase';
 
-/** Opens the pitch in both versions. */
+/** Opens the pitch. */
 const openingParagraph =
   "We're selling a limited number of founding membership spots and they will go fast! Founding Members are the families who believe in what we're building — and we're making it worth your while.";
 
 /**
- * The sale-status paragraph that closes the pitch. Both versions sit here
- * rather than one being edited in place on sale day, so switching LAUNCH_PHASE
- * is the whole change and the v1-b copy has already been read and approved.
- *
- * v1-a: nothing to buy, so it promises and points at the newsletter button
- * below. v1-b: the tier cards carry purchase buttons, so it says so.
+ * The sale-status paragraph that closes the pitch. It names the action the tier
+ * cards below it offer, which is why it says 'join' rather than asking for an
+ * email address.
  */
-const salePitch = MEMBERSHIPS_ON_SALE
-  ? 'Memberships are on sale now! Join before we open and lock in founding rates for three full years.'
-  : saleSoonLine;
+const salePitch =
+  'Memberships are on sale now! Join before we open and lock in founding rates for three full years.';
 
 /**
  * Founding membership sales page. Copy follows early_bird_page.png, with the
@@ -83,14 +77,13 @@ export const earlyBirdPage: Page = {
       // The status line moved out of `intro` into its own field so it renders
       // as a callout rather than as a second paragraph of the pitch.
       notice: pt(salePitch),
-      // No primary button in either version: it would be 'be an early bird',
-      // which links to /early-bird — the page you are already on.
+      // Sits directly under the sale notice, which is the sentence it acts on.
+      // It goes to the main shop rather than to a tier, so it is not a fourth
+      // copy of the 'join now' buttons below: this is for someone sold on the
+      // pitch, those are for someone who has picked a size.
       //
-      // v1-a keeps the newsletter opt-in, the only thing there is to do here
-      // while nothing is for sale. v1-b drops it: the three purchase buttons
-      // on the tier cards are the action, and a fourth button competing with
-      // them for a mailing list is the wrong ask once someone can just buy.
-      ...(MEMBERSHIPS_ON_SALE ? {} : { secondaryCta: joinTheEmailClub }),
+      // No secondaryCta. The lesser slot is 'learn more', which links here.
+      cta: becomeAFoundingMember,
     }),
     {
       _key: 'render',

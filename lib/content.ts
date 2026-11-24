@@ -7,6 +7,7 @@
  * single call site.
  */
 import type {
+  CheckoutConfig,
   FaqItem,
   FaqSection,
   HeaderLogoSize,
@@ -19,6 +20,7 @@ import type {
   SiteSettings,
 } from '@/types/content';
 
+import { rollerCheckout } from '@/content/checkout';
 import { faqSections, faqs } from '@/content/faqs';
 import { pressItems } from '@/content/press';
 import { pricingTiers } from '@/content/pricing';
@@ -28,6 +30,7 @@ import { earlyBirdPage } from '@/content/pages/earlyBird';
 import { homePage } from '@/content/pages/home';
 import { membershipAgreementPage } from '@/content/pages/membershipAgreement';
 import { faqPage } from '@/content/pages/faq';
+import { giftCardsPage } from '@/content/pages/giftCards';
 import { privacyPage } from '@/content/pages/privacy';
 import { termsPage } from '@/content/pages/terms';
 import { pressPage } from '@/content/pages/press';
@@ -36,6 +39,7 @@ import { pressPage } from '@/content/pages/press';
 const pages: Page[] = [
   homePage,
   earlyBirdPage,
+  giftCardsPage,
   contactPage,
   pressPage,
   faqPage,
@@ -286,6 +290,18 @@ export async function getTopNav(): Promise<Link[]> {
 /** Founding tiers first, then the standard rates that apply after opening. */
 export async function getPricing(): Promise<PricingTier[]> {
   return pricingTiers;
+}
+
+/**
+ * ROLLER's script source and store URL, for the routes that sell something.
+ *
+ * Fetched rather than imported so components/CheckoutScript.tsx takes it as a
+ * prop like everything else — see ARCHITECTURE.md → Prime directive. The
+ * product ids do not come through here: they are already baked into each
+ * tier's `cta`, which arrives with the page.
+ */
+export async function getCheckoutConfig(): Promise<CheckoutConfig> {
+  return rollerCheckout;
 }
 
 /** The FAQ grouped for display. The /faq page gets these through its block. */
