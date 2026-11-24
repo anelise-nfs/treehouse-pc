@@ -1,51 +1,19 @@
-import type { Link, PricingTier } from '@/types/content';
-import { rollerCheckout, rollerProductIds } from './checkout';
+import type { PricingTier } from '@/types/content';
 
 /**
- * A tier's purchase button: opens ROLLER's overlay on that tier's product.
+ * Founding ("early bird") memberships. SOLD OUT, AND NO LONGER RENDERED.
  *
- * A factory rather than three hand-written Links, because everything except
- * the product id and the name in the accessible label is identical across the
- * three — and the one thing that must never be copy-pasted wrong is which
- * product id sits on which price.
+ * Kept as the record of what was actually sold — the rates, the annual totals
+ * and the struck-through comparisons these families bought against. Their
+ * ROLLER purchase buttons have been REMOVED rather than left dormant: those
+ * products are closed, and a `cta` sitting on a sold-out tier is a button
+ * waiting to be rendered by mistake. The product ids went with them, out of
+ * content/checkout.ts.
  *
- * `kind: 'checkout'` makes this a trigger rather than a navigation; `href` is
- * the store it falls back to if the widget has not loaded. See
- * components/CheckoutTrigger.tsx.
- */
-function joinNow(tierSlug: string, productId: string, buys: string): Link {
-  return {
-    label: 'join now',
-    kind: 'checkout',
-    href: rollerCheckout.checkoutUrl,
-    checkout: {
-      productId,
-      triggerId: `checkout-join-now-${tierSlug}`,
-      // The visible 'join now' is the client's copy and reads correctly under
-      // a price. This is what it means away from that price.
-      ariaLabel: `Join now — founding membership for ${buys}`,
-    },
-    // Outline, not solid: the price block directly above each of these is already
-    // a saturated color field, and a filled button under it put two competing
-    // blocks of color in a card about 360px wide. The outline reads as the card's
-    // action without fighting the price for attention, and it fills solid blue on
-    // hover, so the emphasis arrives when it is useful.
-    variant: 'outline-ocean',
-  };
-}
-
-/**
- * Founding ("early bird") memberships. The mockups show a monthly figure with
- * the standard rate struck through, but the customer is charged the full year
- * up front — hence the separate billed* fields, which the cards now spell out
- * ("$1,680 for the year") rather than leaving to the footnote alone.
+ * The homepage renders `standardTiers` below. Nothing renders these.
  *
  * billedAmount is always amount × 12: 140 × 12 = 1680, 235 × 12 = 2820,
- * 330 × 12 = 3960. It is stored rather than computed because a future tier may
- * be billed on different terms, and because in Phase 2 it is an authored field.
- *
- * No per-tier feature lists exist in the mockups; the shared perks list carries
- * that copy instead.
+ * 330 × 12 = 3960.
  */
 export const foundingTiers: PricingTier[] = [
   {
@@ -64,7 +32,6 @@ export const foundingTiers: PricingTier[] = [
     // kid' carry it — the standard one does not render yet, and leaving it on
     // sky would have the pair diverge the day it does.
     priceColor: 'ocean',
-    cta: joinNow('one-kid', rollerProductIds.oneKid, 'one child'),
   },
   {
     _id: 'pricingTier.founding-two-kids',
@@ -78,7 +45,6 @@ export const foundingTiers: PricingTier[] = [
     features: [],
     headerColor: 'pine',
     priceColor: 'mint',
-    cta: joinNow('two-kids', rollerProductIds.twoKids, 'two children'),
   },
   {
     _id: 'pricingTier.founding-three-plus-kids',
@@ -92,14 +58,18 @@ export const foundingTiers: PricingTier[] = [
     features: [],
     headerColor: 'tangerine',
     priceColor: 'flamingo',
-    cta: joinNow('three-plus-kids', rollerProductIds.threePlusKids, 'three or more children'),
   },
 ];
 
 /**
- * Standard rates that take effect after opening. Not rendered by either launch
- * page — they are the `compareAtAmount` figures above — but they are the real
- * post-opening prices and belong in content rather than in a future commit.
+ * Standard rates that take effect at opening, and WHAT THE HOMEPAGE NOW
+ * RENDERS. These were written as the `compareAtAmount` figures the founding
+ * cards struck through; with that sale closed they are simply the prices.
+ *
+ * No compareAtAmount, no billedAmount and no cta, which is exactly the card
+ * the change-over calls for: '$150/month' and nothing else. A standard
+ * membership can be paid annually or monthly (see the FAQ), so there is no one
+ * annual total to print, and there is nothing to buy until the doors open.
  */
 export const standardTiers: PricingTier[] = [
   {

@@ -26,7 +26,6 @@ import { pressItems } from '@/content/press';
 import { pricingTiers } from '@/content/pricing';
 import { siteSettings } from '@/content/site';
 import { contactPage } from '@/content/pages/contact';
-import { earlyBirdPage } from '@/content/pages/earlyBird';
 import { homePage } from '@/content/pages/home';
 import { membershipAgreementPage } from '@/content/pages/membershipAgreement';
 import { faqPage } from '@/content/pages/faq';
@@ -38,7 +37,6 @@ import { pressPage } from '@/content/pages/press';
 /** Keyed by slug. The homepage's slug is the empty string. */
 const pages: Page[] = [
   homePage,
-  earlyBirdPage,
   giftCardsPage,
   contactPage,
   pressPage,
@@ -85,7 +83,7 @@ function sortedFaqSections(): FaqSection[] {
     .filter((section) => section.items.length > 0);
 }
 
-/** '' for the homepage, '/early-bird' for the rest. */
+/** '' for the homepage, '/gift-cards' for the rest. */
 function routeOf(page: Page): string {
   return page.slug === '' ? '/' : `/${page.slug}`;
 }

@@ -14,8 +14,8 @@ import { standardTiers } from './pricing';
  * the FAQ is where someone checks a number before they drive over.
  *
  * The membership figures are the STANDARD rates, which is what these answers
- * describe. The founding rates on the homepage are lower and currently
- * struck through against exactly these numbers.
+ * describe — and, since the founding sale closed, what the homepage cards show
+ * too. They were the struck-through comparison there until then.
  */
 
 /** A drop-in price by badge key, so a renamed badge fails loudly rather than silently. */

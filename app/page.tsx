@@ -1,8 +1,7 @@
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import { BlockRenderer } from '@/components/blocks/BlockRenderer';
-import { CheckoutScript } from '@/components/CheckoutScript';
-import { getCheckoutConfig, getPage, getSiteSettings } from '@/lib/content';
+import { getPage, getSiteSettings } from '@/lib/content';
 import { pageMetadata } from '@/lib/seo';
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -12,18 +11,17 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function HomePage() {
-  const [page, checkout] = await Promise.all([getPage(''), getCheckoutConfig()]);
+  const page = await getPage('');
   if (!page) notFound();
 
+  // No CheckoutScript. This route carried it while the membership buttons
+  // opened ROLLER's overlay; with the founding sale closed there is not one
+  // checkout trigger left on the homepage, and loading a third-party payment
+  // widget that nothing can open is a request made of every visitor for
+  // nothing. /gift-cards is the only route that still needs it.
   return (
-    <>
-      <main id="main">
-        <BlockRenderer blocks={page.blocks} />
-      </main>
-      {/* Outside <main>: it renders nothing and is not page content. This
-          route sells memberships, so it is one of the three that loads the
-          widget — see components/CheckoutScript.tsx. */}
-      <CheckoutScript {...checkout} />
-    </>
+    <main id="main">
+      <BlockRenderer blocks={page.blocks} />
+    </main>
   );
 }

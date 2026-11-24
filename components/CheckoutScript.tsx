@@ -12,10 +12,15 @@ export const CHECKOUT_SCRIPT_ID = 'roller-checkout';
 /**
  * Loads ROLLER's checkout widget.
  *
- * One component, rendered by every route that has something to buy — the
- * homepage, /early-bird and /gift-cards. Not the root layout: the other seven
- * routes sell nothing, and a third-party script on a privacy policy is a
- * dependency nobody is getting anything for.
+ * One component, rendered by every route that has something to buy. That is
+ * /gift-cards alone now: the homepage and /early-bird both carried it during
+ * the founding sale, and with that sale closed the gift card is the only thing
+ * on the site anyone can purchase. Not the root layout — a third-party payment
+ * script on a privacy policy is a dependency nobody is getting anything for.
+ *
+ * It stays a component rather than being inlined into that one page: the id
+ * dedupe below is what makes adding a second selling route safe, and regular
+ * memberships going on sale at opening will want exactly that.
  *
  * `afterInteractive` rather than `beforeInteractive`: the overlay cannot be
  * opened until someone clicks a button, so there is nothing to gain from

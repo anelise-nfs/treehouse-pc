@@ -28,7 +28,9 @@ export const siteSettings: SiteSettings = {
   // it elsewhere does not render here.
   primaryNav: [
     { label: 'Home', kind: 'internal', href: '/' },
-    { label: 'Early Bird', kind: 'internal', href: '/early-bird' },
+    // Gift Cards takes the slot Early Bird held: it is the one thing on the
+    // site anyone can buy now, and the only sub-page that sells anything.
+    { label: 'Gift Cards', kind: 'internal', href: '/gift-cards' },
     { label: 'FAQ', kind: 'internal', href: '/faq' },
     { label: 'In the News', kind: 'internal', href: '/press' },
     // Contact stays last, where a nav conventionally puts it. The footer lists
@@ -47,10 +49,9 @@ export const siteSettings: SiteSettings = {
    */
   topNav: [
     { page: '', label: 'Home' },
-    // Early Bird is the main sub-page at launch and the one thing the bar most
-    // needs to point at. It retires when the founding-membership sale closes,
-    // and retiring it is deleting this line.
-    { page: 'early-bird', label: 'Early Bird' },
+    // Early Bird sat here and retired with the sale, exactly as the note on
+    // this line used to predict. Gift Cards takes its place.
+    { page: 'gift-cards', label: 'Gift Cards' },
     // Labels are set rather than inherited: /faq's own title is 'good
     // questions', which is right on the page and useless in a nav bar.
     { page: 'faq', label: 'FAQ' },
@@ -72,7 +73,6 @@ export const siteSettings: SiteSettings = {
    */
   footerNav: [
     { label: 'Home', kind: 'internal', href: '/' },
-    { label: 'Early Bird', kind: 'internal', href: '/early-bird' },
     // A plain navigation link, not a checkout trigger: the footer takes you to
     // the page, and the button on the page opens the store. A purchase overlay
     // launched from the footer of a privacy policy is not what anyone clicking

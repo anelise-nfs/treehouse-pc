@@ -22,9 +22,9 @@ export default async function GiftCardsPage() {
       <main id="main">
         <BlockRenderer blocks={page.blocks} />
       </main>
-      {/* Outside <main>: it renders nothing and is not page content. This
-          route sells gift cards, so it is one of the three that loads the
-          widget — see components/CheckoutScript.tsx. */}
+      {/* Outside <main>: it renders nothing and is not page content. This is
+          the only route that loads the widget now — see
+          components/CheckoutScript.tsx. */}
       <CheckoutScript {...checkout} />
     </>
   );

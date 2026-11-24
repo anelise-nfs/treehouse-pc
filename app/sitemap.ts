@@ -35,8 +35,9 @@ interface Weight {
  */
 const WEIGHTS: Record<string, Weight> = {
   '/': { priority: 1, changeFrequency: 'weekly' },
-  // The money page until the founding sale closes.
-  '/early-bird': { priority: 0.9, changeFrequency: 'weekly' },
+  // /early-bird sat second at 0.9 and is gone — the founding sale closed and
+  // the page went with it. Nothing replaces it at that weight: the homepage
+  // carries the membership copy now.
   '/faq': { priority: 0.7, changeFrequency: 'monthly' },
   // Also sells something, but a smaller something than a founding membership
   // and not the reason anyone arrives.
@@ -70,7 +71,6 @@ const DEFAULT_WEIGHT: Weight = { priority: 0.5, changeFrequency: 'monthly' };
  */
 const LAST_MODIFIED: Record<string, string> = {
   '/': '2026-11-19',
-  '/early-bird': '2026-11-19',
   '/faq': '2026-11-19',
   '/press': '2026-11-19',
   '/privacy': '2026-11-19',

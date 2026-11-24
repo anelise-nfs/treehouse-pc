@@ -3,7 +3,7 @@ import { parkCity } from '../location';
 
 /**
  * Frequently asked questions. The standard sub-page shape: topbar header,
- * pageHeader opener, content below — the same template /contact, /early-bird
+ * pageHeader opener, content below — the same template /contact, /gift-cards
  * and /press use.
  *
  * The faqAccordion block declares an empty `sections`; lib/content.ts fills it

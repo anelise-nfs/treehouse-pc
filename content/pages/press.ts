@@ -4,7 +4,7 @@ import { pt } from '../_portableText';
 
 /**
  * Press coverage. The standard sub-page shape: topbar header, pageHeader
- * opener, content below — the same template /contact and /early-bird use.
+ * opener, content below — the same template /contact and /gift-cards use.
  *
  * The pressList block below declares an empty `items`; lib/content.ts fills it
  * from content/press.ts, sorted. The items are deliberately not authored here
@@ -43,7 +43,7 @@ export const pressPage: Page = {
       height: 'small',
       image: {
         // PLACEHOLDER: final photography pending. Shared with /contact and
-        // /early-bird, which is visible to anyone moving between them.
+        // the other sub-pages, which is visible to anyone moving between them.
         url: '/images/hero-play-structure.jpg',
         alt: '',
       },

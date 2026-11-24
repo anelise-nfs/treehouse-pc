@@ -37,15 +37,9 @@ export const rollerCheckout: CheckoutConfig = {
 };
 
 /**
- * The store section the general-purpose purchase button opens, as opposed to a
- * single product. Spelled exactly as ROLLER's section is named; it is matched
- * as a string on their side, so the capitalisation is load-bearing and does
- * not follow this site's lowercase voice.
- */
-export const EARLY_BIRD_SECTION = 'Early Bird Membership';
-
-/**
- * The gift-card section.
+ * The gift-card section, and the only ROLLER target left. EARLY_BIRD_SECTION
+ * stood beside it pointing at the founding-membership range, and went with
+ * that sale along with the per-tier product ids.
  *
  * SINGULAR, AND NOT A TYPO. ROLLER matches this against the section name in
  * the client's Products tab, which reads 'Gift Card'. Our own page title and
@@ -54,14 +48,3 @@ export const EARLY_BIRD_SECTION = 'Early Bird Membership';
  * breaks the overlay.
  */
 export const GIFT_CARD_SECTION = 'Gift Card';
-
-/**
- * One ROLLER product per founding tier. Keyed by the tier it sells rather than
- * listed positionally, so a reordering of the cards cannot shuffle the prices
- * people are charged.
- */
-export const rollerProductIds = {
-  oneKid: '29704',
-  twoKids: '29693',
-  threePlusKids: '29698',
-} as const;

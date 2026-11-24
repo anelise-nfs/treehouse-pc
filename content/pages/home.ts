@@ -1,12 +1,7 @@
 import type { Page } from '@/types/content';
 import { parkCity } from '../location';
 import { pt } from '../_portableText';
-import {
-  becomeAFoundingMember,
-  foundingMembershipSection,
-  foundingPitch,
-  learnMore,
-} from '../shared/foundingMembership';
+import { buyAGiftCard, membershipSection, signUpForUpdates } from '../shared/membership';
 import { dropInBadges } from '../dropIn';
 
 /**
@@ -49,17 +44,19 @@ export const homePage: Page = {
       // a phone, and this one is five words. Setting one now would show
       // different copy at different widths for no reason.
       bandColor: 'mint',
-      // The one call to action a first visitor sees, and it leads to the thing
-      // there is to buy. The mailing-list ask it used to carry moved down to
-      // the band below, where it is the secondary offer it now is.
+      // Back to the mailing list, where it was before the founding sale. The
+      // memberships button it carried during the sale pointed at /early-bird,
+      // which no longer exists, and there is nothing else to buy until the
+      // doors open — so the one call to action a first visitor sees is the one
+      // that pays off when regular memberships open.
       //
-      // /early-bird rather than a checkout link: the pass options, the perks
-      // and the membership agreement are all there, and nobody should meet a
-      // payment form before the prices.
+      // Opens the signup dialog rather than scrolling. Anchoring it sent a
+      // first visitor nine screens down the page, past everything, to the
+      // footer.
       primaryCta: {
-        label: 'early bird memberships',
-        kind: 'internal',
-        href: '/early-bird',
+        label: 'sign up for updates',
+        kind: 'newsletter',
+        href: '#newsletter',
         variant: 'solid-ocean',
       },
       // Rendered by the hero, not as a block of its own: its seam continues the
@@ -78,25 +75,10 @@ export const homePage: Page = {
           'Treehouse is a gathering space — not just somewhere to drop in, but somewhere to belong. It looks and feels like a playground, but every climb, balance, and leap is quietly building strength, coordination, and confidence — the real work of childhood, hidden inside the fun. Our calendar stays full of classes, workshops, and activities that bring families back week after week, where neighbors become friends over coffee and kids find something new to love each visit. A living, breathing part of our community.',
           "We can't wait to see you!",
         ),
-        // The mailing-list ask, which lives here now that the hero's button
-        // leads to the memberships instead. Opens the signup dialog like every
-        // other mailing-list link on the site; the href is the no-JavaScript
-        // fallback to the footer's form.
-        //
-        // outline-white, the band variant: a white border and label over a 20%
-        // black scrim. solid-ocean sat here first and read as a blue slab
-        // dropped onto the green; outline-ocean was never an option, since
-        // --color-action as text on mint is 2.12:1.
-        //
-        // The scrim is load-bearing, not styling — white on bare mint is
-        // 3.13:1 and fails at this size. See the variant's note in
-        // components/Button.tsx, which also says where it may not be used.
-        cta: {
-          label: 'sign up for updates',
-          kind: 'newsletter',
-          href: '#newsletter',
-          variant: 'outline-white',
-        },
+        // No cta. It carried the mailing-list ask only while the hero's own
+        // button was selling memberships; now that the hero asks for an email
+        // again, a second identical button one screen below it is the same
+        // request twice.
       },
     },
     {
@@ -196,42 +178,29 @@ export const homePage: Page = {
       anchorId: 'how-it-works',
       accent: 'rainbow',
     },
-    {
-      // Lifted out of the membership section's own intro so it sits directly
-      // under the 'how it works' band, where it now introduces everything
-      // below rather than just the prices — and so that band is no longer a
-      // bare heading running straight into a second heading.
-      //
-      // A block of its own rather than the band's `body` field: SectionBand
-      // renders body copy in white at --text-body, which on flamingo is
-      // 3.11:1 against a 4.5:1 requirement. Nothing uses that field today, so
-      // the trap is latent; on the page background this is ink on linen at
-      // 16.78:1. See ARCHITECTURE.md -> Color rule.
-      //
-      // No doodle: the band above carries two and the membership section below
-      // carries its own.
-      _key: 'membership-intro',
-      _type: 'richText',
-      align: 'center',
-      content: pt(foundingPitch),
-    },
-    foundingMembershipSection('early-bird-membership', {
-      title: 'early bird memberships',
+    // The founding-member pitch that sat here, directly under the 'how it
+    // works' band, is gone with the sale: it described what a Founding Member
+    // was and why to become one, and nobody can become one. The band now runs
+    // into the membership section, which opens on its own title bar.
+    membershipSection('memberships', {
+      // 'memberships', not 'early bird memberships'. What this section shows
+      // is the standard rates.
+      title: 'memberships',
       titleBandColor: 'tangerine',
+      // The anchor is unchanged: the footer and the nav link to '#memberships'
+      // and the section is still about memberships.
       anchorId: 'memberships',
-      // The scarcity and the rate lock, which the standing pitch above does not
-      // carry. A plain paragraph, not the `notice` callout /early-bird uses:
-      // this is ink on the page background at any size, where that one is ocean
-      // and depends on its own type size to stay legal.
+      // The change-over notice. A plain paragraph, not the `notice` callout —
+      // this is ink on the page background and legible at any size, where that
+      // one is ocean and depends on its own type size to stay legal.
       intro: pt(
-        'Early Bird memberships are on sale now in limited quantities and will sell out quickly. Buy now to lock in your early bird rate for three years!',
+        'Our Early Bird memberships have flown the nest — they\u2019re all spoken for! Regular memberships will be available when we open. Join our list to be the first to know.',
       ),
-      // The purchase takes the solid slot and 'learn more' the outline one:
-      // the button that leads to a purchase should not be the quieter of the
-      // two. 'learn more' goes to /early-bird, which carries the perks in full
-      // and the membership agreement.
-      cta: becomeAFoundingMember,
-      secondaryCta: learnMore,
+      // The mailing list leads, because the copy above just asked for it and
+      // there is no membership to sell until opening. See the two constants in
+      // content/shared/membership.ts.
+      cta: signUpForUpdates,
+      secondaryCta: buyAGiftCard,
     }),
     {
       _key: 'drop-in',

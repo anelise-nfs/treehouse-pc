@@ -156,8 +156,8 @@ function PerkGroup({
 }) {
   return (
     <div className={className}>
-      {/* h2, not h3: on /early-bird no title bar precedes this section, so an
-          h3 jumped straight from the page h1. */}
+      {/* h2, not h3: a page may render this section with no title bar above
+          it, where an h3 would jump straight from the page h1. */}
       <h2 className="text-center font-script text-[length:var(--text-script-sm)] leading-[var(--leading-heading)] text-ink">
         {title}
       </h2>

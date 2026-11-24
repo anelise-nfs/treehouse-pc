@@ -6,10 +6,13 @@ import { GIFT_CARD_SECTION, rollerCheckout } from '../checkout';
 /**
  * The gift-card purchase button.
  *
- * Page-local rather than shared: it is the only gift-card CTA on the site, and
- * the two in content/shared/foundingMembership.ts are shared because two pages
- * render them. A constant anyway, so the label, the target and the fallback
- * stay next to each other.
+ * Page-local rather than shared: this is the only button that opens the
+ * gift-card overlay, and the links in content/shared/membership.ts are there
+ * because they belong to a section rather than to a page. A constant anyway,
+ * so the label, the target and the fallback stay next to each other.
+ *
+ * NOT the same thing as `buyAGiftCard` in that module, which is the plain
+ * navigation link the homepage uses to send someone here. This is the purchase.
  *
  * Opens ROLLER's overlay on the gift-card section — see GIFT_CARD_SECTION for
  * why that string is singular. `href` is the store it falls through to if the

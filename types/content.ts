@@ -196,7 +196,7 @@ export interface ImageCrop {
 export interface Link {
   label: string;
   kind: LinkKind;
-  /** Internal: a site-relative path ('/early-bird'). External: absolute URL. Anchor: '#membership'. */
+  /** Internal: a site-relative path ('/gift-cards'). External: absolute URL. Anchor: '#memberships'. */
   href: string;
   /** External links only. Ignored elsewhere. */
   newTab?: boolean;
@@ -639,8 +639,8 @@ export interface MembershipSectionBlock extends BlockBase, Decorated {
    * look like one. It renders as quiet underlined text at the footnote's size,
    * below the prices, where someone reading the terms is already looking.
    *
-   * Optional, and only /early-bird sets it. The homepage renders the same
-   * section without it.
+   * Optional, and nothing sets it since /early-bird closed — see
+   * `membershipAgreement` in content/shared/membership.ts.
    */
   tiersFootnoteLink?: Link;
   intro: PortableTextBlock[];
@@ -664,9 +664,8 @@ export interface MembershipSectionBlock extends BlockBase, Decorated {
    */
   notice?: PortableTextBlock[];
   /**
-   * Optional: /early-bird drops it while the sale is not open, leaving the
-   * newsletter opt-in below as the only action. A section with neither is
-   * valid too — it just reads as information.
+   * Optional. A section with neither button is valid and just reads as
+   * information.
    */
   cta?: Link;
   /**
@@ -675,9 +674,13 @@ export interface MembershipSectionBlock extends BlockBase, Decorated {
    * styling difference between a primary and a secondary action is the point.
    */
   secondaryCta?: Link;
-  /** Heading over `perks` — the founding-exclusive list ('early birds get:'). */
+  /**
+   * Heading over `perks`. This is the first and, today, only perk list: 'all
+   * members will enjoy'. It held the founding-exclusive 'early birds get:'
+   * list while that sale ran, with the standing benefits in `memberPerks`
+   * below.
+   */
   perksTitle: string;
-  /** Perks a founding member gets and a later member does not. */
   perks: MembershipPerk[];
   /**
    * A second, separate perk list: what every membership includes, founding or
@@ -686,8 +689,8 @@ export interface MembershipSectionBlock extends BlockBase, Decorated {
    * two would quietly claim the standing benefits as founding exclusives.
    *
    * Optional, and only rendered when both the title and a non-empty list are
-   * present, so a section that offers nothing beyond the founding perks
-   * renders exactly as it did before.
+   * present. EMPTY TODAY: with the founding list gone there is no second
+   * category to draw, and two identically styled lists would imply one.
    */
   memberPerksTitle?: string;
   memberPerks?: MembershipPerk[];

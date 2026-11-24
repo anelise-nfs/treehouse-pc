@@ -44,7 +44,7 @@ export const contactPage: Page = {
       title: 'stay in touch',
       height: 'small',
       image: {
-        // PLACEHOLDER: final photography pending. Shared with /early-bird for
+        // PLACEHOLDER: final photography pending. Shared with the other sub-pages for
         // now, which is visible if a visitor moves between the two.
         url: '/images/hero-play-structure.jpg',
         alt: '',
