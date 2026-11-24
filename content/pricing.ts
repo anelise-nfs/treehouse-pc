@@ -1,31 +1,38 @@
 import type { Link, PricingTier } from '@/types/content';
-import { MEMBERSHIPS_ON_SALE } from './launchPhase';
+import { rollerCheckout, rollerProductIds } from './checkout';
 
 /**
- * THE ONE PLACE TO SWAP IN THE REAL CHECKOUT LINKS — the last thing to do
- * before switching LAUNCH_PHASE to 'v1-b'.
+ * A tier's purchase button: opens ROLLER's overlay on that tier's product.
  *
- * Every founding tier's purchase button points here while the ROLLER product
- * pages do not exist yet. When they do, each tier gets its own `cta` with that
- * tier's product URL and this constant is deleted — one shared placeholder now
- * is what makes that a single, findable edit rather than a hunt through
- * content.
+ * A factory rather than three hand-written Links, because everything except
+ * the product id and the name in the accessible label is identical across the
+ * three — and the one thing that must never be copy-pasted wrong is which
+ * product id sits on which price.
  *
- * 'anchor' with '#': a real element to land on is better than a dead `href`,
- * and it keeps the button a plain link rather than something that needs
- * JavaScript to be harmless.
+ * `kind: 'checkout'` makes this a trigger rather than a navigation; `href` is
+ * the store it falls back to if the widget has not loaded. See
+ * components/CheckoutTrigger.tsx.
  */
-export const PLACEHOLDER_CTA: Link = {
-  label: 'join now',
-  kind: 'anchor',
-  href: '#',
-  // Outline, not solid: the price block directly above each of these is already
-  // a saturated color field, and a filled button under it put two competing
-  // blocks of color in a card about 360px wide. The outline reads as the card's
-  // action without fighting the price for attention, and it fills solid blue on
-  // hover, so the emphasis arrives when it is useful.
-  variant: 'outline-ocean',
-};
+function joinNow(tierSlug: string, productId: string, buys: string): Link {
+  return {
+    label: 'join now',
+    kind: 'checkout',
+    href: rollerCheckout.checkoutUrl,
+    checkout: {
+      productId,
+      triggerId: `checkout-join-now-${tierSlug}`,
+      // The visible 'join now' is the client's copy and reads correctly under
+      // a price. This is what it means away from that price.
+      ariaLabel: `Join now — founding membership for ${buys}`,
+    },
+    // Outline, not solid: the price block directly above each of these is already
+    // a saturated color field, and a filled button under it put two competing
+    // blocks of color in a card about 360px wide. The outline reads as the card's
+    // action without fighting the price for attention, and it fills solid blue on
+    // hover, so the emphasis arrives when it is useful.
+    variant: 'outline-ocean',
+  };
+}
 
 /**
  * Founding ("early bird") memberships. The mockups show a monthly figure with
@@ -57,7 +64,7 @@ export const foundingTiers: PricingTier[] = [
     // kid' carry it — the standard one does not render yet, and leaving it on
     // sky would have the pair diverge the day it does.
     priceColor: 'ocean',
-    ...(MEMBERSHIPS_ON_SALE ? { cta: PLACEHOLDER_CTA } : {}),
+    cta: joinNow('one-kid', rollerProductIds.oneKid, 'one child'),
   },
   {
     _id: 'pricingTier.founding-two-kids',
@@ -71,7 +78,7 @@ export const foundingTiers: PricingTier[] = [
     features: [],
     headerColor: 'pine',
     priceColor: 'mint',
-    ...(MEMBERSHIPS_ON_SALE ? { cta: PLACEHOLDER_CTA } : {}),
+    cta: joinNow('two-kids', rollerProductIds.twoKids, 'two children'),
   },
   {
     _id: 'pricingTier.founding-three-plus-kids',
@@ -85,7 +92,7 @@ export const foundingTiers: PricingTier[] = [
     features: [],
     headerColor: 'tangerine',
     priceColor: 'flamingo',
-    ...(MEMBERSHIPS_ON_SALE ? { cta: PLACEHOLDER_CTA } : {}),
+    cta: joinNow('three-plus-kids', rollerProductIds.threePlusKids, 'three or more children'),
   },
 ];
 

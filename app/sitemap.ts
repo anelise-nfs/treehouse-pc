@@ -38,6 +38,9 @@ const WEIGHTS: Record<string, Weight> = {
   // The money page until the founding sale closes.
   '/early-bird': { priority: 0.9, changeFrequency: 'weekly' },
   '/faq': { priority: 0.7, changeFrequency: 'monthly' },
+  // Also sells something, but a smaller something than a founding membership
+  // and not the reason anyone arrives.
+  '/gift-cards': { priority: 0.6, changeFrequency: 'monthly' },
   '/press': { priority: 0.6, changeFrequency: 'monthly' },
   '/contact': { priority: 0.5, changeFrequency: 'monthly' },
   // Legal boilerplate: required, rarely read, almost never searched for, and
@@ -73,6 +76,7 @@ const LAST_MODIFIED: Record<string, string> = {
   '/privacy': '2026-11-19',
   '/terms': '2026-11-19',
   '/contact': '2026-11-12',
+  '/gift-cards': '2026-11-24',
 };
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {

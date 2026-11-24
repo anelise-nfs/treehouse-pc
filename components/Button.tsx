@@ -35,6 +35,29 @@ export const BUTTON_STYLES: Record<ButtonVariant, string> = {
   // the two is a type + content change, left for the palette decision.
   'solid-tangerine-ink': 'bg-tangerine text-on-tangerine hover:brightness-90 focus-visible:brightness-90',
   'solid-tangerine-white': 'bg-tangerine text-white hover:brightness-90 focus-visible:brightness-90',
+  /**
+   * FOR A COLOURED BAND, AND ITS LEGALITY DEPENDS ON WHICH ONE. Every other
+   * variant above carries its own ground and so passes anywhere; this one
+   * borrows the band's.
+   *
+   * The 20% black scrim is the whole reason it passes. White on bare mint is
+   * 3.13:1 and fails at this type size. The scrim composites mint (#4da17e) to
+   * #3e8165, where white is 4.65:1 and legal at any size — so the fill is not
+   * decoration and must not be removed to make the button 'properly'
+   * transparent. The white border is 3.13:1 against mint, which clears the 3:1
+   * that WCAG asks of a control's boundary.
+   *
+   * SAFE ON: mint, and any fill darker than it. ILLEGAL ON: linen, white,
+   * seafoam, and the light brand fills — a 20% scrim does not come close to
+   * carrying white there. Re-measure before putting this on a new fill;
+   * white needs the composited surface at luminance <= 0.183.
+   *
+   * Fills white on hover with an ink label (17.4:1), matching the other
+   * outline variants, which all go solid on hover.
+   */
+  'outline-white':
+    'border-2 border-white bg-black/20 text-white ' +
+    'hover:bg-white hover:text-ink focus-visible:bg-white focus-visible:text-ink',
 };
 
 /**

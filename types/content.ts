@@ -59,6 +59,11 @@ export type SurfaceColor = BandColor | 'linen' | 'white';
  *   outline-tangerine      tangerine border, ink label
  *   solid-tangerine-ink    tangerine fill, ink label          (5.44:1)
  *   solid-tangerine-white  temporary, pending the ADA sweep
+ *   outline-white          white border and label on a dark scrim — the one
+ *                          variant whose ratio is NOT against linen, and the
+ *                          one that is illegal on a light surface. See the
+ *                          note on it in components/Button.tsx before using
+ *                          it anywhere new.
  *
  * Do not introduce a color to make a new variant work.
  */
@@ -67,7 +72,8 @@ export type ButtonVariant =
   | 'outline-ocean'
   | 'outline-tangerine'
   | 'solid-tangerine-ink'
-  | 'solid-tangerine-white';
+  | 'solid-tangerine-white'
+  | 'outline-white';
 
 /**
  * Where a doodle may sit inside a block. Named slots, not coordinates: an author
@@ -195,14 +201,56 @@ export interface Link {
   /** External links only. Ignored elsewhere. */
   newTab?: boolean;
   variant?: ButtonVariant;
+  /** 'checkout' links only. Ignored elsewhere, and required on those. */
+  checkout?: CheckoutTarget;
 }
 
 /**
- * 'newsletter' is a destination rather than a URL: it opens the mailing-list
- * dialog. It still carries an href to the footer's signup, so a visitor
- * without JavaScript gets taken somewhere real instead of nowhere.
+ * What a 'checkout' link opens in ROLLER's overlay.
+ *
+ * EXACTLY ONE of `productId` and `section` is set. Both are optional here
+ * rather than modelled as a union because the two reach ROLLER as the same
+ * options object and the component passes through whichever it is given;
+ * a union would buy a compile-time guarantee at the cost of being the kind of
+ * type nobody can read. Setting both is an authoring mistake, not a state the
+ * code handles.
  */
-export type LinkKind = 'internal' | 'external' | 'anchor' | 'newsletter';
+export interface CheckoutTarget {
+  /** A single ROLLER product — one founding tier. */
+  productId?: string;
+  /** A named section of the ROLLER store, which opens the range. */
+  section?: string;
+  /**
+   * DOM id, and the handle analytics reports on. Authored rather than derived
+   * from the label so that rewording a button does not silently start a new
+   * series in the dashboard. Unique within a page.
+   */
+  triggerId: string;
+  /**
+   * The accessible name. Required, not optional: the tier buttons all read
+   * 'join now', which is clear beneath a price and ambiguous in a screen
+   * reader's list of links, so every checkout trigger has to say what it buys.
+   */
+  ariaLabel: string;
+}
+
+/**
+ * ROLLER account configuration. Account-level, not per-page — one store, one
+ * widget script — which is why it is fetched on its own rather than hung off a
+ * Page. Becomes two fields on SiteSettings in Phase 2.
+ */
+export interface CheckoutConfig {
+  scriptSrc: string;
+  checkoutUrl: string;
+}
+
+/**
+ * 'newsletter' and 'checkout' are destinations rather than URLs: the first
+ * opens the mailing-list dialog, the second ROLLER's purchase overlay. Both
+ * still carry an href — the footer's signup, and the ROLLER store — so a
+ * visitor without JavaScript gets taken somewhere real instead of nowhere.
+ */
+export type LinkKind = 'internal' | 'external' | 'anchor' | 'newsletter' | 'checkout';
 
 /**
  * One entry in the site navigation: a reference to a page, not a URL.

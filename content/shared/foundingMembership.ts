@@ -17,47 +17,49 @@ import type {
   MembershipSectionBlock,
   PortableTextBlock,
 } from '@/types/content';
+import { EARLY_BIRD_SECTION, rollerCheckout } from '../checkout';
 import { foundingTiers } from '../pricing';
 
 /**
- * The buttons the membership section can show under its copy. Which pair each
- * page uses depends on LAUNCH_PHASE; see content/launchPhase.ts for the table.
+ * The buttons the membership section shows under its copy, on the homepage.
  *
- * All three are defined here rather than at their call sites because the two
- * pages share them, and because a label is the kind of thing that gets changed
- * in one place and forgotten in the other.
+ * Defined here rather than at their call sites because a label is the kind of
+ * thing that gets changed in one place and forgotten in the other, and because
+ * the pair is part of the shared section rather than of either page.
  *
- * Solid is the primary slot and outline the lesser one — the two never carry
- * the same weight.
+ * Outline, not solid: this sits beside the purchase button below, which takes
+ * the solid treatment. The two never carry the same weight, and the button that
+ * sells something should not be the quieter one.
  */
 export const learnMore: Link = {
   label: 'learn more',
   kind: 'internal',
   href: '/early-bird',
-  variant: 'solid-ocean',
+  variant: 'outline-ocean',
 };
 
 /**
- * The same link in the lesser slot, for v1-b. There it sits beside 'be an
- * early bird', which goes to the product page — the action worth the solid
- * treatment once there is something to buy. Two constants rather than a
- * variant argument because a Link carries its own styling, and spreading an
- * override at the call site hides which button is the primary one.
- */
-export const learnMoreSecondary: Link = { ...learnMore, variant: 'outline-ocean' };
-
-/**
- * v1-b only, on the homepage. PLACEHOLDER: points at '#' until the ROLLER
- * product page exists, which is also when this button first renders — so the
- * dead href can never reach the live site, which ships as v1-a.
+ * The purchase button, in the primary slot on both pages. One constant, so the
+ * label and the destination cannot drift between the homepage teaser and the
+ * sales page.
  *
- * Swap alongside PLACEHOLDER_CTA in content/pricing.ts; both are listed as
- * remaining v1-b work in content/launchPhase.ts.
+ * Opens ROLLER's overlay on the early bird *section* rather than on a product,
+ * which is the difference between this and the three 'join now' buttons on the
+ * tier cards: this is for someone sold on the pitch who has not picked a size
+ * yet, and it lands them on the range.
+ *
+ * Its `triggerId` repeats on both pages, which is correct — ids are unique
+ * within a page, and analytics wants one series for one action, not two.
  */
-export const beAnEarlyBird: Link = {
-  label: 'be an early bird',
-  kind: 'anchor',
-  href: '#',
+export const becomeAFoundingMember: Link = {
+  label: 'become a founding member',
+  kind: 'checkout',
+  href: rollerCheckout.checkoutUrl,
+  checkout: {
+    section: EARLY_BIRD_SECTION,
+    triggerId: 'checkout-become-founding-member',
+    ariaLabel: 'Become a founding member — open the early bird membership store',
+  },
   variant: 'solid-ocean',
 };
 
@@ -80,37 +82,9 @@ export const membershipAgreement: Link = {
 };
 
 /**
- * Opens the signup dialog, like the hero's button — the mailing list has one
- * UI and one endpoint wherever it is offered. The href is the no-JavaScript
- * fallback, pointing at the footer's copy.
- */
-export const joinTheEmailClub: Link = {
-  label: 'join the email club',
-  kind: 'newsletter',
-  href: '#newsletter',
-  variant: 'outline-ocean',
-};
-
-/**
- * The v1-a sale-status line, shared by both pages so the promise is worded
- * identically wherever someone meets it. It closes each page's intro copy and
- * disappears in v1-b, where there is a purchase button instead of a promise.
- */
-export const saleSoonLine =
-  'Memberships will go on sale soon. Sign up for email updates to be the first to know!';
-
-/**
- * The homepage's wording, which needs the qualifier the /early-bird page does
- * not: that page is entirely about founding memberships and says so in its
- * title, while the homepage carries every kind of pricing and a bare
- * "Memberships" there could be read as the standard rates.
- */
-export const earlyBirdSaleSoonLine =
-  'Early bird memberships will go on sale soon. Sign up for email updates to be the first to know!';
-
-/**
- * The homepage's standing description of a founding member. It is the whole
- * intro in v1-b and the first paragraph of it in v1-a.
+ * The homepage's standing description of a founding member, and the whole of
+ * its membership intro — the prices below it carry their own purchase buttons,
+ * so nothing here has to announce that there is something to buy.
  */
 export const foundingPitch =
   "Founding Members (aka early birds) are the families who believe in what we're building — and we're making it worth your while.";
@@ -192,12 +166,13 @@ export interface FoundingMembershipOptions {
   /** In-page anchor target, so the footer can link to this section. */
   anchorId?: string;
   /**
-   * The buttons under the intro copy, chosen per page and per launch phase
-   * rather than fixed here — /early-bird shows one in v1-a and none in v1-b,
-   * the homepage shows two in both but swaps the second.
+   * The buttons under the intro copy, passed per page rather than fixed here:
+   * the homepage shows 'be an early bird' and 'learn more', and /early-bird
+   * shows neither — one would link to the page you are already on and the
+   * other to a purchase its own tier cards already offer.
    *
    * Both optional, and the section renders no button row at all when neither
-   * is given, which is what /early-bird wants in v1-b.
+   * is given.
    */
   cta?: Link;
   secondaryCta?: Link;

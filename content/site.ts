@@ -73,6 +73,11 @@ export const siteSettings: SiteSettings = {
   footerNav: [
     { label: 'Home', kind: 'internal', href: '/' },
     { label: 'Early Bird', kind: 'internal', href: '/early-bird' },
+    // A plain navigation link, not a checkout trigger: the footer takes you to
+    // the page, and the button on the page opens the store. A purchase overlay
+    // launched from the footer of a privacy policy is not what anyone clicking
+    // a footer expects.
+    { label: 'Gift Cards', kind: 'internal', href: '/gift-cards' },
     { label: 'Contact', kind: 'internal', href: '/contact' },
     { label: 'Parties', kind: 'internal', href: '/#parties' },
     { label: 'FAQ', kind: 'internal', href: '/faq' },

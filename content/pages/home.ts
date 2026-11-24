@@ -2,15 +2,11 @@ import type { Page } from '@/types/content';
 import { parkCity } from '../location';
 import { pt } from '../_portableText';
 import {
-  beAnEarlyBird,
+  becomeAFoundingMember,
   foundingMembershipSection,
   foundingPitch,
-  joinTheEmailClub,
   learnMore,
-  learnMoreSecondary,
-  earlyBirdSaleSoonLine,
 } from '../shared/foundingMembership';
-import { MEMBERSHIPS_ON_SALE } from '../launchPhase';
 import { dropInBadges } from '../dropIn';
 
 /**
@@ -53,22 +49,17 @@ export const homePage: Page = {
       // a phone, and this one is five words. Setting one now would show
       // different copy at different widths for no reason.
       bandColor: 'mint',
-      // LAUNCH WORDING. Founding memberships are not on sale yet, so the hero
-      // asks for an email instead of a purchase and points at the footer's
-      // opt-in. At sales launch this flips to:
+      // The one call to action a first visitor sees, and it leads to the thing
+      // there is to buy. The mailing-list ask it used to carry moved down to
+      // the band below, where it is the secondary offer it now is.
       //
-      //   label: 'learn about memberships'
-      //   kind:  'internal'
-      //   href:  '/early-bird'
-      //
-      // and nothing else about the hero changes.
+      // /early-bird rather than a checkout link: the pass options, the perks
+      // and the membership agreement are all there, and nobody should meet a
+      // payment form before the prices.
       primaryCta: {
-        label: 'sign up for updates',
-        // Opens the signup dialog rather than scrolling. This is the only
-        // call to action a first visitor sees, and anchoring it sent them
-        // nine screens down the page, past everything, to the footer.
-        kind: 'newsletter',
-        href: '#newsletter',
+        label: 'early bird memberships',
+        kind: 'internal',
+        href: '/early-bird',
         variant: 'solid-ocean',
       },
       // Rendered by the hero, not as a block of its own: its seam continues the
@@ -87,6 +78,25 @@ export const homePage: Page = {
           'Treehouse is a gathering space — not just somewhere to drop in, but somewhere to belong. It looks and feels like a playground, but every climb, balance, and leap is quietly building strength, coordination, and confidence — the real work of childhood, hidden inside the fun. Our calendar stays full of classes, workshops, and activities that bring families back week after week, where neighbors become friends over coffee and kids find something new to love each visit. A living, breathing part of our community.',
           "We can't wait to see you!",
         ),
+        // The mailing-list ask, which lives here now that the hero's button
+        // leads to the memberships instead. Opens the signup dialog like every
+        // other mailing-list link on the site; the href is the no-JavaScript
+        // fallback to the footer's form.
+        //
+        // outline-white, the band variant: a white border and label over a 20%
+        // black scrim. solid-ocean sat here first and read as a blue slab
+        // dropped onto the green; outline-ocean was never an option, since
+        // --color-action as text on mint is 2.12:1.
+        //
+        // The scrim is load-bearing, not styling — white on bare mint is
+        // 3.13:1 and fails at this size. See the variant's note in
+        // components/Button.tsx, which also says where it may not be used.
+        cta: {
+          label: 'sign up for updates',
+          kind: 'newsletter',
+          href: '#newsletter',
+          variant: 'outline-white',
+        },
       },
     },
     {
@@ -209,22 +219,19 @@ export const homePage: Page = {
       title: 'early bird memberships',
       titleBandColor: 'tangerine',
       anchorId: 'memberships',
-      // Just the sale-status line now, sitting immediately above the buttons
-      // it refers to — the standing pitch moved up to the block above. v1-b
-      // leaves this empty: by then the prices carry their own purchase
-      // buttons and the status is self-evident. An empty intro renders
-      // nothing, so the section opens on its title bar.
-      // A plain paragraph, not the `notice` callout /early-bird uses. The
-      // wording is the only thing that changed here; the treatment is what it
-      // always was.
-      intro: MEMBERSHIPS_ON_SALE ? pt() : pt(earlyBirdSaleSoonLine),
-      // Both buttons swap between versions, and which one gets the solid
-      // treatment swaps with them. v1-a has nothing to sell, so 'learn more'
-      // leads and the mailing list is the fallback. v1-b has a product page,
-      // so that takes the primary slot and 'learn more' steps back — the
-      // button that leads to a purchase should not be the quieter of the two.
-      cta: MEMBERSHIPS_ON_SALE ? beAnEarlyBird : learnMore,
-      secondaryCta: MEMBERSHIPS_ON_SALE ? learnMoreSecondary : joinTheEmailClub,
+      // The scarcity and the rate lock, which the standing pitch above does not
+      // carry. A plain paragraph, not the `notice` callout /early-bird uses:
+      // this is ink on the page background at any size, where that one is ocean
+      // and depends on its own type size to stay legal.
+      intro: pt(
+        'Early Bird memberships are on sale now in limited quantities and will sell out quickly. Buy now to lock in your early bird rate for three years!',
+      ),
+      // The purchase takes the solid slot and 'learn more' the outline one:
+      // the button that leads to a purchase should not be the quieter of the
+      // two. 'learn more' goes to /early-bird, which carries the perks in full
+      // and the membership agreement.
+      cta: becomeAFoundingMember,
+      secondaryCta: learnMore,
     }),
     {
       _key: 'drop-in',
@@ -345,11 +352,9 @@ export const homePage: Page = {
       location: {
         label: 'Treehouse Park City',
         address: '1209 Center Dr, Park City, UT 84098',
-        // UNUSED, and approximate. The map geocodes `address` above — the same
-        // string the directions link uses — so nothing reads these numbers and
-        // they have never been verified. Delete or correct them at the next
-        // content review; leaving them risks someone trusting them later.
-        coordinates: { lat: 40.719, lng: -111.539 },
+        // No `coordinates`. The field is optional and unread — the map
+        // geocodes `address` above, the same string the directions link uses —
+        // and the pair that sat here was approximate and never verified.
       },
       // Desktop framing, one step wider than it started: at 15 and tighter the
       // surroundings stop reading as Park City. The phone crop derives its own
